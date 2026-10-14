@@ -23,11 +23,15 @@ export interface ProcessCost {
 }
 
 /** The newest metrics event for a run. Percent is of one core (DEC-12); the headline
- * sums cover the whole tree, the breakdown is capped by the host. */
+ * sums cover the whole tree, the breakdown is capped by the host. Null gpu fields mean
+ * not measured — never zero. */
 export interface RunMetrics {
   cpuPercent: number;
   ramBytes: number;
   processes: ProcessCost[];
+  vramBytes: number | null;
+  gpuUtilPercent: number | null;
+  gpuSource: string;
 }
 
 export interface Run {

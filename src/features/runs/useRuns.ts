@@ -110,6 +110,9 @@ export function useRuns(host: RunHost) {
                   cpuPercent: event.cpuPercent,
                   ramBytes: event.ramBytes,
                   processes: event.processes,
+                  vramBytes: event.vramBytes,
+                  gpuUtilPercent: event.gpuUtilPercent,
+                  gpuSource: event.gpuSource,
                 },
               }
             : run,

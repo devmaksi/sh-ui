@@ -11,7 +11,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml gpu_probe
     scenarios: [SC-e04s01-P1-01]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["host", "gpu probe"]
@@ -20,7 +20,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml gpu_attribution
     scenarios: [SC-e04s01-P1-02]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["host", "gpu attribution"]
@@ -29,7 +29,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml gpu_payload
     scenarios: [SC-e04s01-P1-01, SC-e04s01-P2-03]
     risk: P2
-    status: failing
+    status: passing
     allure:
       severity: normal
       categories: ["host", "IPC contract"]
@@ -38,7 +38,7 @@ tasks:
     verify: npm run test -- CostReadoutGpu
     scenarios: [SC-e04s01-P2-04]
     risk: P2
-    status: failing
+    status: passing
     allure:
       severity: normal
       categories: ["ui"]

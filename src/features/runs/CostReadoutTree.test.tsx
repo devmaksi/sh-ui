@@ -11,6 +11,9 @@ const treeMetrics = {
     { pid: 4242, cpuPercent: 100, ramBytes: 2097152 },
     { pid: 4243, cpuPercent: 200, ramBytes: 4194304 },
   ],
+  vramBytes: null,
+  gpuUtilPercent: null,
+  gpuSource: "unavailable",
 };
 
 describe("CostReadout tree", () => {

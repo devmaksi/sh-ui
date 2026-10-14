@@ -23,6 +23,9 @@ fn metrics_event_payload_matches_the_shared_fixture() {
             cpu_percent: 12.5,
             ram_bytes: 1_048_576,
         }],
+        vram_bytes: None,
+        gpu_util_percent: None,
+        gpu_source: "unavailable".to_string(),
     };
 
     let produced: serde_json::Value =

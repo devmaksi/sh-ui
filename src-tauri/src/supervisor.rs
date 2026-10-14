@@ -10,6 +10,7 @@ use std::sync::{Arc, Condvar, Mutex};
 use std::thread;
 use std::time::{Duration, Instant};
 
+use crate::gpu::{build_gpu_probe, probe_gpu_source, run_tool, GpuProbe, UnavailableGpuProbe};
 use crate::metrics::{spawn_metrics_poller, ProcfsReader, METRICS_REFRESH};
 
 /// One event payload cannot exceed this. A script that writes fast must not flood the UI.
@@ -59,6 +60,9 @@ pub enum RunEvent {
         cpu_percent: f64,
         ram_bytes: u64,
         processes: Vec<crate::metrics::ProcessCost>,
+        vram_bytes: Option<u64>,
+        gpu_util_percent: Option<f64>,
+        gpu_source: String,
     },
 }
 
@@ -153,6 +157,7 @@ fn mark_exit(state: &Arc<(Mutex<Completion>, Condvar)>, code: Option<i32>) {
 pub struct Supervisor {
     runs: HashMap<String, LiveRun>,
     sink: Arc<dyn EventSink>,
+    gpu: Arc<dyn GpuProbe>,
     sequence: u64,
 }
 
@@ -161,8 +166,16 @@ impl Supervisor {
         Self {
             runs: HashMap::new(),
             sink: Arc::new(sink),
+            gpu: Arc::new(UnavailableGpuProbe),
             sequence: 0,
         }
+    }
+
+    /// The host probes vendor GPU tooling once at startup and hands the answer to every
+    /// poller. Tests keep the default Unavailable probe.
+    pub fn attach_gpu(&mut self) {
+        let source = probe_gpu_source(&run_tool);
+        self.gpu = build_gpu_probe(&source);
     }
 
     pub fn live_run_ids(&self) -> Vec<String> {
@@ -253,6 +266,7 @@ impl Supervisor {
             run_id.clone(),
             pid,
             self.sink.clone(),
+            self.gpu.clone(),
             finished.clone(),
             METRICS_REFRESH,
         );

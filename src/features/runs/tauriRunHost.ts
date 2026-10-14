@@ -26,6 +26,9 @@ interface RunMetricsPayload {
   cpuPercent: number;
   ramBytes: number;
   processes: ProcessCost[];
+  vramBytes: number | null;
+  gpuUtilPercent: number | null;
+  gpuSource: string;
 }
 
 function toStartFailure(cause: unknown): StartFailure {
@@ -93,6 +96,9 @@ export const tauriRunHost: RunHost = {
         cpuPercent: payload.cpuPercent,
         ramBytes: payload.ramBytes,
         processes: payload.processes,
+        vramBytes: payload.vramBytes,
+        gpuUtilPercent: payload.gpuUtilPercent,
+        gpuSource: payload.gpuSource,
       }),
     ),
 };

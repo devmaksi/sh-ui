@@ -47,6 +47,9 @@ pub struct MetricsPayload {
     pub cpu_percent: f64,
     pub ram_bytes: u64,
     pub processes: Vec<ProcessCostPayload>,
+    pub vram_bytes: Option<u64>,
+    pub gpu_util_percent: Option<f64>,
+    pub gpu_source: String,
 }
 
 /// Turns supervisor events into app events. The supervisor itself never sees Tauri.
@@ -99,6 +102,9 @@ impl EventSink for TauriRunSink {
                 cpu_percent,
                 ram_bytes,
                 processes,
+                vram_bytes,
+                gpu_util_percent,
+                gpu_source,
             } => {
                 let _ = self.app.emit(
                     EVENT_METRICS,
@@ -106,6 +112,9 @@ impl EventSink for TauriRunSink {
                         run_id,
                         cpu_percent,
                         ram_bytes,
+                        vram_bytes,
+                        gpu_util_percent,
+                        gpu_source,
                         processes: processes
                             .into_iter()
                             .map(|cost| ProcessCostPayload {

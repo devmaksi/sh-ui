@@ -3,6 +3,7 @@
 mod common;
 
 use common::TempRegistry;
+use sh_ui_lib::gpu::UnavailableGpuProbe;
 use sh_ui_lib::metrics::{spawn_metrics_poller, ProcReader, ProcessSample};
 use sh_ui_lib::supervisor::{Recorder, RunEvent, Supervisor};
 use std::collections::VecDeque;
@@ -80,6 +81,7 @@ fn metrics_emits_and_stops_poller_stops_when_sample_gone() {
         "run-1".to_string(),
         4242,
         Arc::new(recorder.clone()),
+        std::sync::Arc::new(UnavailableGpuProbe),
         finished,
         Duration::from_millis(50),
     );
@@ -121,6 +123,7 @@ fn metrics_emits_and_stops_poller_stops_on_finished() {
         "run-1".to_string(),
         4242,
         Arc::new(recorder.clone()),
+        std::sync::Arc::new(UnavailableGpuProbe),
         finished.clone(),
         Duration::from_millis(50),
     );

@@ -1,0 +1,11 @@
+{
+  "runId": "run-1",
+  "cpuPercent": 12.5,
+  "ramBytes": 1048576,
+  "processes": [
+    { "pid": 4242, "cpuPercent": 12.5, "ramBytes": 1048576 }
+  ],
+  "vramBytes": 367001600,
+  "gpuUtilPercent": 42.0,
+  "gpuSource": "nvidia-smi"
+}

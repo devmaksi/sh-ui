@@ -81,6 +81,9 @@ describe("useRuns", () => {
       cpuPercent: 42.5,
       ramBytes: 1048576,
       processes: [{ pid: 4242, cpuPercent: 42.5, ramBytes: 1048576 }],
+      vramBytes: null,
+      gpuUtilPercent: null,
+      gpuSource: "unavailable",
     });
   });
 

@@ -95,6 +95,7 @@ pub fn tree_sum(
     )
 }
 
+/// The poller reports which probe answers; the tag is the payload's gpuSource.
 fn clock_ticks_per_second() -> u64 {
     let ticks = unsafe { libc::sysconf(libc::_SC_CLK_TCK) };
     if ticks > 0 {
@@ -114,6 +115,7 @@ pub fn spawn_metrics_poller(
     run_id: String,
     pid: u32,
     sink: Arc<dyn EventSink>,
+    gpu: Arc<dyn crate::gpu::GpuProbe>,
     finished: Arc<AtomicBool>,
     refresh: Duration,
 ) -> JoinHandle<()> {
@@ -158,11 +160,19 @@ pub fn spawn_metrics_poller(
             processes.sort_by_key(|cost| cost.pid);
             processes.truncate(BREAKDOWN_MAX_PROCESSES);
 
+            let vram_bytes = gpu
+                .compute_apps()
+                .map(|apps| crate::gpu::attribute_vram(&apps, &pids) * 1024 * 1024);
+            let gpu_util_percent = gpu.device_util_max();
+
             sink.emit(RunEvent::Metrics {
                 run_id: run_id.clone(),
                 cpu_percent: snapshot.cpu_percent,
                 ram_bytes: snapshot.ram_bytes,
                 processes,
+                vram_bytes,
+                gpu_util_percent,
+                gpu_source: gpu.source_tag().to_string(),
             });
             baseline = next_baseline;
             previous_at = now;

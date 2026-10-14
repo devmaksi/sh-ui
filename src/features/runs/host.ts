@@ -17,6 +17,9 @@ export interface MetricsEvent {
   cpuPercent: number;
   ramBytes: number;
   processes: ProcessCost[];
+  vramBytes: number | null;
+  gpuUtilPercent: number | null;
+  gpuSource: string;
 }
 
 export type OutputListener = (event: OutputEvent) => void;

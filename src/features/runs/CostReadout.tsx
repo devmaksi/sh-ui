@@ -43,6 +43,21 @@ export function CostReadout({ metrics }: CostReadoutProps) {
         <span>
           RAM <span data-testid="cost-ram">{formatRam(metrics.ramBytes)}</span>
         </span>
+        {metrics.vramBytes !== null ? (
+          <span>
+            VRAM <span data-testid="cost-vram">{formatRam(metrics.vramBytes)}</span>
+          </span>
+        ) : null}
+        {metrics.gpuUtilPercent !== null ? (
+          <span>
+            GPU{" "}
+            <span data-testid="cost-gpu">{metrics.gpuUtilPercent.toFixed(1)}%</span>
+            <span data-testid="cost-gpu-source" className="text-neutral-500">
+              {" "}
+              (device, {metrics.gpuSource})
+            </span>
+          </span>
+        ) : null}
         <button
           type="button"
           onClick={() => setOpen((current) => !current)}

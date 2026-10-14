@@ -1,5 +1,6 @@
 // story: e01s01 e01s02 e01s03
 pub mod commands;
+pub mod gpu;
 pub mod metrics;
 pub mod registry;
 pub mod runs;
@@ -24,6 +25,9 @@ pub fn run() {
             app.manage(Mutex::new(store));
 
             let supervisor = Supervisor::new(TauriRunSink::new(app.handle().clone()));
+            let mut supervisor = supervisor;
+            // story: e04s01 — probe vendor GPU tooling once at startup.
+            supervisor.attach_gpu();
             app.manage(Mutex::new(supervisor));
 
             Ok(())
