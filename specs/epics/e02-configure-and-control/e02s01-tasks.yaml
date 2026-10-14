@@ -1,5 +1,7 @@
 story_id: e02s01
 title: Arguments, environment, and working directory per script
+# DEC-10 already sets the default working directory to the directory holding the script.
+# This story adds an explicit per-entry override on top of that default.
 status: todo
 bcps: 6
 tasks:

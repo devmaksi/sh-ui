@@ -1,9 +1,12 @@
-// story: e01s01 e01s02
+// story: e01s01 e01s02 e01s03
 import { open } from "@tauri-apps/plugin-dialog";
 import { AddScriptForm } from "./features/registry/AddScriptForm";
 import { ScriptsList } from "./features/registry/ScriptsList";
 import { tauriRegistryHost } from "./features/registry/tauriRegistryHost";
 import { useRegistry } from "./features/registry/useRegistry";
+import { OutputPanel } from "./features/runs/OutputPanel";
+import { tauriRunHost } from "./features/runs/tauriRunHost";
+import { useRuns } from "./features/runs/useRuns";
 
 async function pickScriptPath(): Promise<string | null> {
   const picked = await open({
@@ -15,17 +18,24 @@ async function pickScriptPath(): Promise<string | null> {
 }
 
 export function App() {
-  const { entries, error, reload, addScript, removeScript } =
+  const { entries, error: registryError, reload, addScript, removeScript } =
     useRegistry(tauriRegistryHost);
+  const { runs, error: runError, start, linesFor, hiddenCountFor } =
+    useRuns(tauriRunHost);
+
+  const activeRun = runs[runs.length - 1];
+  const activeEntry = activeRun
+    ? entries.find((entry) => entry.id === activeRun.handle.entryId)
+    : undefined;
 
   return (
-    <main className="mx-auto max-w-3xl p-6">
+    <main className="mx-auto max-w-4xl p-6">
       <h1 className="text-2xl font-semibold">sh-ui</h1>
       <p className="text-sm text-neutral-500">Local shell script manager</p>
 
-      {error ? (
+      {registryError || runError ? (
         <div role="alert" className="mt-4 border border-red-300 p-3 text-red-700">
-          {error}
+          {registryError ?? runError}
         </div>
       ) : null}
 
@@ -34,8 +44,26 @@ export function App() {
       </div>
 
       <div className="mt-6">
-        <ScriptsList entries={entries} onRemove={removeScript} />
+        <ScriptsList entries={entries} onStart={start} onRemove={removeScript} />
       </div>
+
+      {activeRun ? (
+        <section className="mt-6">
+          <h2 className="text-sm font-medium">
+            {activeEntry?.path ?? activeRun.handle.entryId} · pid{" "}
+            {activeRun.handle.pid} ·{" "}
+            {activeRun.state === "ended"
+              ? `ended with code ${activeRun.exitCode ?? "unknown"}`
+              : "running"}
+          </h2>
+          <div className="mt-2">
+            <OutputPanel
+              lines={linesFor(activeRun.handle.runId)}
+              droppedCount={hiddenCountFor(activeRun.handle.runId)}
+            />
+          </div>
+        </section>
+      ) : null}
 
       <button
         type="button"

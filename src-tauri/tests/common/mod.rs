@@ -5,6 +5,7 @@
 // compiler sees the rest as dead. The fixture is shared on purpose.
 #![allow(dead_code)]
 
+use std::os::unix::fs::PermissionsExt;
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicU64, Ordering};
 
@@ -40,6 +41,22 @@ impl TempRegistry {
     pub fn write_file(&self, name: &str, body: &str) -> PathBuf {
         let file = self.dir.join(name);
         std::fs::write(&file, body).expect("fixture file must be writable");
+        file
+    }
+
+    /// Write an executable script the host is allowed to spawn.
+    pub fn write_script(&self, name: &str, body: &str) -> PathBuf {
+        let file = self.write_file(name, body);
+        std::fs::set_permissions(&file, std::fs::Permissions::from_mode(0o755))
+            .expect("fixture script must become executable");
+        file
+    }
+
+    /// Write a non-executable file, for tests that assert the host refuses it.
+    pub fn write_inert_file(&self, name: &str, body: &str) -> PathBuf {
+        let file = self.write_file(name, body);
+        std::fs::set_permissions(&file, std::fs::Permissions::from_mode(0o644))
+            .expect("fixture file must stay non-executable");
         file
     }
 }

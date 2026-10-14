@@ -2,7 +2,7 @@ story_id: e01s03
 title: Start a script and read its live output
 spec: e01s03-live-output.md
 test_plan: specs/tech-architecture/e01-TEST_PLAN_LATEST.md
-status: failing
+status: passing
 bcps: 8
 risk: P0
 verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
@@ -12,7 +12,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml supervisor_tracks_run
     scenarios: [SC-e01s03-P0-01]
     risk: P0
-    status: failing
+    status: passing
     allure:
       severity: critical
       categories: ["host", "process control"]
@@ -21,7 +21,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml output_events
     scenarios: [SC-e01s03-P0-02]
     risk: P0
-    status: failing
+    status: passing
     allure:
       severity: critical
       categories: ["host", "IPC contract"]
@@ -30,7 +30,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml output_chunk_cap
     scenarios: [SC-e01s03-P1-05]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["host", "flood resistance"]
@@ -40,7 +40,7 @@ tasks:
     scenarios: [SC-e01s03-P0-04]
     risk: P0
     security: high
-    status: failing
+    status: passing
     allure:
       severity: critical
       categories: ["Security Review", "process control"]
@@ -49,7 +49,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml output_first_chunk_latency
     scenarios: [SC-e01s03-P0-06]
     risk: P0
-    status: failing
+    status: passing
     allure:
       severity: critical
       categories: ["latency"]
@@ -58,7 +58,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml ended_event_once
     scenarios: [SC-e01s03-P2-09]
     risk: P2
-    status: failing
+    status: passing
     allure:
       severity: normal
       categories: ["host"]
@@ -67,7 +67,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml shutdown_kills_children
     scenarios: [SC-e01s03-P0-03]
     risk: P0
-    status: failing
+    status: passing
     allure:
       severity: critical
       categories: ["process control", "clean exit"]
@@ -76,7 +76,7 @@ tasks:
     verify: npm run test -- output-panel
     scenarios: [SC-e01s03-P1-06]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["ui"]
@@ -85,7 +85,7 @@ tasks:
     verify: npm run test -- output-panel-no-input
     scenarios: [SC-e01s03-P1-07]
     risk: P2
-    status: failing
+    status: passing
     allure:
       severity: normal
       categories: ["ui"]
@@ -94,7 +94,7 @@ tasks:
     verify: npm run test -- start-errors
     scenarios: [SC-e01s03-P1-08]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["ui", "error surfaces"]

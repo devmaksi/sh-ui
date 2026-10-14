@@ -2,7 +2,7 @@ story_id: e01s02
 title: Add a script by path and keep it across restarts
 spec: e01s02-add-script.md
 test_plan: specs/tech-architecture/e01-TEST_PLAN_LATEST.md
-status: failing
+status: passing
 bcps: 5
 risk: P0
 verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build

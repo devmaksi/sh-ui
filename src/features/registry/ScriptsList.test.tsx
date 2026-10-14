@@ -28,6 +28,22 @@ describe("ScriptsList", () => {
     expect(screen.getByText("/home/user/deploy.sh")).toBeInTheDocument();
   });
 
+  // scenario: SC-e01s03-P0-M3
+  it("asks to start the entry the user selected", async () => {
+    const onStart = vi.fn();
+
+    render(
+      <ScriptsList
+        entries={[{ id: "a1", path: "/home/user/build.sh" }]}
+        onStart={onStart}
+      />,
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: /^start/i }));
+
+    expect(onStart).toHaveBeenCalledWith("a1");
+  });
+
   // scenario: SC-e01s02-P1-08
   it("asks to remove the entry the user selected", async () => {
     const onRemove = vi.fn();

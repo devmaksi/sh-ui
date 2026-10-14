@@ -54,6 +54,28 @@ decisions:
   what: Scaffolding uses create-tauri-app with the React + TypeScript template.
   why: The official template carries Linux build wiring a hand-built config would
     get wrong.
+- id: DEC-07
+  what: Every run is spawned as a process-group leader with setsid, and stopping a run
+    is killpg SIGTERM then SIGKILL after a two second grace.
+  why: One call must reach every descendant of a script that forks. Walking /proc races
+    with re-parenting.
+  ref: specs/adr/0002-run-supervision-and-output-caps.md
+- id: DEC-08
+  what: The host executes the registered file directly. A file without the execute bit
+    is refused with NotExecutable.
+  why: Running sh <path> would execute something other than the file the user registered
+    and would remove NotExecutable from the contract.
+  ref: specs/adr/0002-run-supervision-and-output-caps.md
+- id: DEC-09
+  what: Output is capped at 8 KiB per event on the host and 2000 lines in the UI ring
+    buffer, with dropped lines counted on screen.
+  why: A fast-printing script must not grow the webview until the app stops responding.
+  ref: specs/adr/0002-run-supervision-and-output-caps.md
+- id: DEC-10
+  what: A run starts in the directory that holds the script.
+  why: Scripts read their sibling files by relative path. Inheriting the host CWD made
+    the same script behave differently under cargo test and under npm run dev.
+  ref: specs/adr/0002-run-supervision-and-output-caps.md
 deviations:
 - id: DEV-01
   what: Repository root commit bdbad15 landed directly on main during seed-conventions.
@@ -81,8 +103,9 @@ test_plans:
   e01: specs/tech-architecture/e01-TEST_PLAN_LATEST.md
 known_findings:
   - 'check-blind-spots: 3 MEDIUM sc-gap for e01s01-e01s03 — expected, no test files exist yet. They clear when SC tags land in test code.'
+  - 'ETXTBSY flake in cargo test: a script held open for writing cannot be exec'd. Source of the transient write handle is not traced. The host now retries 8 times at 25 ms and reports spawnFailed with the OS reason.'
 handoff:
-  last_step_completed: 'e01s02 UAT confirmed by the user; story done; landing to main'
+  last_step_completed: 'e01 complete — e01s01, e01s02, e01s03 all done and landed to main; user confirmed manual UAT for live output and clean shutdown'
   open_decisions_from: open_decisions
   required_reading:
   - AGENTS.md
@@ -90,8 +113,11 @@ handoff:
   - specs/product/SCOPE_LATEST.yaml
   - specs/release-plan.yaml
   - specs/adr/0001-tauri-shell-with-rust-host.md
-  - specs/epics/e01-run-and-watch/epic.yaml
-  next_skill: kickoff-branch
+  - specs/adr/0002-run-supervision-and-output-caps.md
+  - specs/epics/archive/e01-run-and-watch/epic.yaml
+  - specs/epics/e03-process-cost/epic.yaml
+  next_skill: plan-work
+  next_target: 'e03s01 live CPU and RAM. Close the two open decisions first: metric source (/proc by hand or a crate) and GPU probe order.'
 metrics:
   skill_timings:
     plan-work:

@@ -3,7 +3,7 @@ title: Run a script and watch it
 capsule_dir: epics/e01-run-and-watch
 wsjf: 1.23
 total_bcps: 18
-status: in_progress
+status: done
 delta: ADDED
 stories:
   - id: e01s01
@@ -18,12 +18,16 @@ stories:
     title: Add a script by path and keep it across restarts
     bcps: 5
     risk: P0
+    status: passing
+    verified: specs/verifications/e01s02-verify.md
     spec: e01s02-add-script.md
     tasks_file: e01s02-tasks.yaml
   - id: e01s03
     title: Start a script and read its live output
     bcps: 8
     risk: P0
+    status: passing
+    verified: specs/verifications/e01s03-verify.md
     spec: e01s03-live-output.md
     tasks_file: e01s03-tasks.yaml
 tracer_bullet: e01s01 → e01s02 → e01s03
