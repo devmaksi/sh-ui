@@ -12,7 +12,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml registry_persistence
     scenarios: [SC-e01s02-P0-06]
     risk: P0
-    status: failing
+    status: passing
     allure:
       severity: critical
       categories: ["host", "persistence"]
@@ -21,7 +21,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml registry_add
     scenarios: [SC-e01s02-P0-01]
     risk: P0
-    status: failing
+    status: passing
     allure:
       severity: critical
       categories: ["host"]
@@ -31,7 +31,7 @@ tasks:
     scenarios: [SC-e01s02-P0-02, SC-e01s02-P0-03, SC-e01s02-P0-04, SC-e01s02-P0-05]
     risk: P0
     security: medium
-    status: failing
+    status: passing
     allure:
       severity: critical
       categories: ["host", "Security Review"]
@@ -40,7 +40,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml registry_corrupt_file
     scenarios: [SC-e01s02-P1-07]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["persistence", "error surfaces"]
@@ -49,7 +49,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml registry_remove
     scenarios: [SC-e01s02-P1-08]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["host"]
@@ -58,7 +58,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml registry_survives_reload
     scenarios: [SC-e01s02-P0-06]
     risk: P0
-    status: failing
+    status: passing
     allure:
       severity: critical
       categories: ["persistence"]
@@ -67,7 +67,7 @@ tasks:
     verify: npm run test -- registry-form
     scenarios: [SC-e01s02-P2-10]
     risk: P2
-    status: failing
+    status: passing
     allure:
       severity: normal
       categories: ["ui"]
@@ -76,7 +76,7 @@ tasks:
     verify: npm run test -- registry-errors
     scenarios: [SC-e01s02-P1-09]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["ui", "error surfaces"]

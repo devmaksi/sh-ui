@@ -6,6 +6,10 @@ session:
   phase: build
   active_epic: e01
   active_story: e01s01
+active_epic_id: e01
+git:
+  branch: feat/e01s02-script-registry
+  head: d10b2e5
 active_flow:
   current_skill: release-branch
   next_skill: kickoff-branch
@@ -78,7 +82,7 @@ test_plans:
 known_findings:
   - 'check-blind-spots: 3 MEDIUM sc-gap for e01s01-e01s03 — expected, no test files exist yet. They clear when SC tags land in test code.'
 handoff:
-  last_step_completed: 'e01s01 UAT confirmed by the user; story passing; landing to main'
+  last_step_completed: 'e01s02 UAT confirmed by the user; story done; landing to main'
   open_decisions_from: open_decisions
   required_reading:
   - AGENTS.md

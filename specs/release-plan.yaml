@@ -1,5 +1,6 @@
 release:
-  version: "0.1.0"          # mirror label only — semantic-release owns the real number
+  # Mirror label only. semantic-release owns the real number.
+  version: "0.1.0"
   codename: "See what your scripts cost"
   status: planning
   semantic_release: true
@@ -8,20 +9,24 @@ release:
 epics:
   - id: e01
     title: Run a script and watch it
-    wsjf: 1.23              # (BV 8 + TC 8 + RR 0) / job size 13 — tracer bullet through every layer
+    # (BV 8 + TC 8 + RR 0) / job size 13 — tracer bullet through every layer
+  wsjf: 1.23
     capsule_dir: epics/e01-run-and-watch
     note: Delivers the thinnest end-to-end path. Nothing else ships before this proves the seam works.
   - id: e03
     title: What the script costs
-    wsjf: 1.08              # (BV 9 + TC 4 + RR 1) / job size 13 — the differentiator of the product
+    # (BV 9 + TC 4 + RR 1) / job size 13 — the differentiator of the product
+  wsjf: 1.08
     capsule_dir: epics/e03-process-cost
   - id: e04
     title: GPU and VRAM, honestly
-    wsjf: 1.00              # (BV 6 + TC 2 + RR 0) / job size 8
+    # (BV 6 + TC 2 + RR 0) / job size 8
+  wsjf: 1.00
     capsule_dir: epics/e04-gpu-visibility
   - id: e02
     title: Configure and control the run
-    wsjf: 0.71              # (BV 8 + TC 7 + RR 0) / job size 21 — table stakes, but the largest job
+    # (BV 8 + TC 7 + RR 0) / job size 21 — table stakes, but the largest job
+  wsjf: 0.71
     capsule_dir: epics/e02-configure-and-control
 
 scope_mapping:

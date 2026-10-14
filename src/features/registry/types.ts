@@ -7,3 +7,17 @@ export interface ScriptEntry {
 export interface RegistryList {
   entries: ScriptEntry[];
 }
+
+/** Mirrors `RegistryError::kind` in src-tauri/src/registry.rs. */
+export type RegistryErrorKind =
+  | "notFound"
+  | "notAFile"
+  | "notShellScript"
+  | "notReadable"
+  | "corrupt"
+  | "io";
+
+export interface RegistryFailure {
+  kind: RegistryErrorKind;
+  detail: string;
+}

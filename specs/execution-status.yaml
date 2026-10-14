@@ -1,7 +1,7 @@
 development_status:
-  e01: backlog
-  e01s01: backlog
-  e01s02: backlog
+  e01: in_progress
+  e01s01: done
+  e01s02: done
   e01s03: backlog
   e02: backlog
   e02s01: backlog
@@ -17,7 +17,7 @@ development_status:
 
 epics:
   e01:
-    status: backlog
+    status: in_progress
     title: Run a script and watch it
     wsjf: 1.23
     total_bcps: 18
@@ -39,7 +39,7 @@ epics:
 
 stories:
   e01s01:
-    status: backlog
+    status: done
     title: App shell shows the script list
     bcps: 5
     epic: e01
@@ -48,13 +48,13 @@ stories:
     tasks_failing: 0
     risk_max: P0
   e01s02:
-    status: backlog
+    status: done
     title: Add a script by path and keep it across restarts
     bcps: 5
     epic: e01
     tasks_total: 8
-    tasks_passing: 0
-    tasks_failing: 8
+    tasks_passing: 8
+    tasks_failing: 0
     risk_max: P0
     security_max: medium
   e01s03:

@@ -11,7 +11,9 @@
     "tauri": "tauri",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint . && tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit",
+    "lint": "eslint . && tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit && cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings",
+    "dashboard": "bash tools/dashboard.sh start",
+    "dashboard:stop": "bash tools/dashboard.sh stop",
     "preflight": "npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build"
   },
   "dependencies": {
@@ -24,8 +26,10 @@
     "@eslint/js": "^10.0.1",
     "@tailwindcss/vite": "^4.3.3",
     "@tauri-apps/cli": "^2",
+    "@tauri-apps/plugin-dialog": "^2.8.2",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
     "@types/node": "^26.6.5",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",

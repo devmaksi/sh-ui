@@ -45,6 +45,8 @@ Stack: TypeScript / React + Vite / Tauri (Rust host) / Node 22 / Tailwind CSS / 
 | Lint | `npm run lint && cargo clippy --manifest-path src-tauri/Cargo.toml -- -D warnings` |
 | Preflight | `npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build` |
 | Land | `bash scripts/land-branch.sh <branch> "<conventional message>"` |
+| Dashboard | `npm run dashboard` → http://localhost:7742 |
+| Dashboard stop | `npm run dashboard:stop` |
 
 ## Test
 

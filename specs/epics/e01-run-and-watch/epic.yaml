@@ -3,13 +3,15 @@ title: Run a script and watch it
 capsule_dir: epics/e01-run-and-watch
 wsjf: 1.23
 total_bcps: 18
-status: planned
+status: in_progress
 delta: ADDED
 stories:
   - id: e01s01
     title: App shell shows the script list
     bcps: 5
     risk: P0
+    status: passing
+    verified: specs/verifications/e01s01-verify.md
     spec: e01s01-app-shell.md
     tasks_file: e01s01-tasks.yaml
   - id: e01s02

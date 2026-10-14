@@ -24,3 +24,11 @@ bugs:
     summary: run-verification-gates.sh runs the bigpowers self-test in a consumer project and reports 25 false failures
     status: logged
     file: specs/bugs/BUG-20260814-03-golden-gates-not-portable.md
+  - bug_id: BUG-20260814-04
+    date: 2026-08-14
+    severity: low
+    priority: P2
+    scope: bigpowers dashboard (upstream)
+    summary: dashboard web client 404s because dashboard/node_modules is missing and express resolves to v5
+    status: resolved locally
+    file: specs/bugs/BUG-20260814-04-dashboard-web-client-404.md
