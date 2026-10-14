@@ -70,11 +70,16 @@ Tailwind, Vitest config.
 
 ## 13. Test strategy
 
+Scenarios come from `specs/tech-architecture/e01-TEST_PLAN_LATEST.md`.
+
 | Scenario ID | Level | Asserts |
 |---|---|---|
-| SC-e01s01-P0-01 | Rust unit | `list_scripts` returns an empty registry, not an error |
-| SC-e01s01-P0-02 | UI unit | The list renders the empty state when entries are empty |
-| SC-e01s01-P1-03 | Build gate | `npm run preflight` exits 0 |
+| SC-e01s01-P0-01 | U-R | `list_scripts` returns an empty registry, not an error |
+| SC-e01s01-P0-02 | U-T | The list renders the empty state when entries are empty |
+| SC-e01s01-P1-03 | C | The Rust payload and the TypeScript type describe the same shape |
+| SC-e01s01-P1-04 | G | `npm run preflight` exits 0 |
+| SC-e01s01-P2-05 | G | The Linux release build links successfully |
+| SC-e01s01-P0-M1 | M | A human opens the app and sees the empty registry |
 
 Test files carry `// scenario: SC-…` and `// story: e01s01` comments.
 
@@ -99,12 +104,14 @@ Adding scripts, running scripts, output display, metrics, and window chrome poli
 ## 17. Acceptance criteria
 
 ```gherkin
+# SC-e01s01-P0-M1
 Scenario: First launch with no scripts
   Given the application has just been built
   When the user opens it
   Then the window renders
   And the registry area shows an empty state
 
+# SC-e01s01-P1-04
 Scenario: Preflight covers both languages
   Given a clean checkout
   When the user runs npm run preflight
@@ -112,6 +119,12 @@ Scenario: Preflight covers both languages
   And Vitest passes
   And cargo test passes
   And the build passes
+
+# SC-e01s01-P1-03
+Scenario: The payload shape agrees on both sides of the seam
+  Given the shared contract fixture
+  When the Rust model is serialised and the TypeScript parser reads the same file
+  Then both accept it without error
 ```
 
 ## 18. Dependencies and prior art

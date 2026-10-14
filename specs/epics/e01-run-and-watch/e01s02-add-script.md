@@ -75,12 +75,21 @@ commands. `src/features/registry/` — add form, remove action, error band.
 
 ## 13. Test strategy
 
+Scenarios come from `specs/tech-architecture/e01-TEST_PLAN_LATEST.md`.
+
 | Scenario ID | Level | Asserts |
 |---|---|---|
-| SC-e01s02-P0-01 | Rust unit | A valid `.sh` path is accepted and persisted |
-| SC-e01s02-P0-02 | Rust unit | A directory, a missing file, and a non-`.sh` file are each rejected with the right error |
-| SC-e01s02-P0-03 | Rust unit | Load after save returns identical entries |
-| SC-e01s02-P1-04 | UI unit | The form shows the specific error text for each error variant |
+| SC-e01s02-P0-01 | U-R | A valid `.sh` path is accepted, stored, and keeps its id |
+| SC-e01s02-P0-02 | U-R | A directory is rejected as `NotAFile` |
+| SC-e01s02-P0-03 | U-R | A missing path is rejected as `NotFound` |
+| SC-e01s02-P0-04 | U-R | A non-`.sh` file is rejected as `NotShellScript` |
+| SC-e01s02-P0-05 | U-R | An unreadable file is rejected as `NotReadable` |
+| SC-e01s02-P0-06 | U-R | Save then load returns identical entries, ids included |
+| SC-e01s02-P1-07 | U-R | A corrupt registry file yields a named error, never a silent empty registry |
+| SC-e01s02-P1-08 | U-R | Remove deletes the target entry and leaves the others |
+| SC-e01s02-P1-09 | U-T | Each error variant renders its own message in the UI |
+| SC-e01s02-P2-10 | U-T | The dialog path lands in the form field and stays editable |
+| SC-e01s02-P0-M2 | M | A human adds a real script, restarts, and still sees it |
 
 ## 14. Verification Script
 
@@ -105,22 +114,39 @@ scripts, and any watcher that notices a file changed on disk.
 ## 17. Acceptance criteria
 
 ```gherkin
+# SC-e01s02-P0-01, SC-e01s02-P0-M2
 Scenario: Register a script
   Given the application is open with an empty registry
   When the user selects an existing readable .sh file
   Then the entry appears in the list
   And the entry is present after the app restarts
 
-Scenario: Reject a path that is not a script
-  Given the user types the path of a directory
+# SC-e01s02-P0-02, SC-e01s02-P0-03, SC-e01s02-P0-04, SC-e01s02-P0-05
+Scenario Outline: Reject a path the host cannot run
+  Given the user types <path>
   When the user confirms the add
-  Then the host rejects it with the NotAFile error
+  Then the host rejects it with <error>
   And the UI names the problem in plain words
 
+  Examples:
+    | path              | error           |
+    | a directory       | NotAFile        |
+    | a missing file    | NotFound        |
+    | a .txt file       | NotShellScript  |
+    | an unreadable file| NotReadable     |
+
+# SC-e01s02-P1-08
 Scenario: Remove an entry
   Given the registry holds two entries
   When the user removes one
   Then only that entry disappears
+
+# SC-e01s02-P1-07
+Scenario: A damaged registry says so
+  Given the registry file cannot be parsed
+  When the host loads it
+  Then the host reports a named persistence error
+  And the UI never shows an empty registry as if it were valid
 ```
 
 ## 18. Dependencies and prior art

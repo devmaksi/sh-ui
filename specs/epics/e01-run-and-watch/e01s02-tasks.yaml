@@ -1,6 +1,7 @@
 story_id: e01s02
 title: Add a script by path and keep it across restarts
 spec: e01s02-add-script.md
+test_plan: specs/tech-architecture/e01-TEST_PLAN_LATEST.md
 status: failing
 bcps: 5
 risk: P0
@@ -9,57 +10,73 @@ tasks:
   - id: 1
     description: Add the registry entry model with JSON load and atomic save in Rust.
     verify: cargo test --manifest-path src-tauri/Cargo.toml registry_persistence
+    scenarios: [SC-e01s02-P0-06]
     risk: P0
     status: failing
     allure:
       severity: critical
-      categories:
-        - "host"
-        - "persistence"
+      categories: ["host", "persistence"]
   - id: 2
-    description: Add the add_script command with path validation.
+    description: Add the add_script command that accepts a valid readable .sh path.
     verify: cargo test --manifest-path src-tauri/Cargo.toml registry_add
+    scenarios: [SC-e01s02-P0-01]
     risk: P0
     status: failing
     allure:
       severity: critical
-      categories:
-        - "host"
-        - "Security Review"
+      categories: ["host"]
   - id: 3
-    description: Add the remove_script command by entry id.
-    verify: cargo test --manifest-path src-tauri/Cargo.toml registry_remove
+    description: Reject a directory, a missing path, a non-.sh file, and an unreadable file with distinct errors.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml registry_rejects
+    scenarios: [SC-e01s02-P0-02, SC-e01s02-P0-03, SC-e01s02-P0-04, SC-e01s02-P0-05]
+    risk: P0
+    security: medium
+    status: failing
+    allure:
+      severity: critical
+      categories: ["host", "Security Review"]
+  - id: 4
+    description: Report a corrupt registry file as a named persistence error instead of an empty registry.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml registry_corrupt_file
+    scenarios: [SC-e01s02-P1-07]
     risk: P1
     status: failing
     allure:
       severity: high
-      categories:
-        - "host"
-  - id: 4
-    description: Add the native file dialog and path field to the add form.
+      categories: ["persistence", "error surfaces"]
+  - id: 5
+    description: Add the remove_script command by entry id.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml registry_remove
+    scenarios: [SC-e01s02-P1-08]
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories: ["host"]
+  - id: 6
+    description: Prove a write and reload cycle keeps entries and ids identical.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml registry_survives_reload
+    scenarios: [SC-e01s02-P0-06]
+    risk: P0
+    status: failing
+    allure:
+      severity: critical
+      categories: ["persistence"]
+  - id: 7
+    description: Add the native file dialog and the editable path field to the add form.
     verify: npm run test -- registry-form
+    scenarios: [SC-e01s02-P2-10]
     risk: P2
     status: failing
     allure:
       severity: normal
-      categories:
-        - "ui"
-  - id: 5
-    description: Render every RegistryError variant as a distinct message.
+      categories: ["ui"]
+  - id: 8
+    description: Render every RegistryError variant as its own message.
     verify: npm run test -- registry-errors
+    scenarios: [SC-e01s02-P1-09]
     risk: P1
     status: failing
     allure:
       severity: high
-      categories:
-        - "ui"
-        - "error surfaces"
-  - id: 6
-    description: Prove a write and reload cycle keeps entries identical.
-    verify: cargo test --manifest-path src-tauri/Cargo.toml registry_survives_reload
-    risk: P0
-    status: failing
-    allure:
-      severity: critical
-      categories:
-        - "persistence"
+      categories: ["ui", "error surfaces"]

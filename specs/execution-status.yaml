@@ -43,27 +43,28 @@ stories:
     title: App shell shows the script list
     bcps: 5
     epic: e01
-    tasks_total: 5
+    tasks_total: 6
     tasks_passing: 0
-    tasks_failing: 5
+    tasks_failing: 6
     risk_max: P0
   e01s02:
     status: backlog
     title: Add a script by path and keep it across restarts
     bcps: 5
     epic: e01
-    tasks_total: 6
+    tasks_total: 8
     tasks_passing: 0
-    tasks_failing: 6
+    tasks_failing: 8
     risk_max: P0
+    security_max: medium
   e01s03:
     status: backlog
     title: Start a script and read its live output
     bcps: 8
     epic: e01
-    tasks_total: 7
+    tasks_total: 10
     tasks_passing: 0
-    tasks_failing: 7
+    tasks_failing: 10
     risk_max: P0
     security_max: high
   e02s01:

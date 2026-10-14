@@ -7,7 +7,7 @@ session:
   active_epic: e01
   active_story: null
 active_flow:
-  current_skill: plan-work
+  current_skill: plan-tests
   next_skill: kickoff-branch
 scope:
   file: specs/product/SCOPE_LATEST.yaml
@@ -66,9 +66,12 @@ planning_coverage:
   - e02
   - e03
   - e04
+test_plans:
+  e01: specs/tech-architecture/e01-TEST_PLAN_LATEST.md
+known_findings:
+  - 'check-blind-spots: 3 MEDIUM sc-gap for e01s01-e01s03 — expected, no test files exist yet. They clear when SC tags land in test code.'
 handoff:
-  last_step_completed: 'plan-work: e01 capsule has 3 story specs of 20 sections and
-    18 tasks with verify commands; plan-consistency-check PASS'
+  last_step_completed: 'plan-tests: e01 test design published — 28 scenarios, 5 NFR commands, fixture plan; plan-consistency-check PASS'
   open_decisions_from: open_decisions
   required_reading:
   - AGENTS.md

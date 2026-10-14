@@ -1,0 +1,33 @@
+{
+  "generated_at": "2026-10-14T08:21:58.102057+00:00",
+  "version": "1.0",
+  "summary": {
+    "total_findings": 3,
+    "high": 0,
+    "medium": 3,
+    "low": 0
+  },
+  "findings": [
+    {
+      "check": "sc-gap",
+      "story_id": "e01s01",
+      "severity": "MEDIUM",
+      "description": "P0 story e01s01 has a TEST_PLAN but no `scenario: SC-e01s01-P0-*` tags found in its implementing files",
+      "remediation": "Add `// scenario: SC-e01s01-P0-XX` tags to the test files for this story"
+    },
+    {
+      "check": "sc-gap",
+      "story_id": "e01s02",
+      "severity": "MEDIUM",
+      "description": "P0 story e01s02 has a TEST_PLAN but no `scenario: SC-e01s02-P0-*` tags found in its implementing files",
+      "remediation": "Add `// scenario: SC-e01s02-P0-XX` tags to the test files for this story"
+    },
+    {
+      "check": "sc-gap",
+      "story_id": "e01s03",
+      "severity": "MEDIUM",
+      "description": "P0 story e01s03 has a TEST_PLAN but no `scenario: SC-e01s03-P0-*` tags found in its implementing files",
+      "remediation": "Add `// scenario: SC-e01s03-P0-XX` tags to the test files for this story"
+    }
+  ]
+}

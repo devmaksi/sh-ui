@@ -77,13 +77,21 @@ Host events: `run://started { run_id, entry_id, pid }`, `run://output { run_id, 
 
 ## 13. Test strategy
 
+Scenarios come from `specs/tech-architecture/e01-TEST_PLAN_LATEST.md`.
+
 | Scenario ID | Level | Asserts |
 |---|---|---|
-| SC-e01s03-P0-01 | Rust unit | A spawned run appears in the supervisor with its pid |
-| SC-e01s03-P0-02 | Rust unit | Output written by the script arrives tagged with its stream |
-| SC-e01s03-P0-03 | Rust unit | No child process remains after host shutdown |
-| SC-e01s03-P1-04 | UI unit | The panel appends chunks in arrival order and marks stderr distinctly |
-| SC-e01s03-P1-05 | UI unit | The panel renders no text input and no send control |
+| SC-e01s03-P0-01 | U-R | A spawned run appears in the supervisor with its pid |
+| SC-e01s03-P0-02 | U-R | Output arrives tagged with its stream |
+| SC-e01s03-P0-03 | U-R | No child process remains after host shutdown |
+| SC-e01s03-P0-04 | U-R | A path with shell metacharacters is passed as one literal argument |
+| SC-e01s03-P0-06 | U-R | The first output chunk arrives within 1000 ms of spawn |
+| SC-e01s03-P1-05 | U-R | A burst of output respects the chunk cap |
+| SC-e01s03-P1-06 | U-T | The panel appends in arrival order and marks stderr distinctly |
+| SC-e01s03-P1-07 | U-T | The panel renders no text input and no send control |
+| SC-e01s03-P1-08 | U-T | Each `StartError` variant renders its own message with the entry path |
+| SC-e01s03-P2-09 | U-R | A normally exiting script produces exactly one ended event |
+| SC-e01s03-P0-M3 | M | A human runs a looping script, reads output, closes the app, finds no orphan |
 
 ## 14. Verification Script
 
@@ -110,21 +118,36 @@ search, and log files on disk.
 ## 17. Acceptance criteria
 
 ```gherkin
+# SC-e01s03-P0-06, SC-e01s03-P0-M3
 Scenario: Start a script and watch it
   Given a registered script that prints once per second
   When the user presses start
   Then output appears within one second
   And output keeps appearing while the script runs
 
+# SC-e01s03-P1-07
 Scenario: Output is read only
   Given a run is live
   When the user looks at the output panel
   Then no input control exists
 
+# SC-e01s03-P0-03
 Scenario: Closing the app stops the script
   Given a run is live
   When the user closes the application
   Then no process from that run remains running
+
+# SC-e01s03-P0-04
+Scenario: Registry data is never interpreted by a shell
+  Given a registered path whose name contains $, backticks, a semicolon, and a space
+  When the host starts it
+  Then the name reaches the process as one literal argument
+
+# SC-e01s03-P1-08
+Scenario: A failed start explains itself
+  Given an entry whose file is not executable
+  When the user presses start
+  Then the UI shows the NotExecutable message with the entry path
 ```
 
 ## 18. Dependencies and prior art

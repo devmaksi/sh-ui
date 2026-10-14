@@ -1,6 +1,7 @@
 story_id: e01s01
 title: App shell shows the script list
 spec: e01s01-app-shell.md
+test_plan: specs/tech-architecture/e01-TEST_PLAN_LATEST.md
 status: failing
 bcps: 5
 risk: P0
@@ -9,47 +10,54 @@ tasks:
   - id: 1
     description: Scaffold the app with create-tauri-app using the React + TypeScript template.
     verify: npm run build && cargo build --manifest-path src-tauri/Cargo.toml
+    scenarios: [SC-e01s01-P2-05]
     risk: P0
     status: failing
     allure:
       severity: critical
-      categories:
-        - "infra"
-        - "build gate"
+      categories: ["infra", "build gate"]
   - id: 2
     description: Add npm scripts for dev, build, test, lint, tauri, and preflight matching AGENTS.md.
-    verify: npm run lint && npm run test
+    verify: npm run preflight
+    scenarios: [SC-e01s01-P1-04]
     risk: P1
     status: failing
     allure:
       severity: high
-      categories:
-        - "infra"
+      categories: ["infra", "build gate"]
   - id: 3
     description: Add the Rust registry module with an empty list and the list_scripts command.
     verify: cargo test --manifest-path src-tauri/Cargo.toml list_scripts
+    scenarios: [SC-e01s01-P0-01]
     risk: P0
     status: failing
     allure:
       severity: critical
-      categories:
-        - "host"
-        - "IPC contract"
+      categories: ["host", "IPC contract"]
   - id: 4
     description: Render the registry list with an explicit empty state.
     verify: npm run test -- scripts-list
+    scenarios: [SC-e01s01-P0-02]
     risk: P1
     status: failing
     allure:
       severity: high
-      categories:
-        - "ui"
+      categories: ["ui"]
   - id: 5
-    description: Wire the preflight chain across both languages.
-    verify: npm run preflight
+    description: Add the shared contract fixture and assert the Rust payload matches the TypeScript type.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml contract_registry_list
+    scenarios: [SC-e01s01-P1-03]
     risk: P1
     status: failing
     allure:
       severity: high
-      categories:
-        - "build gate"
+      categories: ["IPC contract"]
+  - id: 6
+    description: Prove the Linux release target links.
+    verify: cargo build --release --manifest-path src-tauri/Cargo.toml
+    scenarios: [SC-e01s01-P2-05]
+    risk: P2
+    status: failing
+    allure:
+      severity: normal
+      categories: ["build gate"]
