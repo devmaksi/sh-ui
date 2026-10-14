@@ -1,6 +1,6 @@
 id: e01
 title: Run a script and watch it
-capsule_dir: epics/e01-run-and-watch
+capsule_dir: epics/archive/e01-run-and-watch
 wsjf: 1.23
 total_bcps: 18
 status: done

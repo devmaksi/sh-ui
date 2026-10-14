@@ -32,3 +32,11 @@ bugs:
     summary: dashboard web client 404s because dashboard/node_modules is missing and express resolves to v5
     status: resolved locally
     file: specs/bugs/BUG-20260814-04-dashboard-web-client-404.md
+  - bug_id: BUG-20260814-05
+    date: 2026-08-14
+    severity: low
+    priority: P2
+    scope: bigpowers scripts (upstream)
+    summary: land-branch.sh never archives a completed epic because the story status grep matches the id twice and yields a multi-line value
+    status: logged
+    file: specs/bugs/BUG-20260814-05-land-branch-never-archives-epic.md
