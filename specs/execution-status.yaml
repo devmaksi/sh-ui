@@ -78,8 +78,8 @@ stories:
     bcps: 4
     epic: e02
     tasks_total: 3
-    tasks_passing: 0
-    tasks_failing: 3
+    tasks_passing: 3
+    tasks_failing: 0
     risk_max: P1
   e02s03:
     status: backlog
@@ -87,8 +87,8 @@ stories:
     bcps: 4
     epic: e02
     tasks_total: 3
-    tasks_passing: 0
-    tasks_failing: 3
+    tasks_passing: 3
+    tasks_failing: 0
     risk_max: P1
   e02s04:
     status: backlog
