@@ -39,8 +39,8 @@ TypeScript type), **G** gate (build or full-chain command), **M** manual UAT.
 | SC-e01s02-P0-M2 | A human adds a real script, restarts, and still sees it | P0 | M | story §14 script |
 | SC-e01s03-P0-M3 | A human starts a looping script, reads output, closes the app, and finds no orphan | P0 | M | story §14 script |
 
-Distribution: 15 Rust unit, 6 TypeScript unit, 1 contract, 2 gates, 3 manual. Nothing sits at
-a higher level than it must.
+Distribution: 16 Rust unit, 6 TypeScript unit, 1 contract, 2 gates, 3 manual. Total 28
+scenarios against 24 tasks. Nothing sits at a higher level than it must.
 
 ## 2. Fixture architecture and isolation
 
