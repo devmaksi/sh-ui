@@ -1,5 +1,5 @@
 // story: e01s03 e03s01
-import type { OutputStream, RunHandle } from "./types";
+import type { OutputStream, ProcessCost, RunHandle } from "./types";
 
 export interface OutputEvent {
   runId: string;
@@ -16,6 +16,7 @@ export interface MetricsEvent {
   runId: string;
   cpuPercent: number;
   ramBytes: number;
+  processes: ProcessCost[];
 }
 
 export type OutputListener = (event: OutputEvent) => void;

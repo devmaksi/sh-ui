@@ -71,13 +71,16 @@ describe("useRuns", () => {
     });
 
     act(() => {
-      host.emitMetrics("run-1", 12.5, 2097152);
-      host.emitMetrics("run-1", 42.5, 1048576);
+      host.emitMetrics("run-1", 12.5, 2097152, []);
+      host.emitMetrics("run-1", 42.5, 1048576, [
+        { pid: 4242, cpuPercent: 42.5, ramBytes: 1048576 },
+      ]);
     });
 
     expect(result.current.runs[0].metrics).toEqual({
       cpuPercent: 42.5,
       ramBytes: 1048576,
+      processes: [{ pid: 4242, cpuPercent: 42.5, ramBytes: 1048576 }],
     });
   });
 

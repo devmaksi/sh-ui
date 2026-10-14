@@ -30,6 +30,10 @@ impl ProcReader for FakeReader {
     fn sample(&self, _pid: u32) -> Option<ProcessSample> {
         self.0.lock().expect("fake reader lock").pop_front()
     }
+
+    fn children(&self, _pid: u32) -> Vec<u32> {
+        Vec::new()
+    }
 }
 
 #[test]
@@ -102,6 +106,10 @@ fn metrics_emits_and_stops_poller_stops_on_finished() {
     impl ProcReader for EndlessReader {
         fn sample(&self, _pid: u32) -> Option<ProcessSample> {
             Some(ProcessSample { cpu_ticks: 10, rss_bytes: 1000 })
+        }
+
+        fn children(&self, _pid: u32) -> Vec<u32> {
+            Vec::new()
         }
     }
 

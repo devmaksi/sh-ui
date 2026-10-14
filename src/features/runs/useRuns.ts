@@ -106,7 +106,11 @@ export function useRuns(host: RunHost) {
           run.handle.runId === event.runId
             ? {
                 ...run,
-                metrics: { cpuPercent: event.cpuPercent, ramBytes: event.ramBytes },
+                metrics: {
+                  cpuPercent: event.cpuPercent,
+                  ramBytes: event.ramBytes,
+                  processes: event.processes,
+                },
               }
             : run,
         ),

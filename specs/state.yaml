@@ -159,3 +159,4 @@ metrics:
       calls: 1
       total_seconds: 387.0
       avg_seconds: 387.0
+      _start: '2026-10-14T18:21:44Z'

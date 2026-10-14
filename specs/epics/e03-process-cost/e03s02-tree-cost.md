@@ -61,9 +61,14 @@ breakdown behind a toggle.
 
 `ProcReader` gains `fn children(&self, pid: u32) -> Vec<u32>` — direct children of one pid.
 `fn tree_pids(reader, root) -> Vec<u32>` walks depth-first. `fn tree_sum(reader, pids,
-prev) -> TreeSnapshot { cpu_percent: f64, ram_bytes: u64 }` reuses the e03s01 percent math
-and the same `METRICS_REFRESH_MS`. `RunEvent::Metrics` payload is unchanged — the numbers it
-carries become tree sums.
+previous, wall_ms, clock)` returns one `TreeSnapshot { cpu_percent: f64, ram_bytes: u64 }`
+plus the new baseline map for the next interval, reusing the e03s01 percent math and the same
+`METRICS_REFRESH`.
+
+`RunEvent::Metrics` gains `processes: Vec<ProcessCost>` — per-pid `cpu_percent` and
+`ram_bytes`, capped at the named constant `BREAKDOWN_MAX_PROCESSES` (64). The headline sum
+always covers the whole tree even when the breakdown is capped. App event:
+`run://metrics { runId, cpuPercent, ramBytes, processes }`.
 
 ## 11. Affected modules
 

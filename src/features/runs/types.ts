@@ -15,10 +15,19 @@ export interface RunHandle {
 
 export type RunState = "running" | "ended";
 
-/** The newest metrics event for a run. Percent is of one core (DEC-12). */
+/** One process inside the run's tree, for the breakdown behind the headline. */
+export interface ProcessCost {
+  pid: number;
+  cpuPercent: number;
+  ramBytes: number;
+}
+
+/** The newest metrics event for a run. Percent is of one core (DEC-12); the headline
+ * sums cover the whole tree, the breakdown is capped by the host. */
 export interface RunMetrics {
   cpuPercent: number;
   ramBytes: number;
+  processes: ProcessCost[];
 }
 
 export interface Run {

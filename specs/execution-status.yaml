@@ -9,7 +9,7 @@ development_status:
   e02s03: backlog
   e02s04: backlog
   e03: planned
-  e03s01: planned
+  e03s01: done
   e03s02: planned
   e04: backlog
   e04s01: backlog
@@ -100,7 +100,7 @@ stories:
     tasks_passing: 0
     tasks_failing: 0
   e03s01:
-    status: built
+    status: done
     title: Live CPU and RAM of the running script
     bcps: 5
     epic: e03
@@ -108,13 +108,13 @@ stories:
     tasks_passing: 5
     tasks_failing: 0
   e03s02:
-    status: planned
+    status: built
     title: One summed figure over the whole process tree
     bcps: 8
     epic: e03
     tasks_total: 5
-    tasks_passing: 0
-    tasks_failing: 5
+    tasks_passing: 4
+    tasks_failing: 1
   e04s01:
     status: backlog
     title: Report GPU and VRAM when the machine can measure them

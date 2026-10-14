@@ -1,6 +1,6 @@
-// story: e03s01
-// scenario: SC-e03s01-P1-02
-use sh_ui_lib::runs::{MetricsPayload, EVENT_METRICS};
+// story: e03s01 e03s02
+// scenario: SC-e03s02-P2-04
+use sh_ui_lib::runs::{MetricsPayload, ProcessCostPayload, EVENT_METRICS};
 
 fn fixture_path() -> std::path::PathBuf {
     std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -18,6 +18,11 @@ fn metrics_event_payload_matches_the_shared_fixture() {
         run_id: "run-1".to_string(),
         cpu_percent: 12.5,
         ram_bytes: 1_048_576,
+        processes: vec![ProcessCostPayload {
+            pid: 4242,
+            cpu_percent: 12.5,
+            ram_bytes: 1_048_576,
+        }],
     };
 
     let produced: serde_json::Value =

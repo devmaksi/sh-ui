@@ -58,6 +58,7 @@ pub enum RunEvent {
         run_id: String,
         cpu_percent: f64,
         ram_bytes: u64,
+        processes: Vec<crate::metrics::ProcessCost>,
     },
 }
 

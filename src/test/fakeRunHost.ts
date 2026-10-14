@@ -6,7 +6,7 @@ import type {
   OutputListener,
   RunHost,
 } from "../features/runs/host";
-import type { RunHandle, StartErrorKind, StartFailure } from "../features/runs/types";
+import type { ProcessCost, RunHandle, StartErrorKind, StartFailure } from "../features/runs/types";
 
 export class FakeRunHost implements RunHost {
   readonly startCalls: string[] = [];
@@ -76,9 +76,14 @@ export class FakeRunHost implements RunHost {
     }
   }
 
-  emitMetrics(runId: string, cpuPercent: number, ramBytes: number): void {
+  emitMetrics(
+    runId: string,
+    cpuPercent: number,
+    ramBytes: number,
+    processes: ProcessCost[],
+  ): void {
     for (const listener of this.metricsListeners) {
-      listener({ runId, cpuPercent, ramBytes });
+      listener({ runId, cpuPercent, ramBytes, processes });
     }
   }
 }

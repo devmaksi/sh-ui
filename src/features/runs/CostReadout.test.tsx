@@ -6,7 +6,7 @@ import { CostReadout } from "./CostReadout";
 
 describe("CostReadout", () => {
   it("shows cpu percent and resident ram from a metrics event", () => {
-    render(<CostReadout metrics={{ cpuPercent: 42.5, ramBytes: 1048576 }} />);
+    render(<CostReadout metrics={{ cpuPercent: 42.5, ramBytes: 1048576, processes: [] }} />);
 
     expect(screen.getByTestId("cost-cpu")).toHaveTextContent("42.5%");
     expect(screen.getByTestId("cost-ram")).toHaveTextContent("1.0 MiB");

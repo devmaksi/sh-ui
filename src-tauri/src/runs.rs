@@ -34,10 +34,19 @@ pub struct EndedPayload {
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
+pub struct ProcessCostPayload {
+    pub pid: u32,
+    pub cpu_percent: f64,
+    pub ram_bytes: u64,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MetricsPayload {
     pub run_id: String,
     pub cpu_percent: f64,
     pub ram_bytes: u64,
+    pub processes: Vec<ProcessCostPayload>,
 }
 
 /// Turns supervisor events into app events. The supervisor itself never sees Tauri.
@@ -89,6 +98,7 @@ impl EventSink for TauriRunSink {
                 run_id,
                 cpu_percent,
                 ram_bytes,
+                processes,
             } => {
                 let _ = self.app.emit(
                     EVENT_METRICS,
@@ -96,6 +106,14 @@ impl EventSink for TauriRunSink {
                         run_id,
                         cpu_percent,
                         ram_bytes,
+                        processes: processes
+                            .into_iter()
+                            .map(|cost| ProcessCostPayload {
+                                pid: cost.pid,
+                                cpu_percent: cost.cpu_percent,
+                                ram_bytes: cost.ram_bytes,
+                            })
+                            .collect(),
                     },
                 );
             }

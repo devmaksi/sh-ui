@@ -8,7 +8,7 @@ import type {
   OutputListener,
   RunHost,
 } from "./host";
-import type { OutputStream, RunHandle, StartFailure } from "./types";
+import type { OutputStream, ProcessCost, RunHandle, StartFailure } from "./types";
 
 interface RunOutputPayload {
   runId: string;
@@ -25,6 +25,7 @@ interface RunMetricsPayload {
   runId: string;
   cpuPercent: number;
   ramBytes: number;
+  processes: ProcessCost[];
 }
 
 function toStartFailure(cause: unknown): StartFailure {
@@ -91,6 +92,7 @@ export const tauriRunHost: RunHost = {
         runId: payload.runId,
         cpuPercent: payload.cpuPercent,
         ramBytes: payload.ramBytes,
+        processes: payload.processes,
       }),
     ),
 };
