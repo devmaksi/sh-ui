@@ -1,23 +1,46 @@
 story_id: e02s01
 title: Arguments, environment, and working directory per script
-# DEC-10 already sets the default working directory to the directory holding the script.
-# This story adds an explicit per-entry override on top of that default.
-status: todo
+spec: e02s01-run-config.md
+# DEC-10 sets the default working directory to the directory holding the script.
+# This story adds an explicit per-entry configuration on top of that default.
+status: failing
 bcps: 6
+risk: P1
+verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
 tasks:
-  - id: t1
-    description: Store per-script run configuration — argv list, environment map, working directory — in the registry entry.
+  - id: 1
+    description: RunConfig (argv list, env map, optional working dir) on ScriptEntry with serde default; registry document accepts versions 1 and 2, writes 2.
     verify: cargo test --manifest-path src-tauri/Cargo.toml run_config_store
-    status: todo
-  - id: t2
-    description: Reject a working directory that does not exist before starting, with a typed error.
-    verify: cargo test --manifest-path src-tauri/Cargo.toml run_config_validates_cwd
-    status: todo
-  - id: t3
-    description: Start the script with its stored argv, environment, and directory. Never build a shell string.
+    scenarios: [SC-e02s01-P1-01]
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories: ["host", "registry", "persistence"]
+  - id: 2
+    description: update_script_config command with Rust-side validation — badWorkingDir for a missing or non-directory path, badEnvVar for a malformed KEY=VALUE line.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml run_config_validates
+    scenarios: [SC-e02s01-P1-02, SC-e02s01-P1-03]
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories: ["host", "IPC contract", "validation"]
+  - id: 3
+    description: Supervisor::start execs with stored argv, env overrides over the inherited environment, and stored cwd (pre-spawn existence check, default = script directory per DEC-10). Never a shell string.
     verify: cargo test --manifest-path src-tauri/Cargo.toml start_uses_config
-    status: todo
-  - id: t4
-    description: Build the edit form for argv, environment variables, and working directory, with validation errors shown inline.
-    verify: npm run test -- run-config-form
-    status: todo
+    scenarios: [SC-e02s01-P1-04]
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories: ["host", "run lifecycle"]
+  - id: 4
+    description: RunConfigForm edit form (args lines, KEY=VALUE lines, working dir field) with inline host errors and an edit affordance in ScriptsList.
+    verify: npm run test -- RunConfigForm
+    scenarios: [SC-e02s01-P2-05]
+    risk: P2
+    status: failing
+    allure:
+      severity: normal
+      categories: ["ui", "registry"]

@@ -1,20 +1,43 @@
 story_id: e02s04
 title: Leave nothing running when the app closes
-status: todo
+spec: e02s04-shutdown-cleanup.md
+# terminate_group and shutdown-on-Exit exist from e01; this story routes shutdown through
+# stop_run and adds the live-group record + crash reap (DEC-07).
+status: failing
 bcps: 4
+risk: P1
+verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
 tasks:
-  - id: t1
-    description: On host shutdown, stop every live run through the same stop path a user trigger uses.
+  - id: 1
+    description: Supervisor::shutdown calls stop_run for every live run; each emits Ended status stopped through the same group-termination path a user press uses.
     verify: cargo test --manifest-path src-tauri/Cargo.toml shutdown_stops_all
-    status: todo
-  - id: t2
-    description: On host start, detect processes left over from a previous crash and reap or report them.
+    scenarios: [SC-e02s04-P1-01]
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories: ["host", "run lifecycle"]
+  - id: 2
+    description: recovery.rs — live group records (pgid, pid, procfs start time) written on spawn, removed on end, cleared on clean shutdown; reap_stale at startup kills only start-time-matched groups and drops mismatched records.
     verify: cargo test --manifest-path src-tauri/Cargo.toml crash_recovery_reaps
-    status: todo
-  - id: t3
-    description: Manual verification that closing the app leaves no orphan.
+    scenarios: [SC-e02s04-P1-02, SC-e02s04-P1-03]
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories: ["host", "recovery"]
+  - id: 3
+    description: Manual verification that closing the app leaves no orphan and a crash-killed host's orphans are reaped on next start.
     verify-script: |
       1. Start two registered scripts that run indefinitely.
       2. Close the app window.
-      3. Run pgrep for both script names.
+      3. Run pgrep -f for both script names.
       4. Confirm neither is running.
+      5. Start one infinite script, kill -9 the app, start the app again.
+      6. Confirm pgrep no longer finds the orphan.
+    scenarios: [SC-e02s04-P1-M1]
+    risk: P2
+    status: failing
+    allure:
+      severity: normal
+      categories: ["manual verification"]

@@ -3,7 +3,7 @@ project: sh-ui
 stack: TypeScript / React + Vite / Tauri (Rust host) / Node 22 / Tailwind CSS / Vitest
 session:
   started: 2026-08-14
-  phase: build
+  phase: plan
   active_epic: e02
   active_story: e02s01
 active_epic_id: e02
@@ -11,8 +11,8 @@ git:
   branch: chore/e03-close
   head: pending
 active_flow:
-  current_skill: develop-tdd
-  next_skill: verify-work
+  current_skill: plan-work
+  next_skill: kickoff-branch
 scope:
   file: specs/product/SCOPE_LATEST.yaml
   epics:
@@ -123,9 +123,9 @@ planning_coverage:
   planned:
   - e01
   - e03
-  awaiting_plan_work:
-  - e02
   - e04
+  - e02
+  awaiting_plan_work: []
 test_plans:
   e01: specs/tech-architecture/e01-TEST_PLAN_LATEST.md
 known_findings:
@@ -138,9 +138,12 @@ known_findings:
   swallowed a parse error (unescaped apostrophe in known_findings) and dumped an empty
   skeleton. Restored from git. See specs/bugs/BUG-20260814-06-bp-timing-overwrites-unparseable-state.md'
 handoff:
-  last_step_completed: epic e04 done — e04s01 landed 7fca6c5, e04s02 landed, manual UAT
-    confirmed; capsule archived to specs/epics/archive/e04-gpu-visibility (manual git mv
-    per BUG-20260814-05). Release order e01, e03, e04 complete; e02 remains.
+  last_step_completed: plan-work for epic e02 done — four story specs written
+    (e02s01-run-config, e02s02-stop-run, e02s03-end-state, e02s04-shutdown-cleanup),
+    all four tasks.yaml rewritten with risk/scenarios/allure and status failing;
+    plan-consistency-check PASS (CRITICAL=0 HIGH=0 MED=0). Decisions Q1/Q2/Q3 all A —
+    line-based argv and env fields, five honest run states, reap stale groups on
+    start with a start-time match guard.
   open_decisions_from: []
   required_reading:
   - AGENTS.md
@@ -153,15 +156,22 @@ handoff:
   - specs/epics/archive/e04-gpu-visibility/epic.yaml
   - specs/epics/e02-configure-and-control/epic.yaml
   - specs/epics/e02-configure-and-control/e02s01-tasks.yaml
-  next_skill: plan-work
-  next_target: plan-work for epic e02 (configure and control the run) — four sliced stories,
-    no detailed tasks yet
+  - specs/epics/e02-configure-and-control/e02s01-run-config.md
+  - specs/epics/e02-configure-and-control/e02s02-tasks.yaml
+  - specs/epics/e02-configure-and-control/e02s02-stop-run.md
+  - specs/epics/e02-configure-and-control/e02s03-tasks.yaml
+  - specs/epics/e02-configure-and-control/e02s03-end-state.md
+  - specs/epics/e02-configure-and-control/e02s04-tasks.yaml
+  - specs/epics/e02-configure-and-control/e02s04-shutdown-cleanup.md
+  next_skill: kickoff-branch
+  next_target: kickoff-branch then develop-tdd on e02s01 (arguments, environment,
+    and working directory per script)
 metrics:
   skill_timings:
     plan-work:
-      calls: 2
-      total_seconds: 228.0
-      avg_seconds: 114.0
+      calls: 3
+      total_seconds: 645.0
+      avg_seconds: 215.0
     develop-tdd:
       calls: 4
       total_seconds: 2137.0

@@ -19,22 +19,18 @@ epics:
   e01:
     status: done
     title: Run a script and watch it
-    wsjf: 1.23
     total_bcps: 18
   e02:
     status: backlog
     title: Configure and control the run
-    wsjf: 0.71
     total_bcps: 18
   e03:
     status: done
     title: What the script costs
-    wsjf: 1.08
     total_bcps: 13
   e04:
     status: done
     title: 'GPU and VRAM, honestly'
-    wsjf: 1.0
     total_bcps: 8
 
 stories:
@@ -74,7 +70,8 @@ stories:
     epic: e02
     tasks_total: 4
     tasks_passing: 0
-    tasks_failing: 0
+    tasks_failing: 4
+    risk_max: P1
   e02s02:
     status: backlog
     title: Stop a running script
@@ -82,7 +79,8 @@ stories:
     epic: e02
     tasks_total: 3
     tasks_passing: 0
-    tasks_failing: 0
+    tasks_failing: 3
+    risk_max: P1
   e02s03:
     status: backlog
     title: Show how the run ended
@@ -90,7 +88,8 @@ stories:
     epic: e02
     tasks_total: 3
     tasks_passing: 0
-    tasks_failing: 0
+    tasks_failing: 3
+    risk_max: P1
   e02s04:
     status: backlog
     title: Leave nothing running when the app closes
@@ -98,7 +97,8 @@ stories:
     epic: e02
     tasks_total: 3
     tasks_passing: 0
-    tasks_failing: 0
+    tasks_failing: 3
+    risk_max: P1
   e03s01:
     status: done
     title: Live CPU and RAM of the running script
@@ -107,14 +107,16 @@ stories:
     tasks_total: 5
     tasks_passing: 5
     tasks_failing: 0
+    risk_max: P1
   e03s02:
     status: done
     title: One summed figure over the whole process tree
     bcps: 8
     epic: e03
     tasks_total: 5
-    tasks_passing: 5
-    tasks_failing: 0
+    tasks_passing: 4
+    tasks_failing: 1
+    risk_max: P1
   e04s01:
     status: done
     title: Report GPU and VRAM when the machine can measure them
@@ -123,11 +125,13 @@ stories:
     tasks_total: 4
     tasks_passing: 4
     tasks_failing: 0
+    risk_max: P1
   e04s02:
     status: done
     title: Say what cannot be measured
     bcps: 3
     epic: e04
     tasks_total: 3
-    tasks_passing: 3
-    tasks_failing: 0
+    tasks_passing: 2
+    tasks_failing: 1
+    risk_max: P0

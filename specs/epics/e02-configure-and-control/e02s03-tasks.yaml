@@ -1,17 +1,37 @@
 story_id: e02s03
 title: Show how the run ended
-status: todo
+spec: e02s03-end-state.md
+# Completion discipline (Ended after reader drain) exists from e01s03; the poller's
+# finished flag from e03s01. This story adds the derived end status and the five UI states.
+status: failing
 bcps: 4
+risk: P1
+verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
 tasks:
-  - id: t1
-    description: Record the exit state — exited, failed, or stopped — with the exit code, on the run record.
+  - id: 1
+    description: RunStatus derivation in watch_exit (exited/failed/stopped) and status field on the Ended payload.
     verify: cargo test --manifest-path src-tauri/Cargo.toml run_exit_state
-    status: todo
-  - id: t2
-    description: Emit the final state event once and stop the metrics timer for that run.
+    scenarios: [SC-e02s03-P1-01]
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories: ["host", "run lifecycle"]
+  - id: 2
+    description: Ended emitted exactly once per run and no Metrics event for that run after Ended.
     verify: cargo test --manifest-path src-tauri/Cargo.toml final_state_event
-    status: todo
-  - id: t3
-    description: Render the four states distinctly — not running, running, exited, failed.
-    verify: npm run test -- run-status
-    status: todo
+    scenarios: [SC-e02s03-P1-02]
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories: ["host", "IPC contract"]
+  - id: 3
+    description: Run view renders five distinct states — not running, running, exited, failed, stopped — with the exit code on failed.
+    verify: npm run test -- RunStatus
+    scenarios: [SC-e02s03-P2-03]
+    risk: P2
+    status: failing
+    allure:
+      severity: normal
+      categories: ["ui"]
