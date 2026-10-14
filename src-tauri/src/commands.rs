@@ -75,6 +75,29 @@ fn to_start_payload(error: StartError) -> StartErrorPayload {
     }
 }
 
+/// story: e02s02
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct StopErrorPayload {
+    pub kind: &'static str,
+    pub detail: String,
+}
+
+#[tauri::command]
+pub fn stop_run(
+    supervisor: tauri::State<'_, Mutex<Supervisor>>,
+    run_id: String,
+) -> Result<(), StopErrorPayload> {
+    supervisor
+        .lock()
+        .expect("supervisor mutex must not be poisoned")
+        .stop_run(&run_id)
+        .map_err(|error| StopErrorPayload {
+            kind: error.kind(),
+            detail: error.to_string(),
+        })
+}
+
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RunHandlePayload {

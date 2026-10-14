@@ -91,7 +91,7 @@ fn output_events_report_the_exit_code_of_a_clean_run() {
         .expect("ended event");
 
     match ended {
-        RunEvent::Ended { run_id, code } => {
+        RunEvent::Ended { run_id, code, .. } => {
             assert_eq!(run_id, handle.run_id);
             assert_eq!(code, Some(0), "a clean exit must report its code");
         }

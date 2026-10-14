@@ -3,26 +3,27 @@ title: Stop a running script
 spec: e02s02-stop-run.md
 # terminate_group (SIGTERM -> TERM_GRACE 2s -> SIGKILL) already exists from e01 as the
 # shutdown path; this story exposes it per run (DEC-07).
-status: failing
+# All three task verifies pass; manual UAT confirmed by the user on 2026-08-14.
+status: passing
 bcps: 4
 risk: P1
 verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
 tasks:
   - id: 1
     description: Supervisor::stop_run reusing terminate_group; StopError::runNotFound for unknown or finished ids; Ended carries stopped flag.
-    verify: cargo test --manifest-path src-tauri/Cargo.toml stop_sends_signal
+    verify: cargo test --manifest-path src-tauri/Cargo.toml --test stop_run
     scenarios: [SC-e02s02-P1-01, SC-e02s02-P1-03]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["host", "run lifecycle"]
   - id: 2
     description: Escalation to SIGKILL after the bounded grace for a SIGTERM-ignoring script, using the named TERM_GRACE constant.
-    verify: cargo test --manifest-path src-tauri/Cargo.toml stop_escalates
+    verify: cargo test --manifest-path src-tauri/Cargo.toml --test stop_escalates
     scenarios: [SC-e02s02-P1-02]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["host", "run lifecycle"]
@@ -31,7 +32,7 @@ tasks:
     verify: npm run test -- RunControls
     scenarios: [SC-e02s02-P2-04]
     risk: P2
-    status: failing
+    status: passing
     allure:
       severity: normal
       categories: ["ui", "IPC contract"]

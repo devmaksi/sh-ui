@@ -80,6 +80,26 @@ export function useRuns(host: RunHost) {
     [host],
   );
 
+  // story: e02s02 — the host refuses a run that already ended (runNotFound); the button
+  // is disabled in that case, so a refusal here is a race guard surfaced as an error.
+  const stop = useCallback(
+    async (runId: string) => {
+      try {
+        await host.stopRun(runId);
+        setError(null);
+      } catch (cause) {
+        setError(
+          cause instanceof Error
+            ? cause.message
+            : typeof cause === "object" && cause !== null && "detail" in cause
+              ? String(cause.detail)
+              : "The host refused the stop.",
+        );
+      }
+    },
+    [host],
+  );
+
   useEffect(() => {
     const offOutput = host.onOutput((event) => {
       lineSequence.current += 1;
@@ -138,5 +158,5 @@ export function useRuns(host: RunHost) {
     [buffer],
   );
 
-  return { runs, error, start, linesFor, hiddenCountFor };
+  return { runs, error, start, stop, linesFor, hiddenCountFor };
 }

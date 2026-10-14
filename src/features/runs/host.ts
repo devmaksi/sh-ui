@@ -10,6 +10,8 @@ export interface OutputEvent {
 export interface EndedEvent {
   runId: string;
   code: number | null;
+  // story: e02s02
+  stopped: boolean;
 }
 
 export interface MetricsEvent {
@@ -30,6 +32,8 @@ export type MetricsListener = (event: MetricsEvent) => void;
 /** The host capabilities the run feature needs. Tests supply a fake. */
 export interface RunHost {
   startScript(entryId: string): Promise<RunHandle>;
+  // story: e02s02
+  stopRun(runId: string): Promise<void>;
   onOutput(listener: OutputListener): () => void;
   onEnded(listener: EndedListener): () => void;
   onMetrics(listener: MetricsListener): () => void;

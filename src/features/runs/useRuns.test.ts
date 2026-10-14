@@ -7,6 +7,23 @@ import { OUTPUT_LINE_BUFFER } from "./types";
 import { useRuns } from "./useRuns";
 
 describe("useRuns", () => {
+  // story: e02s02
+  // scenario: SC-e02s02-P2-04
+  it("stops the live run through the host", async () => {
+    const host = new FakeRunHost();
+    const { result } = renderHook(() => useRuns(host));
+
+    await act(async () => {
+      await result.current.start("entry-1");
+    });
+
+    await act(async () => {
+      await result.current.stop("run-1");
+    });
+
+    expect(host.stopCalls).toEqual(["run-1"]);
+  });
+
   it("appends output in arrival order and keeps the stream tag", async () => {
     const host = new FakeRunHost();
     const { result } = renderHook(() => useRuns(host));

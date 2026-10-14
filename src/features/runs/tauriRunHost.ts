@@ -19,6 +19,8 @@ interface RunOutputPayload {
 interface RunEndedPayload {
   runId: string;
   code: number | null;
+  // story: e02s02
+  stopped: boolean;
 }
 
 interface RunMetricsPayload {
@@ -76,6 +78,9 @@ export const tauriRunHost: RunHost = {
       throw toStartFailure(cause);
     }),
 
+  // story: e02s02
+  stopRun: (runId) => invoke<void>("stop_run", { runId }),
+
   onOutput: (listener: OutputListener) =>
     subscribe<RunOutputPayload>("run://output", (payload) =>
       listener({
@@ -87,7 +92,7 @@ export const tauriRunHost: RunHost = {
 
   onEnded: (listener: EndedListener) =>
     subscribe<RunEndedPayload>("run://ended", (payload) =>
-      listener({ runId: payload.runId, code: payload.code }),
+      listener({ runId: payload.runId, code: payload.code, stopped: payload.stopped }),
     ),
 
   onMetrics: (listener: MetricsListener) =>

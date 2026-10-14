@@ -8,6 +8,7 @@ import { tauriRegistryHost } from "./features/registry/tauriRegistryHost";
 import { useRegistry } from "./features/registry/useRegistry";
 import { CostReadout } from "./features/runs/CostReadout";
 import { OutputPanel } from "./features/runs/OutputPanel";
+import { RunControls } from "./features/runs/RunControls";
 import { tauriRunHost } from "./features/runs/tauriRunHost";
 import { useRuns } from "./features/runs/useRuns";
 
@@ -23,7 +24,7 @@ async function pickScriptPath(): Promise<string | null> {
 export function App() {
   const { entries, error: registryError, reload, addScript, removeScript, updateConfig } =
     useRegistry(tauriRegistryHost);
-  const { runs, error: runError, start, linesFor, hiddenCountFor } =
+  const { runs, error: runError, start, stop, linesFor, hiddenCountFor } =
     useRuns(tauriRunHost);
 
   // story: e02s01 — one entry open in the edit form at a time.
@@ -87,6 +88,13 @@ export function App() {
               ? `ended with code ${activeRun.exitCode ?? "unknown"}`
               : "running"}
           </h2>
+          {/* story: e02s02 */}
+          <div className="mt-2">
+            <RunControls
+              running={activeRun.state === "running"}
+              onStop={() => void stop(activeRun.handle.runId)}
+            />
+          </div>
           <div className="mt-2">
             <CostReadout metrics={activeRun.metrics} />
           </div>

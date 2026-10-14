@@ -38,7 +38,9 @@ pub fn run() {
             commands::remove_script,
             // story: e02s01
             commands::update_script_config,
-            commands::start_script
+            commands::start_script,
+            // story: e02s02
+            commands::stop_run
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application");

@@ -10,6 +10,8 @@ import type { ProcessCost, RunHandle, StartErrorKind, StartFailure } from "../fe
 
 export class FakeRunHost implements RunHost {
   readonly startCalls: string[] = [];
+  // story: e02s02
+  readonly stopCalls: string[] = [];
 
   private handles = new Map<string, RunHandle>();
   private outputListeners = new Set<OutputListener>();
@@ -41,6 +43,11 @@ export class FakeRunHost implements RunHost {
     return handle;
   }
 
+  // story: e02s02
+  async stopRun(runId: string): Promise<void> {
+    this.stopCalls.push(runId);
+  }
+
   onOutput(listener: OutputListener): () => void {
     this.outputListeners.add(listener);
     return () => this.outputListeners.delete(listener);
@@ -70,9 +77,10 @@ export class FakeRunHost implements RunHost {
     }
   }
 
-  emitEnded(runId: string, code: number | null): void {
+  // story: e02s02 — stopped defaults to false: a plain ended event.
+  emitEnded(runId: string, code: number | null, stopped = false): void {
     for (const listener of this.endedListeners) {
-      listener({ runId, code });
+      listener({ runId, code, stopped });
     }
   }
 

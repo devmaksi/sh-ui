@@ -18,7 +18,7 @@ use crate::registry::RunConfig;
 /// One event payload cannot exceed this. A script that writes fast must not flood the UI.
 pub const OUTPUT_CHUNK_MAX_BYTES: usize = 8 * 1024;
 
-const TERM_GRACE: Duration = Duration::from_secs(2);
+pub const TERM_GRACE: Duration = Duration::from_secs(2);
 const KILL_GRACE: Duration = Duration::from_secs(1);
 
 /// ETXTBSY means the file is open for writing somewhere — an editor saving, a backup tool
@@ -56,6 +56,8 @@ pub enum RunEvent {
     Ended {
         run_id: String,
         code: Option<i32>,
+        // story: e02s02 — true when the termination was a user stop, not a natural exit.
+        stopped: bool,
     },
     Metrics {
         run_id: String,
@@ -126,6 +128,28 @@ impl std::fmt::Display for StartError {
     }
 }
 
+/// Refusal of a stop request. The tag is part of the UI error union.
+#[derive(Debug)]
+pub enum StopError {
+    RunNotFound(String),
+}
+
+impl StopError {
+    pub fn kind(&self) -> &'static str {
+        match self {
+            StopError::RunNotFound(_) => "runNotFound",
+        }
+    }
+}
+
+impl std::fmt::Display for StopError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            StopError::RunNotFound(run_id) => write!(f, "no live run with id {run_id}"),
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct RunHandle {
     pub run_id: String,
@@ -137,6 +161,8 @@ pub struct RunHandle {
 struct LiveRun {
     pid: u32,
     finished: Arc<AtomicBool>,
+    // story: e02s02 — set by stop_run before the group is terminated; watch_exit reports it.
+    stopped: Arc<AtomicBool>,
 }
 
 /// When both output readers have reached EOF and the child has been reaped, the run is
@@ -232,6 +258,7 @@ impl Supervisor {
             LiveRun {
                 pid,
                 finished: finished.clone(),
+                stopped: Arc::new(AtomicBool::new(false)),
             },
         );
 
@@ -273,7 +300,18 @@ impl Supervisor {
             mark_reader_done(&completion);
         }
 
-        watch_exit(child, run_id.clone(), self.sink.clone(), finished.clone(), completion);
+        watch_exit(
+            child,
+            run_id.clone(),
+            self.sink.clone(),
+            finished.clone(),
+            self.runs
+                .get(&run_id)
+                .expect("live run must exist")
+                .stopped
+                .clone(),
+            completion,
+        );
 
         // story: e03s01
         // The poller ends with the run: it watches the same finished flag and stops when
@@ -293,6 +331,20 @@ impl Supervisor {
             entry_id: entry_id.to_string(),
             pid,
         })
+    }
+
+    /// story: e02s02 — stop one live run: SIGTERM the whole group, then SIGKILL whatever
+    /// is still alive. Same terminate_group path the host shutdown uses (DEC-07).
+    pub fn stop_run(&mut self, run_id: &str) -> Result<(), StopError> {
+        let run = self
+            .runs
+            .get(run_id)
+            .filter(|run| !run.finished.load(Ordering::SeqCst))
+            .ok_or_else(|| StopError::RunNotFound(run_id.to_string()))?;
+
+        run.stopped.store(true, Ordering::SeqCst);
+        terminate_group(run.pid, &run.finished);
+        Ok(())
     }
 
     /// SIGTERM the whole group, then SIGKILL whatever is still alive.
@@ -450,6 +502,7 @@ fn watch_exit(
     run_id: String,
     sink: Arc<dyn EventSink>,
     finished: Arc<AtomicBool>,
+    stopped: Arc<AtomicBool>,
     completion: Arc<(Mutex<Completion>, Condvar)>,
 ) {
     thread::spawn(move || {
@@ -463,9 +516,14 @@ fn watch_exit(
         }
 
         let code = guard.exit_code.flatten();
+        let stopped = stopped.load(Ordering::SeqCst);
         drop(guard);
 
-        sink.emit(RunEvent::Ended { run_id, code });
+        sink.emit(RunEvent::Ended {
+            run_id,
+            code,
+            stopped,
+        });
         finished.store(true, Ordering::SeqCst);
     });
 }
