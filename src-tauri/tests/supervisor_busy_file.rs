@@ -3,6 +3,7 @@
 mod common;
 
 use common::TempRegistry;
+use sh_ui_lib::registry::RunConfig;
 use sh_ui_lib::supervisor::{Recorder, StartError, Supervisor};
 
 #[test]
@@ -27,7 +28,7 @@ fn supervisor_retries_while_the_script_file_is_busy() {
     let mut supervisor = Supervisor::new(recorder.clone());
 
     let handle = supervisor
-        .start("entry-1", &script)
+        .start("entry-1", &script, &RunConfig::default())
         .expect("a briefly busy script must still start");
 
     assert!(handle.pid > 0);
@@ -50,7 +51,7 @@ fn supervisor_reports_a_script_that_stays_busy() {
     let mut supervisor = Supervisor::new(recorder.clone());
 
     let error = supervisor
-        .start("entry-1", &script)
+        .start("entry-1", &script, &RunConfig::default())
         .expect_err("a script that never frees must be reported");
 
     match error {

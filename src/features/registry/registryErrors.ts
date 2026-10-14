@@ -8,6 +8,9 @@ const REASONS: Record<RegistryErrorKind, string> = {
   notReadable: "The file exists but cannot be read.",
   corrupt: "The saved registry cannot be read.",
   io: "The registry file could not be written.",
+  // story: e02s01
+  badWorkingDir: "That working directory does not exist or is not a directory.",
+  badEnvVar: "Environment lines must be KEY=VALUE with a name that starts a letter or underscore.",
 };
 
 const UNKNOWN_REASON = "The host reported a registry problem.";

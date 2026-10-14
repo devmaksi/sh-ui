@@ -1,4 +1,5 @@
 // story: e01s01 e01s02
+use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
@@ -39,10 +40,39 @@ impl RegistryStore {
         self.registry.save(&self.path)?;
         Ok(())
     }
+
+    /// story: e02s01 — validate, store, and persist one entry's run configuration.
+    pub fn update_config(
+        &mut self,
+        id: &str,
+        args_lines: Vec<String>,
+        env_lines: Vec<String>,
+        working_dir: String,
+    ) -> Result<ScriptEntry, RegistryError> {
+        let entry = self.registry.update_config(id, args_lines, env_lines, working_dir)?;
+        self.registry.save(&self.path)?;
+        Ok(entry)
+    }
 }
 
 /// Version of the on-disk registry document. Bump when the shape changes.
-pub const REGISTRY_FILE_VERSION: u32 = 1;
+/// Version 1 documents (no run config) still load; entries get the empty config.
+pub const REGISTRY_FILE_VERSION: u32 = 2;
+const LOADED_VERSIONS: [u32; 2] = [1, 2];
+
+/// Per-entry run configuration (e02s01). Arguments are exec argv items in order — never
+/// shell text. Environment entries override the inherited host environment. A missing
+/// working directory means "the directory holding the script" (DEC-10).
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct RunConfig {
+    #[serde(default)]
+    pub args: Vec<String>,
+    #[serde(default)]
+    pub env: BTreeMap<String, String>,
+    #[serde(default)]
+    pub working_dir: Option<String>,
+}
 
 /// One registered script. `id` is stable across reloads so later stories can
 /// attribute runs and metrics to the entry that started them.
@@ -51,6 +81,8 @@ pub const REGISTRY_FILE_VERSION: u32 = 1;
 pub struct ScriptEntry {
     pub id: String,
     pub path: String,
+    #[serde(default)]
+    pub config: RunConfig,
 }
 
 /// The payload the UI receives when it asks for the registry.
@@ -82,6 +114,10 @@ pub enum RegistryError {
     NotShellScript(String),
     /// The file exists but cannot be read.
     NotReadable(String),
+    /// story: e02s01 — a configured working directory does not exist or is not a directory.
+    BadWorkingDir(String),
+    /// story: e02s01 — an environment line is not a valid KEY=VALUE pair.
+    BadEnvVar(String),
 }
 
 impl std::fmt::Display for RegistryError {
@@ -97,6 +133,12 @@ impl std::fmt::Display for RegistryError {
                 write!(f, "{path} is not a .sh script")
             }
             RegistryError::NotReadable(path) => write!(f, "{path} cannot be read"),
+            RegistryError::BadWorkingDir(path) => {
+                write!(f, "working directory {path} does not exist or is not a directory")
+            }
+            RegistryError::BadEnvVar(line) => {
+                write!(f, "{line} is not a valid KEY=VALUE environment line")
+            }
         }
     }
 }
@@ -112,11 +154,66 @@ impl RegistryError {
             RegistryError::NotAFile(_) => "notAFile",
             RegistryError::NotShellScript(_) => "notShellScript",
             RegistryError::NotReadable(_) => "notReadable",
+            RegistryError::BadWorkingDir(_) => "badWorkingDir",
+            RegistryError::BadEnvVar(_) => "badEnvVar",
         }
     }
 }
 
 impl std::error::Error for RegistryError {}
+
+fn parse_run_config(
+    args_lines: Vec<String>,
+    env_lines: Vec<String>,
+    working_dir: String,
+) -> Result<RunConfig, RegistryError> {
+    let args: Vec<String> = args_lines
+        .into_iter()
+        .filter(|line| !line.is_empty())
+        .collect();
+
+    let mut env = BTreeMap::new();
+    for line in env_lines {
+        if line.is_empty() {
+            continue;
+        }
+        let (key, value) = line
+            .split_once('=')
+            .ok_or_else(|| RegistryError::BadEnvVar(line.clone()))?;
+        if !is_env_key(key) {
+            return Err(RegistryError::BadEnvVar(line));
+        }
+        env.insert(key.to_string(), value.to_string());
+    }
+
+    let working_dir = {
+        let trimmed = working_dir.trim();
+        if trimmed.is_empty() {
+            None
+        } else {
+            if !std::path::Path::new(trimmed).is_dir() {
+                return Err(RegistryError::BadWorkingDir(trimmed.to_string()));
+            }
+            Some(trimmed.to_string())
+        }
+    };
+
+    Ok(RunConfig {
+        args,
+        env,
+        working_dir,
+    })
+}
+
+/// POSIX-ish environment name: ASCII letter or underscore first, then alphanumerics.
+fn is_env_key(key: &str) -> bool {
+    let mut characters = key.chars();
+    match characters.next() {
+        Some(first) if first.is_ascii_alphabetic() || first == '_' => {}
+        _ => return false,
+    }
+    characters.all(|c| c.is_ascii_alphanumeric() || c == '_')
+}
 
 #[derive(Debug, Default)]
 pub struct Registry {
@@ -160,6 +257,7 @@ impl Registry {
         let entry = ScriptEntry {
             id: self.next_id(),
             path: shown,
+            config: RunConfig::default(),
         };
         self.insert(entry.clone());
         Ok(entry)
@@ -176,6 +274,26 @@ impl Registry {
         }
 
         Ok(())
+    }
+
+    /// story: e02s01 — replace one entry's run configuration. The draft arrives as raw
+    /// lines: one argv item per line, one KEY=VALUE per line, one directory path. Empty
+    /// lines are skipped; argument lines stay verbatim because there is no shell.
+    pub fn update_config(
+        &mut self,
+        id: &str,
+        args_lines: Vec<String>,
+        env_lines: Vec<String>,
+        working_dir: String,
+    ) -> Result<ScriptEntry, RegistryError> {
+        let config = parse_run_config(args_lines, env_lines, working_dir)?;
+        let entry = self
+            .entries
+            .iter_mut()
+            .find(|entry| entry.id == id)
+            .ok_or_else(|| RegistryError::NotFound(format!("no registry entry with id {id}")))?;
+        entry.config = config;
+        Ok(entry.clone())
     }
 
     fn next_id(&self) -> String {
@@ -197,7 +315,7 @@ impl Registry {
         let file: RegistryFile =
             serde_json::from_str(&text).map_err(|e| RegistryError::Corrupt(e.to_string()))?;
 
-        if file.version != REGISTRY_FILE_VERSION {
+        if !LOADED_VERSIONS.contains(&file.version) {
             return Err(RegistryError::Corrupt(format!(
                 "unsupported registry version {} — this build writes version {}",
                 file.version, REGISTRY_FILE_VERSION

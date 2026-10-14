@@ -6,11 +6,60 @@ import { FakeHostBridge } from "../../test/fakeHostBridge";
 import { useRegistry } from "./useRegistry";
 
 describe("useRegistry", () => {
+  it("updates the run config and shows the stored entry", async () => {
+    const host = new FakeHostBridge();
+    host.seed([
+      { id: "a1", path: "/home/user/build.sh", config: { args: [], env: {}, workingDir: null } },
+    ]);
+
+    const { result } = renderHook(() => useRegistry(host));
+    await waitFor(() => expect(result.current.entries).toHaveLength(1));
+
+    await act(async () => {
+      await result.current.updateConfig("a1", {
+        argsLines: ["a b", "", "--flag"],
+        envLines: ["DEMO_VAR=hello"],
+        workingDir: "/tmp",
+      });
+    });
+
+    expect(result.current.entries[0].config).toEqual({
+      args: ["a b", "--flag"],
+      env: { DEMO_VAR: "hello" },
+      workingDir: "/tmp",
+    });
+    expect(result.current.error).toBeNull();
+  });
+
+  it("keeps the entry unchanged and names the reason when the host refuses", async () => {
+    const host = new FakeHostBridge();
+    host.seed([
+      { id: "a1", path: "/home/user/build.sh", config: { args: [], env: {}, workingDir: null } },
+    ]);
+    host.rejectNextUpdate("badWorkingDir", "working directory /nope does not exist");
+
+    const { result } = renderHook(() => useRegistry(host));
+    await waitFor(() => expect(result.current.entries).toHaveLength(1));
+
+    await act(async () => {
+      await result.current.updateConfig("a1", {
+        argsLines: [],
+        envLines: [],
+        workingDir: "/nope",
+      });
+    });
+
+    expect(result.current.entries[0].config.workingDir).toBeNull();
+    expect(result.current.error).toContain(
+      "That working directory does not exist or is not a directory.",
+    );
+  });
+
   it("lists what the host reports", async () => {
     const host = new FakeHostBridge();
     host.seed([
-      { id: "a1", path: "/home/user/build.sh" },
-      { id: "b2", path: "/home/user/deploy.sh" },
+      { id: "a1", path: "/home/user/build.sh", config: { args: [], env: {}, workingDir: null } },
+      { id: "b2", path: "/home/user/deploy.sh", config: { args: [], env: {}, workingDir: null } },
     ]);
 
     const { result } = renderHook(() => useRegistry(host));
@@ -50,7 +99,7 @@ describe("useRegistry", () => {
 
   it("removes through the host and drops the entry", async () => {
     const host = new FakeHostBridge();
-    host.seed([{ id: "a1", path: "/home/user/build.sh" }]);
+    host.seed([{ id: "a1", path: "/home/user/build.sh", config: { args: [], env: {}, workingDir: null } }]);
 
     const { result } = renderHook(() => useRegistry(host));
     await waitFor(() => expect(result.current.entries).toHaveLength(1));

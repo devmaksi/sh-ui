@@ -26,6 +26,7 @@ describe("registry list contract", () => {
     expect(list.entries[0]).toEqual({
       id: expect.any(String),
       path: expect.any(String),
+      config: { args: [], env: {}, workingDir: null },
     });
   });
 });

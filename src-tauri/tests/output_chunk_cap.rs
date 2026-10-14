@@ -3,6 +3,7 @@
 mod common;
 
 use common::TempRegistry;
+use sh_ui_lib::registry::RunConfig;
 use sh_ui_lib::supervisor::{OutputStream, Recorder, RunEvent, Supervisor, OUTPUT_CHUNK_MAX_BYTES};
 use std::time::{Duration, Instant};
 
@@ -45,7 +46,7 @@ fn output_chunk_cap_splits_one_oversized_line() {
     let recorder = Recorder::default();
     let mut supervisor = Supervisor::new(recorder.clone());
 
-    supervisor.start("entry-1", &script).expect("spawn must succeed");
+    supervisor.start("entry-1", &script, &RunConfig::default()).expect("spawn must succeed");
     assert!(
         wait_for_end(&recorder, Duration::from_secs(10)),
         "the run must end"
@@ -79,7 +80,7 @@ fn output_chunk_cap_survives_a_fast_burst() {
     let recorder = Recorder::default();
     let mut supervisor = Supervisor::new(recorder.clone());
 
-    supervisor.start("entry-1", &script).expect("spawn must succeed");
+    supervisor.start("entry-1", &script, &RunConfig::default()).expect("spawn must succeed");
     assert!(
         wait_for_end(&recorder, Duration::from_secs(20)),
         "the burst must finish"

@@ -3,6 +3,7 @@
 mod common;
 
 use common::TempRegistry;
+use sh_ui_lib::registry::RunConfig;
 use sh_ui_lib::supervisor::{Recorder, RunEvent, Supervisor};
 use std::time::{Duration, Instant};
 
@@ -31,7 +32,7 @@ fn output_first_chunk_arrives_within_one_second() {
     let mut supervisor = Supervisor::new(recorder.clone());
 
     let started = Instant::now();
-    supervisor.start("entry-1", &script).expect("spawn must succeed");
+    supervisor.start("entry-1", &script, &RunConfig::default()).expect("spawn must succeed");
 
     let deadline = started + Duration::from_millis(1000);
     let mut latency: Option<Duration> = None;
@@ -64,7 +65,7 @@ fn output_keeps_arriving_while_the_script_runs() {
     let recorder = Recorder::default();
     let mut supervisor = Supervisor::new(recorder.clone());
 
-    supervisor.start("entry-1", &script).expect("spawn must succeed");
+    supervisor.start("entry-1", &script, &RunConfig::default()).expect("spawn must succeed");
 
     std::thread::sleep(Duration::from_millis(700));
     let early = output_count(&recorder);

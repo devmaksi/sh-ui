@@ -1,13 +1,14 @@
-// story: e01s01 e01s02
+// story: e01s01 e01s02 e02s01
 import type { ScriptEntry } from "./types";
 
 interface ScriptsListProps {
   entries: ScriptEntry[];
   onRemove?: (id: string) => void;
   onStart?: (id: string) => void;
+  onEdit?: (id: string) => void;
 }
 
-export function ScriptsList({ entries, onRemove, onStart }: ScriptsListProps) {
+export function ScriptsList({ entries, onRemove, onStart, onEdit }: ScriptsListProps) {
   if (entries.length === 0) {
     return (
       <section aria-live="polite" className="py-8 text-neutral-500">
@@ -28,6 +29,16 @@ export function ScriptsList({ entries, onRemove, onStart }: ScriptsListProps) {
               className="border border-neutral-900 bg-neutral-900 px-3 py-1 text-sm text-white"
             >
               Start {entry.path}
+            </button>
+          ) : null}
+
+          {onEdit ? (
+            <button
+              type="button"
+              onClick={() => onEdit(entry.id)}
+              className="border border-neutral-300 px-2 py-1 text-sm"
+            >
+              Edit
             </button>
           ) : null}
 

@@ -3,6 +3,7 @@
 mod common;
 
 use common::TempRegistry;
+use sh_ui_lib::registry::RunConfig;
 use sh_ui_lib::supervisor::{Recorder, Supervisor};
 
 #[test]
@@ -14,7 +15,7 @@ fn supervisor_tracks_run() {
     let mut supervisor = Supervisor::new(recorder.clone());
 
     let handle = supervisor
-        .start("entry-1", &script)
+        .start("entry-1", &script, &RunConfig::default())
         .expect("a registered executable must spawn");
 
     assert_eq!(supervisor.live_run_ids(), vec![handle.run_id.clone()]);

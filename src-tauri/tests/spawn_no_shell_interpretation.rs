@@ -3,6 +3,7 @@
 mod common;
 
 use common::TempRegistry;
+use sh_ui_lib::registry::RunConfig;
 use sh_ui_lib::supervisor::{OutputStream, Recorder, RunEvent, Supervisor};
 use std::time::{Duration, Instant};
 
@@ -45,7 +46,7 @@ fn spawn_no_shell_interpretation_of_a_hostile_path() {
     let recorder = Recorder::default();
     let mut supervisor = Supervisor::new(recorder.clone());
 
-    supervisor.start("entry-1", &script).expect("spawn must succeed");
+    supervisor.start("entry-1", &script, &RunConfig::default()).expect("spawn must succeed");
     assert!(
         wait_for_end(&recorder, Duration::from_secs(10)),
         "the run must end"

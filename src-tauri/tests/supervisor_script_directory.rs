@@ -3,6 +3,7 @@
 mod common;
 
 use common::TempRegistry;
+use sh_ui_lib::registry::RunConfig;
 use sh_ui_lib::supervisor::{OutputStream, Recorder, RunEvent, Supervisor};
 use std::time::{Duration, Instant};
 
@@ -46,7 +47,7 @@ fn supervisor_starts_the_script_in_its_own_directory() {
     let recorder = Recorder::default();
     let mut supervisor = Supervisor::new(recorder.clone());
 
-    supervisor.start("entry-1", &script).expect("spawn must succeed");
+    supervisor.start("entry-1", &script, &RunConfig::default()).expect("spawn must succeed");
     assert!(
         wait_for_end(&recorder, Duration::from_secs(10)),
         "the script must finish"

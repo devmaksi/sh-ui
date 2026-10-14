@@ -47,6 +47,20 @@ pub fn remove_script(
     lock(&registry).remove(&id).map_err(to_payload)
 }
 
+/// story: e02s01 — the draft arrives as raw lines; parsing and validation live in Rust.
+#[tauri::command]
+pub fn update_script_config(
+    registry: tauri::State<'_, Mutex<RegistryStore>>,
+    id: String,
+    args_lines: Vec<String>,
+    env_lines: Vec<String>,
+    working_dir: String,
+) -> Result<ScriptEntry, RegistryErrorPayload> {
+    lock(&registry)
+        .update_config(&id, args_lines, env_lines, working_dir)
+        .map_err(to_payload)
+}
+
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct StartErrorPayload {
@@ -75,22 +89,21 @@ pub fn start_script(
     supervisor: tauri::State<'_, Mutex<Supervisor>>,
     entry_id: String,
 ) -> Result<RunHandlePayload, StartErrorPayload> {
-    let path = {
+    let entry = {
         let entries = lock(&registry).list().entries;
-        entries
-            .into_iter()
-            .find(|entry| entry.id == entry_id)
-            .map(|entry| entry.path)
+        entries.into_iter().find(|entry| entry.id == entry_id)
     };
 
-    let Some(path) = path else {
+    let Some(entry) = entry else {
         return Err(to_start_payload(StartError::EntryNotFound(entry_id)));
     };
 
+    // story: e02s01 — the supervisor execs with the entry's stored run config.
+    let path = std::path::Path::new(&entry.path);
     let handle = supervisor
         .lock()
         .expect("supervisor mutex must not be poisoned")
-        .start(&entry_id, std::path::Path::new(&path))
+        .start(&entry_id, path, &entry.config)
         .map_err(to_start_payload)?;
 
     Ok(RunHandlePayload {

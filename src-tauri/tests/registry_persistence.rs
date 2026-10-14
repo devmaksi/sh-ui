@@ -3,7 +3,7 @@
 mod common;
 
 use common::TempRegistry;
-use sh_ui_lib::registry::{Registry, ScriptEntry};
+use sh_ui_lib::registry::{Registry, RunConfig, ScriptEntry};
 
 #[test]
 fn registry_survives_reload() {
@@ -14,10 +14,12 @@ fn registry_survives_reload() {
     registry.insert(ScriptEntry {
         id: "entry-1".to_string(),
         path: "/home/user/build.sh".to_string(),
+        config: RunConfig::default(),
     });
     registry.insert(ScriptEntry {
         id: "entry-2".to_string(),
         path: "/home/user/deploy.sh".to_string(),
+        config: RunConfig::default(),
     });
 
     registry.save(&file).expect("save must succeed");

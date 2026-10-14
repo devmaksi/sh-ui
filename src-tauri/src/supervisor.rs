@@ -12,6 +12,8 @@ use std::time::{Duration, Instant};
 
 use crate::gpu::{build_gpu_probe, probe_gpu_source, run_tool, GpuProbe, UnavailableGpuProbe};
 use crate::metrics::{spawn_metrics_poller, ProcfsReader, METRICS_REFRESH};
+// story: e02s01
+use crate::registry::RunConfig;
 
 /// One event payload cannot exceed this. A script that writes fast must not flood the UI.
 pub const OUTPUT_CHUNK_MAX_BYTES: usize = 8 * 1024;
@@ -93,6 +95,8 @@ pub enum StartError {
     EntryNotFound(String),
     NotExecutable(String),
     SpawnFailed(String),
+    /// story: e02s01 — a stored working directory vanished after the save.
+    BadWorkingDir(String),
 }
 
 impl StartError {
@@ -102,6 +106,7 @@ impl StartError {
             StartError::EntryNotFound(_) => "entryNotFound",
             StartError::NotExecutable(_) => "notExecutable",
             StartError::SpawnFailed(_) => "spawnFailed",
+            StartError::BadWorkingDir(_) => "badWorkingDir",
         }
     }
 }
@@ -114,6 +119,9 @@ impl std::fmt::Display for StartError {
                 write!(f, "{path} is not executable; add the execute bit or remove the entry")
             }
             StartError::SpawnFailed(detail) => write!(f, "the process could not be started: {detail}"),
+            StartError::BadWorkingDir(dir) => {
+                write!(f, "working directory {dir} no longer exists; edit the entry or remove it")
+            }
         }
     }
 }
@@ -189,7 +197,12 @@ impl Supervisor {
         ids
     }
 
-    pub fn start(&mut self, entry_id: &str, path: &Path) -> Result<RunHandle, StartError> {
+    pub fn start(
+        &mut self,
+        entry_id: &str,
+        path: &Path,
+        config: &RunConfig,
+    ) -> Result<RunHandle, StartError> {
         let metadata = std::fs::metadata(path)
             .map_err(|error| StartError::EntryNotFound(format!("{}: {error}", path.display())))?;
 
@@ -201,10 +214,14 @@ impl Supervisor {
             return Err(StartError::NotExecutable(path.display().to_string()));
         }
 
+        // story: e02s01 — check the stored directory before spawning so the refusal is
+        // typed, not a raw OS error from a failed chdir.
+        let working_dir = working_directory(path, config)?;
+
         self.sequence += 1;
         let run_id = format!("run-{}", self.sequence);
 
-        let mut child = spawn_capturing(path)
+        let mut child = spawn_capturing(path, config, &working_dir)
             .map_err(|error| StartError::SpawnFailed(format!("{}: {error}", path.display())))?;
 
         let pid = child.id();
@@ -295,19 +312,39 @@ impl Drop for Supervisor {
     }
 }
 
-fn spawn_capturing(path: &Path) -> Result<Child, std::io::Error> {
+/// story: e02s01 — the stored directory wins; otherwise the directory holding the script
+/// (DEC-10), so the same script behaves the same under cargo test and under npm run dev.
+fn working_directory(path: &Path, config: &RunConfig) -> Result<std::path::PathBuf, StartError> {
+    if let Some(dir) = &config.working_dir {
+        let dir = Path::new(dir);
+        if !dir.is_dir() {
+            return Err(StartError::BadWorkingDir(dir.display().to_string()));
+        }
+        return Ok(dir.to_path_buf());
+    }
+
+    Ok(path
+        .parent()
+        .filter(|parent| !parent.as_os_str().is_empty())
+        .unwrap_or(Path::new("."))
+        .to_path_buf())
+}
+
+fn spawn_capturing(
+    path: &Path,
+    config: &RunConfig,
+    working_dir: &Path,
+) -> Result<Child, std::io::Error> {
     let mut attempt = 0;
 
     loop {
         // argv array only. The path is one argument to exec, never a shell command string.
+        // story: e02s01 — stored argv items are appended as separate arguments; stored
+        // environment pairs are applied over the inherited host environment.
         let mut command = Command::new(path);
-        // A script reads its own siblings by relative path. Run it where it lives, not where
-        // the host happens to have been started (ADR-0002).
-        let working_dir = path
-            .parent()
-            .filter(|parent| !parent.as_os_str().is_empty())
-            .unwrap_or(Path::new("."));
         command
+            .args(&config.args)
+            .envs(&config.env)
             .current_dir(working_dir)
             .stdin(Stdio::null())
             .stdout(Stdio::piped())

@@ -1,8 +1,8 @@
-// story: e01s01 e01s02
+// story: e01s01 e01s02 e02s01
 import { useCallback, useEffect, useState } from "react";
 import { describeRegistryError } from "./registryErrors";
 import type { RegistryHost } from "./host";
-import type { RegistryFailure, ScriptEntry } from "./types";
+import type { ConfigDraft, RegistryFailure, ScriptEntry } from "./types";
 
 function toMessage(cause: unknown): string {
   if (
@@ -48,6 +48,25 @@ export function useRegistry(host: RegistryHost) {
     [host, applyError],
   );
 
+  // story: e02s01 — the host validates; on success the stored entry replaces the old one.
+  // The boolean lets the edit form stay open when the host refuses.
+  const updateConfig = useCallback(
+    async (id: string, draft: ConfigDraft): Promise<boolean> => {
+      try {
+        const updated = await host.updateScriptConfig(id, draft);
+        setEntries((current) =>
+          current.map((entry) => (entry.id === id ? updated : entry)),
+        );
+        setError(null);
+        return true;
+      } catch (cause) {
+        applyError(cause);
+        return false;
+      }
+    },
+    [host, applyError],
+  );
+
   const removeScript = useCallback(
     async (id: string) => {
       try {
@@ -65,5 +84,5 @@ export function useRegistry(host: RegistryHost) {
     void reload();
   }, [reload]);
 
-  return { entries, error, reload, addScript, removeScript };
+  return { entries, error, reload, addScript, removeScript, updateConfig };
 }

@@ -1,6 +1,6 @@
 // story: e01s01
 // scenario: SC-e01s01-P1-03
-use sh_ui_lib::registry::{RegistryList, ScriptEntry};
+use sh_ui_lib::registry::{RegistryList, RunConfig, ScriptEntry};
 
 fn fixture_path() -> std::path::PathBuf {
     std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -19,10 +19,12 @@ fn contract_registry_list_matches_the_shared_fixture() {
             ScriptEntry {
                 id: "a1".to_string(),
                 path: "/home/user/build.sh".to_string(),
+                config: RunConfig::default(),
             },
             ScriptEntry {
                 id: "b2".to_string(),
                 path: "/home/user/deploy.sh".to_string(),
+                config: RunConfig::default(),
             },
         ],
     };

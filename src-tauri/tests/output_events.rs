@@ -3,6 +3,7 @@
 mod common;
 
 use common::TempRegistry;
+use sh_ui_lib::registry::RunConfig;
 use sh_ui_lib::supervisor::{OutputStream, Recorder, RunEvent, Supervisor};
 use std::time::{Duration, Instant};
 
@@ -47,7 +48,7 @@ fn output_events_tag_every_chunk_with_its_stream() {
     let recorder = Recorder::default();
     let mut supervisor = Supervisor::new(recorder.clone());
 
-    supervisor.start("entry-1", &script).expect("spawn must succeed");
+    supervisor.start("entry-1", &script, &RunConfig::default()).expect("spawn must succeed");
 
     assert!(
         wait_for_end(&recorder, Duration::from_secs(5)),
@@ -75,7 +76,7 @@ fn output_events_report_the_exit_code_of_a_clean_run() {
     let mut supervisor = Supervisor::new(recorder.clone());
 
     let handle = supervisor
-        .start("entry-1", &script)
+        .start("entry-1", &script, &RunConfig::default())
         .expect("spawn must succeed");
 
     assert!(

@@ -5,6 +5,7 @@ mod common;
 use common::TempRegistry;
 use sh_ui_lib::gpu::UnavailableGpuProbe;
 use sh_ui_lib::metrics::{spawn_metrics_poller, ProcReader, ProcessSample};
+use sh_ui_lib::registry::RunConfig;
 use sh_ui_lib::supervisor::{Recorder, RunEvent, Supervisor};
 use std::collections::VecDeque;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -45,7 +46,7 @@ fn metrics_emits_and_stops_with_supervisor() {
     let recorder = Recorder::default();
     let mut supervisor = Supervisor::new(recorder.clone());
     supervisor
-        .start("entry-1", &script)
+        .start("entry-1", &script, &RunConfig::default())
         .expect("the sleep script must spawn");
 
     std::thread::sleep(Duration::from_millis(1300));

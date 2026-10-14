@@ -18,8 +18,8 @@ describe("ScriptsList", () => {
     render(
       <ScriptsList
         entries={[
-          { id: "a1", path: "/home/user/build.sh" },
-          { id: "b2", path: "/home/user/deploy.sh" },
+          { id: "a1", path: "/home/user/build.sh", config: { args: [], env: {}, workingDir: null } },
+          { id: "b2", path: "/home/user/deploy.sh", config: { args: [], env: {}, workingDir: null } },
         ]}
       />,
     );
@@ -34,7 +34,7 @@ describe("ScriptsList", () => {
 
     render(
       <ScriptsList
-        entries={[{ id: "a1", path: "/home/user/build.sh" }]}
+        entries={[{ id: "a1", path: "/home/user/build.sh", config: { args: [], env: {}, workingDir: null } }]}
         onStart={onStart}
       />,
     );
@@ -44,13 +44,30 @@ describe("ScriptsList", () => {
     expect(onStart).toHaveBeenCalledWith("a1");
   });
 
+  // story: e02s01
+  // scenario: SC-e02s01-P2-05
+  it("asks to edit the entry the user selected", async () => {
+    const onEdit = vi.fn();
+
+    render(
+      <ScriptsList
+        entries={[{ id: "a1", path: "/home/user/build.sh", config: { args: [], env: {}, workingDir: null } }]}
+        onEdit={onEdit}
+      />,
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+
+    expect(onEdit).toHaveBeenCalledWith("a1");
+  });
+
   // scenario: SC-e01s02-P1-08
   it("asks to remove the entry the user selected", async () => {
     const onRemove = vi.fn();
 
     render(
       <ScriptsList
-        entries={[{ id: "a1", path: "/home/user/build.sh" }]}
+        entries={[{ id: "a1", path: "/home/user/build.sh", config: { args: [], env: {}, workingDir: null } }]}
         onRemove={onRemove}
       />,
     );

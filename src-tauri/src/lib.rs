@@ -36,6 +36,8 @@ pub fn run() {
             commands::list_scripts,
             commands::add_script,
             commands::remove_script,
+            // story: e02s01
+            commands::update_script_config,
             commands::start_script
         ])
         .build(tauri::generate_context!())

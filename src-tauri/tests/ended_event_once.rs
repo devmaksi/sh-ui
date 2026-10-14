@@ -3,6 +3,7 @@
 mod common;
 
 use common::TempRegistry;
+use sh_ui_lib::registry::RunConfig;
 use sh_ui_lib::supervisor::{Recorder, RunEvent, Supervisor};
 use std::time::{Duration, Instant};
 
@@ -22,7 +23,7 @@ fn ended_event_once_for_a_normal_exit() {
     let recorder = Recorder::default();
     let mut supervisor = Supervisor::new(recorder.clone());
 
-    supervisor.start("entry-1", &script).expect("spawn must succeed");
+    supervisor.start("entry-1", &script, &RunConfig::default()).expect("spawn must succeed");
 
     let deadline = Instant::now() + Duration::from_secs(10);
     while Instant::now() < deadline && ended_events(&recorder).is_empty() {

@@ -43,7 +43,12 @@ export interface Run {
 }
 
 /** Mirrors `StartError::kind` in src-tauri/src/supervisor.rs. */
-export type StartErrorKind = "entryNotFound" | "notExecutable" | "spawnFailed";
+// story: e02s01
+export type StartErrorKind =
+  | "entryNotFound"
+  | "notExecutable"
+  | "spawnFailed"
+  | "badWorkingDir";
 
 export interface StartFailure {
   kind: StartErrorKind;

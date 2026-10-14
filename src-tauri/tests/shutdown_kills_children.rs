@@ -3,6 +3,7 @@
 mod common;
 
 use common::TempRegistry;
+use sh_ui_lib::registry::RunConfig;
 use sh_ui_lib::supervisor::{Recorder, RunEvent, Supervisor};
 use std::time::{Duration, Instant};
 
@@ -60,7 +61,7 @@ fn shutdown_kills_children() {
     let recorder = Recorder::default();
     let mut supervisor = Supervisor::new(recorder.clone());
 
-    let handle = supervisor.start("entry-1", &script).expect("spawn must succeed");
+    let handle = supervisor.start("entry-1", &script, &RunConfig::default()).expect("spawn must succeed");
     assert!(wait_for_output(&recorder, "ready", Duration::from_secs(5)));
 
     let tree = descendants(handle.pid);
@@ -85,7 +86,7 @@ fn shutdown_kills_a_child_that_ignores_sigterm() {
     let recorder = Recorder::default();
     let mut supervisor = Supervisor::new(recorder.clone());
 
-    let handle = supervisor.start("entry-1", &script).expect("spawn must succeed");
+    let handle = supervisor.start("entry-1", &script, &RunConfig::default()).expect("spawn must succeed");
     assert!(wait_for_output(&recorder, "ready", Duration::from_secs(5)));
 
     supervisor.shutdown();

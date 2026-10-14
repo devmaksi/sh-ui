@@ -1,6 +1,8 @@
-// story: e01s01 e01s02 e01s03 e03s01
+// story: e01s01 e01s02 e01s03 e03s01 e02s01
 import { open } from "@tauri-apps/plugin-dialog";
+import { useState } from "react";
 import { AddScriptForm } from "./features/registry/AddScriptForm";
+import { RunConfigForm } from "./features/registry/RunConfigForm";
 import { ScriptsList } from "./features/registry/ScriptsList";
 import { tauriRegistryHost } from "./features/registry/tauriRegistryHost";
 import { useRegistry } from "./features/registry/useRegistry";
@@ -19,10 +21,14 @@ async function pickScriptPath(): Promise<string | null> {
 }
 
 export function App() {
-  const { entries, error: registryError, reload, addScript, removeScript } =
+  const { entries, error: registryError, reload, addScript, removeScript, updateConfig } =
     useRegistry(tauriRegistryHost);
   const { runs, error: runError, start, linesFor, hiddenCountFor } =
     useRuns(tauriRunHost);
+
+  // story: e02s01 — one entry open in the edit form at a time.
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const editingEntry = entries.find((entry) => entry.id === editingId);
 
   const activeRun = runs[runs.length - 1];
   const activeEntry = activeRun
@@ -45,8 +51,32 @@ export function App() {
       </div>
 
       <div className="mt-6">
-        <ScriptsList entries={entries} onStart={start} onRemove={removeScript} />
+        <ScriptsList
+          entries={entries}
+          onStart={start}
+          onRemove={removeScript}
+          onEdit={setEditingId}
+        />
       </div>
+
+      {editingEntry ? (
+        <section className="mt-6 border border-neutral-200 p-4">
+          <h2 className="font-mono text-sm">{editingEntry.path}</h2>
+          <div className="mt-3">
+            <RunConfigForm
+              key={editingEntry.id}
+              entry={editingEntry}
+              error={registryError}
+              onSave={async (draft) => {
+                const saved = await updateConfig(editingEntry.id, draft);
+                if (saved) {
+                  setEditingId(null);
+                }
+              }}
+            />
+          </div>
+        </section>
+      ) : null}
 
       {activeRun ? (
         <section className="mt-6">

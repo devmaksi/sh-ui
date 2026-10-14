@@ -1,6 +1,8 @@
 story_id: e02s01
 title: Arguments, environment, and working directory per script
 spec: e02s01-run-config.md
+# All four task verifies pass; manual UAT confirmed by the user on 2026-08-14.
+status: passing
 # DEC-10 sets the default working directory to the directory holding the script.
 # This story adds an explicit per-entry configuration on top of that default.
 status: failing
@@ -10,28 +12,28 @@ verify_preflight: npm run lint && npm run test && cargo test --manifest-path src
 tasks:
   - id: 1
     description: RunConfig (argv list, env map, optional working dir) on ScriptEntry with serde default; registry document accepts versions 1 and 2, writes 2.
-    verify: cargo test --manifest-path src-tauri/Cargo.toml run_config_store
+    verify: cargo test --manifest-path src-tauri/Cargo.toml --test run_config_store
     scenarios: [SC-e02s01-P1-01]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["host", "registry", "persistence"]
   - id: 2
     description: update_script_config command with Rust-side validation — badWorkingDir for a missing or non-directory path, badEnvVar for a malformed KEY=VALUE line.
-    verify: cargo test --manifest-path src-tauri/Cargo.toml run_config_validates
+    verify: cargo test --manifest-path src-tauri/Cargo.toml --test run_config_validates
     scenarios: [SC-e02s01-P1-02, SC-e02s01-P1-03]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["host", "IPC contract", "validation"]
   - id: 3
     description: Supervisor::start execs with stored argv, env overrides over the inherited environment, and stored cwd (pre-spawn existence check, default = script directory per DEC-10). Never a shell string.
-    verify: cargo test --manifest-path src-tauri/Cargo.toml start_uses_config
+    verify: cargo test --manifest-path src-tauri/Cargo.toml --test start_uses_config
     scenarios: [SC-e02s01-P1-04]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["host", "run lifecycle"]
@@ -40,7 +42,7 @@ tasks:
     verify: npm run test -- RunConfigForm
     scenarios: [SC-e02s01-P2-05]
     risk: P2
-    status: failing
+    status: passing
     allure:
       severity: normal
       categories: ["ui", "registry"]
