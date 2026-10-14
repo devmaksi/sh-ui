@@ -1,0 +1,17 @@
+# North star for sh-ui. Short on purpose. Refine with elaborate-spec if it drifts.
+created: 2026-08-14
+
+statement: >
+  A shell script should be a thing you own: you register it once, you start it when you
+  want, and you can always see what it is doing and what it is costing you.
+
+principles:
+  - Observation never changes the script. sh-ui launches and watches; it does not rewrite or sandbox.
+  - Say what is unknown. An unavailable metric is labelled unavailable, never shown as zero.
+  - One machine, one user. No network surface.
+  - Leave no mess. No orphaned process after the app closes.
+
+non_goals:
+  - Replace the user's shell.
+  - Replace the user's editor.
+  - Become a monitoring server.

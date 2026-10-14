@@ -1,0 +1,116 @@
+feature_name: sh-ui — local shell script manager
+created: 2026-08-14
+status: draft
+
+core_value: >
+  Linux users can register their shell scripts once and then start, stop, watch,
+  and cost-account them from one window instead of juggling terminals.
+
+summary: |
+  sh-ui is a desktop-class application for one Linux machine. The user adds existing
+  `.sh` files to a registry, each with its own arguments, environment variables, and
+  working directory. From the same window the user starts a registered script, stops it,
+  and reads its live output.
+
+  While a script runs, sh-ui shows what that script costs. The measurement covers the
+  script process and every process it spawns, summed as one figure for CPU, RAM, VRAM,
+  and GPU. GPU figures are best effort: sh-ui reports what the machine can actually
+  measure and states plainly what it cannot.
+
+  The terminal view is read-only. sh-ui is an observer and a launcher, not a shell
+  emulator. It never talks to a remote host and never runs a script outside the machine
+  it is installed on.
+
+  Out of scope for this version: interactive input to a running script, remote hosts,
+  scheduling, long-term metric history, and script content editing. Each exclusion is
+  recorded with its reason below.
+
+in_scope:
+  - id: e01
+    name: Script registry
+    outcome: >
+      User adds a `.sh` file to the registry with arguments, environment variables, and
+      a working directory. User removes it. The registry survives an app restart.
+  - id: e02
+    name: Run lifecycle
+    outcome: >
+      User starts a registered script and stops it. The app shows the current state:
+      not running, running, exited, or failed.
+  - id: e03
+    name: Read-only output view
+    outcome: >
+      User reads the live stdout and stderr of a running script. No input is accepted.
+  - id: e04
+    name: Resource accounting
+    outcome: >
+      User sees CPU, RAM, VRAM, and GPU usage summed over the script process and all of
+      its descendants, refreshed while the script runs.
+  - id: e05
+    name: Local process host
+    outcome: >
+      The app launches and supervises processes on the machine it runs on, and shuts
+      them down when the app closes.
+
+out_of_scope:
+  - item: Interactive terminal (stdin, Ctrl+C, resize)
+    reason: deferred
+    why: >
+      Needs a pty layer and signal handling. Reading output already satisfies the
+      observation need. Revisit only if users need to answer a running script.
+  - item: Remote hosts over SSH
+    reason: deferred
+    why: >
+      Adds authentication, key management, and a network attack surface. The stated
+      need is one local machine.
+  - item: Scheduler and auto-start
+    reason: deferred
+    why: >
+      A separate subsystem with its own semantics. Manual start covers the current need.
+  - item: Metric history, graphs, and export
+    reason: deferred
+    why: >
+      The stated need is "what does this script cost right now". Storing time series is
+      a different product surface and a different data model.
+  - item: Editing script file contents
+    reason: not valuable
+    why: >
+      Users already edit scripts in their own editor. sh-ui edits run metadata only.
+  - item: Vendor-specific GPU accuracy guarantees
+    reason: too risky
+    why: >
+      Per-process GPU accounting differs per vendor and driver. sh-ui reports best-effort
+      numbers and marks unavailable metrics instead of promising accuracy.
+  - item: Resource limits and cgroup isolation
+    reason: deferred
+    why: >
+      Limiting a script is enforcement, not observation. It also changes privilege needs.
+  - item: Multi-user access or serving the UI over the network
+    reason: not valuable
+    why: >
+      Single local user is the stated context. Network serving changes the security model.
+  - item: macOS and Windows support
+    reason: not valuable
+    why: >
+      Process and resource APIs differ per OS. Linux-only keeps measurement honest.
+
+constraints:
+  platform: Linux only
+  locality: Local machine only. No remote execution.
+  stack: TypeScript / React + Vite / Node 22
+  privileges: Must not require root to measure scripts it launched itself
+  gpu: Best effort via whatever vendor tool the machine provides
+  time: None stated by the user
+  budget: None stated by the user
+
+success_criteria:
+  - User registers a `.sh` file with arguments, env vars, and a working directory, restarts the app, and the entry is still there and runs correctly.
+  - User starts a script, sees its output appear within one second, and stops it from the same window.
+  - A stopped or failed script is visibly distinguishable from a running one.
+  - A script that spawns children shows one summed CPU and RAM figure, not a per-process list.
+  - On a machine with no GPU tooling, the app shows CPU and RAM and states that GPU metrics are unavailable. It does not show zero as if it were a measurement.
+  - Closing the app leaves no orphaned script process behind.
+
+references:
+  - specs/state.yaml
+  - specs/WORKFLOW-solo-git.md
+  - specs/tech-architecture/tech-stack.md

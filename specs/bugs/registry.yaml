@@ -1,2 +1,10 @@
 # Bug registry for sh-ui. Populated by inspect-quality, investigate-bug, and fix-bug.
-bugs: []
+bugs:
+  - bug_id: BUG-20260814-01
+    date: 2026-08-14
+    severity: medium
+    priority: P1
+    scope: bigpowers hooks (upstream)
+    summary: guard-git allows a direct commit onto an unborn protected branch because it reads HEAD before the command runs
+    status: logged
+    file: specs/bugs/BUG-20260814-01-guard-git-unborn-main.md

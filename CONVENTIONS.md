@@ -127,11 +127,17 @@ Every task needs `verify: <runnable command>`. Evidence over claims.
 
 The agent implements defensive code only for these categories:
 
-- **Retry** with backoff for network and API calls.
-- **Timeout** for long-running operations.
-- **Graceful degradation** when a remote service or resource fails.
+- **Retry** with backoff for transient failures, such as a metric read that fails once.
+- **Timeout** for long-running operations, including a script that never exits.
+- **Graceful degradation** when a host capability is missing, such as absent GPU tooling. Report the metric as unavailable. NEVER report zero as a measurement.
 
-Rate limiting and circuit breakers do NOT apply — this project has no backend service layer.
+Process supervision is mandatory, not optional:
+
+- Every launched process MUST be tracked by the host that launched it.
+- The app MUST terminate its child processes on shutdown and on crash recovery.
+- A stop request MUST escalate from graceful signal to forced kill after a bounded wait.
+
+Rate limiting and circuit breakers do NOT apply — sh-ui has no network service and no remote hosts.
 
 ## Formatting
 

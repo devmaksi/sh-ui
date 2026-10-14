@@ -4,22 +4,34 @@ stack: TypeScript / React + Vite / Node 22 / Tailwind CSS / Vitest
 
 session:
   started: 2026-08-14
-  phase: discover
+  phase: plan
   active_epic: null
   active_story: null
 
 active_flow:
-  current_skill: seed-conventions
-  next_skill: survey-context
+  current_skill: scope-work
+  next_skill: slice-tasks
+
+scope:
+  file: specs/product/SCOPE_LATEST.yaml
+  epics_provisional: [e01, e02, e03, e04, e05]
+
+deviations:
+  - id: DEV-01
+    what: Repository root commit bdbad15 landed directly on main during seed-conventions.
+    why: guard-git read HEAD before git init ran, so the protected-branch check saw "unknown". See specs/bugs/BUG-20260814-01-guard-git-unborn-main.md
+    resolution: Kept as the root commit. All later commits use kickoff-branch and land-branch.sh.
 
 handoff:
-  last_step_completed: "seed-conventions: AGENTS.md, CONVENTIONS.md, specs/ tree created"
+  last_step_completed: "scope-work: SCOPE_LATEST.yaml and VISION_LATEST.yaml written; CONVENTIONS defensive code updated for process supervision"
   open_decisions:
+    - "UI shell shape: Tauri desktop wrapper or local web app served by a Node host"
+    - "Metric source: /proc polling or a supervisor library"
+    - "Registry persistence format: JSON, SQLite, or YAML"
     - "Styling default is Tailwind CSS — confirm or switch to CSS Modules"
-    - "Data-fetching library not chosen yet (TanStack Query candidate)"
-    - "Application domain/features not defined yet — needs scope-work"
   required_reading:
     - AGENTS.md
     - CONVENTIONS.md
+    - specs/product/SCOPE_LATEST.yaml
     - specs/WORKFLOW-solo-git.md
-  next_skill: survey-context
+  next_skill: slice-tasks
