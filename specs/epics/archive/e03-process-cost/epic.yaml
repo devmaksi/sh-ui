@@ -3,17 +3,19 @@ title: What the script costs
 capsule_dir: epics/e03-process-cost
 wsjf: 1.08
 total_bcps: 13
-status: planned
+status: done
 delta: ADDED
 stories:
   - id: e03s01
     title: Live CPU and RAM of the running script
     bcps: 5
     tasks_file: e03s01-tasks.yaml
+    status: passing
   - id: e03s02
     title: One summed figure over the whole process tree
     bcps: 8
     tasks_file: e03s02-tasks.yaml
+    status: passing
 value_test: >
   After e03s02 the user sees one CPU number and one RAM number that include every child
   process the script started. That is the measurement the product exists to provide.

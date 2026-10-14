@@ -4,12 +4,12 @@ stack: TypeScript / React + Vite / Tauri (Rust host) / Node 22 / Tailwind CSS / 
 session:
   started: 2026-08-14
   phase: build
-  active_epic: e03
-  active_story: e03s01
-active_epic_id: e03
+  active_epic: e04
+  active_story: e04s01
+active_epic_id: e04
 git:
-  branch: feat/e01s02-script-registry
-  head: d10b2e5
+  branch: chore/e03-close
+  head: pending
 active_flow:
   current_skill: develop-tdd
   next_skill: verify-work
@@ -131,9 +131,9 @@ known_findings:
   swallowed a parse error (unescaped apostrophe in known_findings) and dumped an empty
   skeleton. Restored from git. See specs/bugs/BUG-20260814-06-bp-timing-overwrites-unparseable-state.md'
 handoff:
-  last_step_completed: e03s01 tasks 1-5 passing on feat/e03s01-live-cost (RED/GREEN
-    pairs, red-isolation PASS, full preflight green). Manual verification SC-e03s01-P1-M1
-    awaits the user.
+  last_step_completed: epic e03 done — e03s01 landed cd88d53, e03s02 landed c151d76,
+    manual UAT confirmed; capsule archived to specs/epics/archive/e03-process-cost (manual
+    git mv per BUG-20260814-05)
   open_decisions_from:
   - 'GPU probe order: which vendor tools, in what order (blocks e04 only)'
   required_reading:
@@ -143,12 +143,12 @@ handoff:
   - specs/release-plan.yaml
   - specs/adr/0001-tauri-shell-with-rust-host.md
   - specs/adr/0002-run-supervision-and-output-caps.md
-  - specs/epics/e03-process-cost/epic.yaml
-  - specs/epics/e03-process-cost/e03s01-live-cost.md
-  - specs/epics/e03-process-cost/e03s01-tasks.yaml
-  next_skill: verify-work
-  next_target: manual verification of e03s01 (Verification Script in e03s01-live-cost.md),
-    then verify-work, then land e03s01 and start e03s02
+  - specs/epics/archive/e03-process-cost/epic.yaml
+  - specs/epics/e04-gpu-visibility/epic.yaml
+  - specs/epics/e04-gpu-visibility/e04s01-tasks.yaml
+  next_skill: research-first
+  next_target: close the GPU probe order decision (which vendor tools, in what order) for
+    epic e04, then plan-work for e04
 metrics:
   skill_timings:
     plan-work:
@@ -156,7 +156,6 @@ metrics:
       total_seconds: 176.0
       avg_seconds: 176.0
     develop-tdd:
-      calls: 1
-      total_seconds: 387.0
-      avg_seconds: 387.0
-      _start: '2026-10-14T18:21:44Z'
+      calls: 2
+      total_seconds: 1094.0
+      avg_seconds: 547.0
