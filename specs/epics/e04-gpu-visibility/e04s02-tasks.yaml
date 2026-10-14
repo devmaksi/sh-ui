@@ -1,20 +1,39 @@
 story_id: e04s02
 title: Say what cannot be measured
-status: todo
+spec: e04s02-unavailable.md
+status: failing
 bcps: 3
+risk: P1
+verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
 tasks:
-  - id: t1
-    description: Represent an unmeasurable metric as an explicit unavailable state in the snapshot type. Zero is never used for unknown.
+  - id: 1
+    description: Unavailable carries a plain-words reason through snapshot and payload; nulls are never zero-filled.
     verify: cargo test --manifest-path src-tauri/Cargo.toml metric_unavailable
-    status: todo
-  - id: t2
-    description: Render the unavailable state as a labelled gap with the reason the probe failed.
-    verify: npm run test -- cost-readout-unavailable
-    status: todo
-  - id: t3
-    description: Manual verification on a machine with no GPU tooling.
+    scenarios: [SC-e04s02-P0-01]
+    risk: P0
+    status: failing
+    allure:
+      severity: critical
+      categories: ["host", "IPC contract", "honest metrics"]
+  - id: 2
+    description: Render the labelled gap with the reason while CPU and RAM stay live.
+    verify: npm run test -- CostReadoutUnavailable
+    scenarios: [SC-e04s02-P1-02]
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories: ["ui"]
+  - id: 3
+    description: Manual verification with GPU tooling hidden from PATH.
     verify-script: |
-      1. Run the app with vendor GPU tools removed from PATH.
+      1. Start the app with a PATH that excludes the directory holding nvidia-smi.
       2. Start a script.
-      3. Confirm CPU and RAM still show.
-      4. Confirm GPU and VRAM show as not measurable, not as 0.
+      3. Confirm CPU and RAM still show and update.
+      4. Confirm GPU and VRAM show as not measurable with a reason, not as 0.
+    scenarios: [SC-e04s02-P1-M1]
+    risk: P2
+    status: failing
+    allure:
+      severity: normal
+      categories: ["manual verification"]

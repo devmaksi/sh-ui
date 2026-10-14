@@ -1,17 +1,44 @@
 story_id: e04s01
 title: Report GPU and VRAM when the machine can measure them
-status: todo
+spec: e04s01-gpu-report.md
+status: failing
 bcps: 5
+risk: P1
+verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
 tasks:
-  - id: t1
-    description: Probe vendor GPU tools in a fixed order and record which one answered.
+  - id: 1
+    description: Probe vendor GPU tools in the DEC-14 order with an injected runner; first answerer wins, none answers Unavailable.
     verify: cargo test --manifest-path src-tauri/Cargo.toml gpu_probe
-    status: todo
-  - id: t2
-    description: Attribute VRAM and GPU utilisation to the run process tree where the vendor tool exposes per-process data.
+    scenarios: [SC-e04s01-P1-01]
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories: ["host", "gpu probe"]
+  - id: 2
+    description: Sum vendor per-process GPU memory over the run process tree only.
     verify: cargo test --manifest-path src-tauri/Cargo.toml gpu_attribution
-    status: todo
-  - id: t3
-    description: Add GPU and VRAM to the metrics snapshot and to the readout.
-    verify: npm run test -- cost-readout-gpu
-    status: todo
+    scenarios: [SC-e04s01-P1-02]
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories: ["host", "gpu attribution"]
+  - id: 3
+    description: Carry vramBytes, gpuUtilPercent and gpuSource into run://metrics; null is never zero.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml gpu_payload
+    scenarios: [SC-e04s01-P1-01, SC-e04s01-P2-03]
+    risk: P2
+    status: failing
+    allure:
+      severity: normal
+      categories: ["host", "IPC contract"]
+  - id: 4
+    description: Render GPU utilization and VRAM in the readout when measured.
+    verify: npm run test -- CostReadoutGpu
+    scenarios: [SC-e04s01-P2-04]
+    risk: P2
+    status: failing
+    allure:
+      severity: normal
+      categories: ["ui"]

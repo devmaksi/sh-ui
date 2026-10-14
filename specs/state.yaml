@@ -82,6 +82,15 @@ decisions:
   what: CPU percent is percent of one core — Δ(utime+stime) ticks over Δwall seconds.
     A multi-threaded script may exceed 100%.
   why: Matches top/htop semantics. User chose option A on 2026-08-14.
+- id: DEC-14
+  what: GPU probe order is nvidia-smi → amd-smi → rocm-smi (legacy) → intel_gpu_top
+    (only if it runs without root); otherwise an explicit unavailable state. Attribution
+    is per-process VRAM intersected with the run process tree, plus device utilization
+    max as context. Probed once per poller, cached for the run.
+  why: nvidia-smi query-compute-apps is the only per-process source verified live
+    on the dev machine; rocm-smi is deprecated; intel_gpu_top needs CAP_PERFMON which
+    collides with the no-root constraint. User confirmed order and option A (VRAM
+    + device util, no pmon per-process util) on 2026-08-14.
 - id: DEC-13
   what: Tree RAM is the sum of RSS over the process tree. Shared pages count in each
     process.
@@ -109,9 +118,7 @@ deviations:
     npm run preflight.
   why: The bundled golden suite tests the bigpowers repository itself and reports
     25 false failures here. See specs/bugs/BUG-20260814-03-golden-gates-not-portable.md
-open_decisions:
-- 'Metric source: /proc polling by hand, or a crate that reads it'
-- 'GPU probe order: which vendor tools, in what order'
+open_decisions: []
 planning_coverage:
   planned:
   - e01
@@ -132,8 +139,8 @@ known_findings:
   skeleton. Restored from git. See specs/bugs/BUG-20260814-06-bp-timing-overwrites-unparseable-state.md'
 handoff:
   last_step_completed: epic e03 done — e03s01 landed cd88d53, e03s02 landed c151d76,
-    manual UAT confirmed; capsule archived to specs/epics/archive/e03-process-cost (manual
-    git mv per BUG-20260814-05)
+    manual UAT confirmed; capsule archived to specs/epics/archive/e03-process-cost
+    (manual git mv per BUG-20260814-05)
   open_decisions_from:
   - 'GPU probe order: which vendor tools, in what order (blocks e04 only)'
   required_reading:
@@ -147,14 +154,14 @@ handoff:
   - specs/epics/e04-gpu-visibility/epic.yaml
   - specs/epics/e04-gpu-visibility/e04s01-tasks.yaml
   next_skill: research-first
-  next_target: close the GPU probe order decision (which vendor tools, in what order) for
-    epic e04, then plan-work for e04
+  next_target: close the GPU probe order decision (which vendor tools, in what order)
+    for epic e04, then plan-work for e04
 metrics:
   skill_timings:
     plan-work:
-      calls: 1
-      total_seconds: 176.0
-      avg_seconds: 176.0
+      calls: 2
+      total_seconds: 228.0
+      avg_seconds: 114.0
     develop-tdd:
       calls: 2
       total_seconds: 1094.0
