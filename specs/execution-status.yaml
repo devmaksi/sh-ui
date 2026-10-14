@@ -11,9 +11,9 @@ development_status:
   e03: done
   e03s01: done
   e03s02: done
-  e04: planned
-  e04s01: planned
-  e04s02: planned
+  e04: done
+  e04s01: done
+  e04s02: done
 
 epics:
   e01:
@@ -32,7 +32,7 @@ epics:
     wsjf: 1.08
     total_bcps: 13
   e04:
-    status: backlog
+    status: done
     title: 'GPU and VRAM, honestly'
     wsjf: 1.0
     total_bcps: 8
@@ -116,18 +116,18 @@ stories:
     tasks_passing: 5
     tasks_failing: 0
   e04s01:
-    status: planned
+    status: done
     title: Report GPU and VRAM when the machine can measure them
     bcps: 5
     epic: e04
     tasks_total: 4
-    tasks_passing: 0
-    tasks_failing: 4
+    tasks_passing: 4
+    tasks_failing: 0
   e04s02:
-    status: planned
+    status: done
     title: Say what cannot be measured
     bcps: 3
     epic: e04
     tasks_total: 3
-    tasks_passing: 0
-    tasks_failing: 3
+    tasks_passing: 3
+    tasks_failing: 0

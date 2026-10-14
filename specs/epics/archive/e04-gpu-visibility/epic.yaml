@@ -3,17 +3,19 @@ title: GPU and VRAM, honestly
 capsule_dir: epics/e04-gpu-visibility
 wsjf: 1.00
 total_bcps: 8
-status: planned
+status: done
 delta: ADDED
 stories:
   - id: e04s01
     title: Report GPU and VRAM when the machine can measure them
     bcps: 5
     tasks_file: e04s01-tasks.yaml
+    status: passing
   - id: e04s02
     title: Say what cannot be measured
     bcps: 3
     tasks_file: e04s02-tasks.yaml
+    status: passing
 value_test: >
   After e04s02 a user on a machine with no GPU tooling sees an explicit "not measurable
   here" instead of a zero. That protects the credibility of every other number.

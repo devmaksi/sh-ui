@@ -4,9 +4,9 @@ stack: TypeScript / React + Vite / Tauri (Rust host) / Node 22 / Tailwind CSS / 
 session:
   started: 2026-08-14
   phase: build
-  active_epic: e04
-  active_story: e04s01
-active_epic_id: e04
+  active_epic: e02
+  active_story: e02s01
+active_epic_id: e02
 git:
   branch: chore/e03-close
   head: pending
@@ -138,11 +138,10 @@ known_findings:
   swallowed a parse error (unescaped apostrophe in known_findings) and dumped an empty
   skeleton. Restored from git. See specs/bugs/BUG-20260814-06-bp-timing-overwrites-unparseable-state.md'
 handoff:
-  last_step_completed: epic e03 done — e03s01 landed cd88d53, e03s02 landed c151d76,
-    manual UAT confirmed; capsule archived to specs/epics/archive/e03-process-cost
-    (manual git mv per BUG-20260814-05)
-  open_decisions_from:
-  - 'GPU probe order: which vendor tools, in what order (blocks e04 only)'
+  last_step_completed: epic e04 done — e04s01 landed 7fca6c5, e04s02 landed, manual UAT
+    confirmed; capsule archived to specs/epics/archive/e04-gpu-visibility (manual git mv
+    per BUG-20260814-05). Release order e01, e03, e04 complete; e02 remains.
+  open_decisions_from: []
   required_reading:
   - AGENTS.md
   - CONVENTIONS.md
@@ -151,11 +150,12 @@ handoff:
   - specs/adr/0001-tauri-shell-with-rust-host.md
   - specs/adr/0002-run-supervision-and-output-caps.md
   - specs/epics/archive/e03-process-cost/epic.yaml
-  - specs/epics/e04-gpu-visibility/epic.yaml
-  - specs/epics/e04-gpu-visibility/e04s01-tasks.yaml
-  next_skill: research-first
-  next_target: close the GPU probe order decision (which vendor tools, in what order)
-    for epic e04, then plan-work for e04
+  - specs/epics/archive/e04-gpu-visibility/epic.yaml
+  - specs/epics/e02-configure-and-control/epic.yaml
+  - specs/epics/e02-configure-and-control/e02s01-tasks.yaml
+  next_skill: plan-work
+  next_target: plan-work for epic e02 (configure and control the run) — four sliced stories,
+    no detailed tasks yet
 metrics:
   skill_timings:
     plan-work:
@@ -163,7 +163,6 @@ metrics:
       total_seconds: 228.0
       avg_seconds: 114.0
     develop-tdd:
-      calls: 3
-      total_seconds: 1663.0
-      avg_seconds: 554.3333333333334
-      _start: '2026-10-14T18:47:03Z'
+      calls: 4
+      total_seconds: 2137.0
+      avg_seconds: 534.25
