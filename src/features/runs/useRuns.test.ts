@@ -117,7 +117,7 @@ describe("useRuns", () => {
       host.emitEnded("run-1", 0);
     });
 
-    expect(result.current.runs[0].state).toBe("ended");
+    expect(result.current.runs[0].state).toBe("exited");
     expect(result.current.runs[0].exitCode).toBe(0);
   });
 

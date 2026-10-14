@@ -66,7 +66,7 @@ fn stop_sends_signal_to_the_whole_group() {
     assert!(matches!(
         ended,
         Some(RunEvent::Ended {
-            stopped: true,
+            status: sh_ui_lib::supervisor::RunStatus::Stopped,
             ..
         })
     ));

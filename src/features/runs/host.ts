@@ -1,5 +1,5 @@
 // story: e01s03 e03s01
-import type { OutputStream, ProcessCost, RunHandle } from "./types";
+import type { OutputStream, ProcessCost, RunEndStatus, RunHandle } from "./types";
 
 export interface OutputEvent {
   runId: string;
@@ -10,8 +10,8 @@ export interface OutputEvent {
 export interface EndedEvent {
   runId: string;
   code: number | null;
-  // story: e02s02
-  stopped: boolean;
+  // story: e02s03 — the host-derived end verdict, once per run.
+  status: RunEndStatus;
 }
 
 export interface MetricsEvent {

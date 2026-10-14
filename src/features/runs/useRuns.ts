@@ -114,7 +114,7 @@ export function useRuns(host: RunHost) {
       setRuns((current) =>
         current.map((run) =>
           run.handle.runId === event.runId
-            ? { ...run, state: "ended", exitCode: event.code }
+            ? { ...run, state: event.status, exitCode: event.code }
             : run,
         ),
       );

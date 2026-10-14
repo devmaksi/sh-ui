@@ -30,8 +30,8 @@ pub struct OutputPayload {
 pub struct EndedPayload {
     pub run_id: String,
     pub code: Option<i32>,
-    // story: e02s02
-    pub stopped: bool,
+    // story: e02s03
+    pub status: &'static str,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -97,8 +97,8 @@ impl EventSink for TauriRunSink {
                     },
                 );
             }
-            RunEvent::Ended { run_id, code, stopped } => {
-                let _ = self.app.emit(EVENT_ENDED, EndedPayload { run_id, code, stopped });
+            RunEvent::Ended { run_id, code, status } => {
+                let _ = self.app.emit(EVENT_ENDED, EndedPayload { run_id, code, status: status.tag() });
             }
             RunEvent::Metrics {
                 run_id,

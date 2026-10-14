@@ -13,7 +13,10 @@ export interface RunHandle {
   pid: number;
 }
 
-export type RunState = "running" | "ended";
+// story: e02s03 — the five states the run view renders. notRunning belongs to entries
+// with no run record in this session; the four others come from the host.
+export type RunEndStatus = "exited" | "failed" | "stopped";
+export type RunState = "notRunning" | "running" | RunEndStatus;
 
 /** One process inside the run's tree, for the breakdown behind the headline. */
 export interface ProcessCost {

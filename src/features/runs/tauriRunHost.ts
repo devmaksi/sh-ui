@@ -8,7 +8,7 @@ import type {
   OutputListener,
   RunHost,
 } from "./host";
-import type { OutputStream, ProcessCost, RunHandle, StartFailure } from "./types";
+import type { OutputStream, ProcessCost, RunEndStatus, RunHandle, StartFailure } from "./types";
 
 interface RunOutputPayload {
   runId: string;
@@ -19,8 +19,8 @@ interface RunOutputPayload {
 interface RunEndedPayload {
   runId: string;
   code: number | null;
-  // story: e02s02
-  stopped: boolean;
+  // story: e02s03
+  status: RunEndStatus;
 }
 
 interface RunMetricsPayload {
@@ -92,7 +92,7 @@ export const tauriRunHost: RunHost = {
 
   onEnded: (listener: EndedListener) =>
     subscribe<RunEndedPayload>("run://ended", (payload) =>
-      listener({ runId: payload.runId, code: payload.code, stopped: payload.stopped }),
+      listener({ runId: payload.runId, code: payload.code, status: payload.status }),
     ),
 
   onMetrics: (listener: MetricsListener) =>

@@ -6,7 +6,7 @@ import type {
   OutputListener,
   RunHost,
 } from "../features/runs/host";
-import type { ProcessCost, RunHandle, StartErrorKind, StartFailure } from "../features/runs/types";
+import type { ProcessCost, RunEndStatus, RunHandle, StartErrorKind, StartFailure } from "../features/runs/types";
 
 export class FakeRunHost implements RunHost {
   readonly startCalls: string[] = [];
@@ -77,10 +77,10 @@ export class FakeRunHost implements RunHost {
     }
   }
 
-  // story: e02s02 — stopped defaults to false: a plain ended event.
-  emitEnded(runId: string, code: number | null, stopped = false): void {
+  // story: e02s03 — plain ended events default to exited.
+  emitEnded(runId: string, code: number | null, status: RunEndStatus = "exited"): void {
     for (const listener of this.endedListeners) {
-      listener({ runId, code, stopped });
+      listener({ runId, code, status });
     }
   }
 

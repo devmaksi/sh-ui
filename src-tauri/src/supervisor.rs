@@ -56,8 +56,8 @@ pub enum RunEvent {
     Ended {
         run_id: String,
         code: Option<i32>,
-        // story: e02s02 — true when the termination was a user stop, not a natural exit.
-        stopped: bool,
+        // story: e02s03 — one honest verdict per finished run, derived in watch_exit.
+        status: RunStatus,
     },
     Metrics {
         run_id: String,
@@ -69,6 +69,26 @@ pub enum RunEvent {
         gpu_source: String,
         gpu_reason: Option<String>,
     },
+}
+
+/// story: e02s03 — how a run ended. exited: code 0. failed: non-zero code or death by
+/// an unrequested signal (code None). stopped: the user pressed stop.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RunStatus {
+    Exited,
+    Failed,
+    Stopped,
+}
+
+impl RunStatus {
+    /// Stable tag for the UI payload union.
+    pub fn tag(self) -> &'static str {
+        match self {
+            RunStatus::Exited => "exited",
+            RunStatus::Failed => "failed",
+            RunStatus::Stopped => "stopped",
+        }
+    }
 }
 
 /// What the supervisor does with output. The Tauri adapter turns events into app events;
@@ -519,11 +539,15 @@ fn watch_exit(
         let stopped = stopped.load(Ordering::SeqCst);
         drop(guard);
 
-        sink.emit(RunEvent::Ended {
-            run_id,
-            code,
-            stopped,
-        });
+        let status = if stopped {
+            RunStatus::Stopped
+        } else if code == Some(0) {
+            RunStatus::Exited
+        } else {
+            RunStatus::Failed
+        };
+
+        sink.emit(RunEvent::Ended { run_id, code, status });
         finished.store(true, Ordering::SeqCst);
     });
 }

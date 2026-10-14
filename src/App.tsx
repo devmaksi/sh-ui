@@ -9,6 +9,8 @@ import { useRegistry } from "./features/registry/useRegistry";
 import { CostReadout } from "./features/runs/CostReadout";
 import { OutputPanel } from "./features/runs/OutputPanel";
 import { RunControls } from "./features/runs/RunControls";
+// story: e02s03
+import { RunStatusBadge } from "./features/runs/RunStatusBadge";
 import { tauriRunHost } from "./features/runs/tauriRunHost";
 import { useRuns } from "./features/runs/useRuns";
 
@@ -84,9 +86,10 @@ export function App() {
           <h2 className="text-sm font-medium">
             {activeEntry?.path ?? activeRun.handle.entryId} · pid{" "}
             {activeRun.handle.pid} ·{" "}
-            {activeRun.state === "ended"
-              ? `ended with code ${activeRun.exitCode ?? "unknown"}`
-              : "running"}
+            <RunStatusBadge
+              state={activeRun.state}
+              exitCode={activeRun.exitCode}
+            />
           </h2>
           {/* story: e02s02 */}
           <div className="mt-2">

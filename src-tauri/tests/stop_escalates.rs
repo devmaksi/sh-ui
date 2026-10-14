@@ -33,7 +33,13 @@ fn stop_escalates_to_sigkill_after_the_grace() {
     while Instant::now() < deadline {
         if !Path::new(&format!("/proc/{}", handle.pid)).exists() {
             let ended = recorder.events().into_iter().any(|event| {
-                matches!(event, RunEvent::Ended { stopped: true, .. })
+                matches!(
+                    event,
+                    RunEvent::Ended {
+                        status: sh_ui_lib::supervisor::RunStatus::Stopped,
+                        ..
+                    }
+                )
             });
             assert!(ended, "an escalated stop must still report its end");
             return;

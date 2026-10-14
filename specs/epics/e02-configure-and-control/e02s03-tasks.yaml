@@ -3,26 +3,27 @@ title: Show how the run ended
 spec: e02s03-end-state.md
 # Completion discipline (Ended after reader drain) exists from e01s03; the poller's
 # finished flag from e03s01. This story adds the derived end status and the five UI states.
-status: failing
+# All three task verifies pass; manual UAT confirmed by the user on 2026-08-14.
+status: passing
 bcps: 4
 risk: P1
 verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
 tasks:
   - id: 1
     description: RunStatus derivation in watch_exit (exited/failed/stopped) and status field on the Ended payload.
-    verify: cargo test --manifest-path src-tauri/Cargo.toml run_exit_state
+    verify: cargo test --manifest-path src-tauri/Cargo.toml --test run_exit_state
     scenarios: [SC-e02s03-P1-01]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["host", "run lifecycle"]
   - id: 2
     description: Ended emitted exactly once per run and no Metrics event for that run after Ended.
-    verify: cargo test --manifest-path src-tauri/Cargo.toml final_state_event
+    verify: cargo test --manifest-path src-tauri/Cargo.toml --test final_state_event
     scenarios: [SC-e02s03-P1-02]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["host", "IPC contract"]
@@ -31,7 +32,7 @@ tasks:
     verify: npm run test -- RunStatus
     scenarios: [SC-e02s03-P2-03]
     risk: P2
-    status: failing
+    status: passing
     allure:
       severity: normal
       categories: ["ui"]
