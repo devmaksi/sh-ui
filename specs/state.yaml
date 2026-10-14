@@ -3,11 +3,11 @@ project: sh-ui
 stack: TypeScript / React + Vite / Tauri (Rust host) / Node 22 / Tailwind CSS / Vitest
 session:
   started: 2026-08-14
-  phase: plan
+  phase: build
   active_epic: e01
-  active_story: null
+  active_story: e01s01
 active_flow:
-  current_skill: plan-tests
+  current_skill: release-branch
   next_skill: kickoff-branch
 scope:
   file: specs/product/SCOPE_LATEST.yaml
@@ -56,6 +56,13 @@ deviations:
   why: guard-git read HEAD before git init ran, so the protected-branch check saw
     "unknown". See specs/bugs/BUG-20260814-01-guard-git-unborn-main.md
   resolution: Kept as the root commit. All later commits use kickoff-branch and land-branch.sh.
+- id: DEV-02
+  what: Worktrees are not used in this project. Feature branches are checked out in the primary checkout.
+  why: guard-git reads the HEAD of its own directory, so commits made from a linked worktree are refused. See specs/bugs/BUG-20260814-02-guard-git-blocks-worktree-commits.md
+  resolution: Re-enable worktrees when the hook resolves the target repository.
+- id: DEV-03
+  what: run-verification-gates.sh is not run in this project. The project gate is npm run preflight.
+  why: The bundled golden suite tests the bigpowers repository itself and reports 25 false failures here. See specs/bugs/BUG-20260814-03-golden-gates-not-portable.md
 open_decisions:
 - 'Metric source: /proc polling by hand, or a crate that reads it'
 - 'GPU probe order: which vendor tools, in what order'
@@ -71,7 +78,7 @@ test_plans:
 known_findings:
   - 'check-blind-spots: 3 MEDIUM sc-gap for e01s01-e01s03 — expected, no test files exist yet. They clear when SC tags land in test code.'
 handoff:
-  last_step_completed: 'plan-tests: e01 test design published — 28 scenarios, 5 NFR commands, fixture plan; plan-consistency-check PASS'
+  last_step_completed: 'e01s01 UAT confirmed by the user; story passing; landing to main'
   open_decisions_from: open_decisions
   required_reading:
   - AGENTS.md

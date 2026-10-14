@@ -1,0 +1,6 @@
+{
+  "entries": [
+    { "id": "a1", "path": "/home/user/build.sh" },
+    { "id": "b2", "path": "/home/user/deploy.sh" }
+  ]
+}

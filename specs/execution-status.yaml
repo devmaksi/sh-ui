@@ -44,8 +44,8 @@ stories:
     bcps: 5
     epic: e01
     tasks_total: 6
-    tasks_passing: 0
-    tasks_failing: 6
+    tasks_passing: 6
+    tasks_failing: 0
     risk_max: P0
   e01s02:
     status: backlog

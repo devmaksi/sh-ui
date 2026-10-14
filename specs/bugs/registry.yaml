@@ -8,3 +8,19 @@ bugs:
     summary: guard-git allows a direct commit onto an unborn protected branch because it reads HEAD before the command runs
     status: logged
     file: specs/bugs/BUG-20260814-01-guard-git-unborn-main.md
+  - bug_id: BUG-20260814-02
+    date: 2026-08-14
+    severity: medium
+    priority: P1
+    scope: bigpowers hooks (upstream)
+    summary: guard-git refuses commits made from a linked worktree because it reads the HEAD of its own directory
+    status: logged
+    file: specs/bugs/BUG-20260814-02-guard-git-blocks-worktree-commits.md
+  - bug_id: BUG-20260814-03
+    date: 2026-08-14
+    severity: medium
+    priority: P1
+    scope: bigpowers scripts (upstream)
+    summary: run-verification-gates.sh runs the bigpowers self-test in a consumer project and reports 25 false failures
+    status: logged
+    file: specs/bugs/BUG-20260814-03-golden-gates-not-portable.md

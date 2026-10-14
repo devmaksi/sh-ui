@@ -11,3 +11,7 @@ coverage/
 allure-results/
 .bigpowers/
 specs/state.yaml.lock
+
+# Tauri / Rust
+src-tauri/target
+src-tauri/gen/schemas

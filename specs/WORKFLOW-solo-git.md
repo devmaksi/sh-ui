@@ -6,9 +6,17 @@ Registered profile: `solo-git`. Source: bigpowers `profiles/solo-git.md`.
 ## Day-to-day arc
 
 1. **On `main`:** `survey-context` → `scope-work` → `slice-tasks` → `plan-work` → `kickoff-branch`
-2. **In the worktree:** `develop-tdd` / `execute-plan` → `verify-work` → `audit-code` → `commit-message`
+2. **In the feature branch:** `develop-tdd` / `execute-plan` → `verify-work` → `audit-code` → `commit-message`
 3. **Integrate:** `release-branch` in **solo-local** mode → `bash scripts/land-branch.sh <branch> "<message>"`
-4. **Done when:** `git branch --show-current` prints `main` and the feature worktree is gone
+4. **Done when:** `git branch --show-current` prints `main` and the feature branch is gone
+
+## Worktrees are disabled in this project
+
+`kickoff-branch` normally isolates work in a linked worktree. It does not here while
+`specs/bugs/BUG-20260814-02-guard-git-blocks-worktree-commits.md` stands: the guard hook reads
+the HEAD of its own directory, so every commit made from a worktree is refused. Use a branch
+in the primary checkout instead. Re-enable worktrees when the hook resolves the target
+repository.
 
 ## Gates that stay mandatory
 
