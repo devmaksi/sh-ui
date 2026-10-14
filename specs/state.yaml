@@ -1,0 +1,25 @@
+workflow_mode: solo-git
+project: sh-ui
+stack: TypeScript / React + Vite / Node 22 / Tailwind CSS / Vitest
+
+session:
+  started: 2026-08-14
+  phase: discover
+  active_epic: null
+  active_story: null
+
+active_flow:
+  current_skill: seed-conventions
+  next_skill: survey-context
+
+handoff:
+  last_step_completed: "seed-conventions: AGENTS.md, CONVENTIONS.md, specs/ tree created"
+  open_decisions:
+    - "Styling default is Tailwind CSS — confirm or switch to CSS Modules"
+    - "Data-fetching library not chosen yet (TanStack Query candidate)"
+    - "Application domain/features not defined yet — needs scope-work"
+  required_reading:
+    - AGENTS.md
+    - CONVENTIONS.md
+    - specs/WORKFLOW-solo-git.md
+  next_skill: survey-context
