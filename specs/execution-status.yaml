@@ -8,9 +8,9 @@ development_status:
   e02s02: backlog
   e02s03: backlog
   e02s04: backlog
-  e03: backlog
-  e03s01: backlog
-  e03s02: backlog
+  e03: planned
+  e03s01: planned
+  e03s02: planned
   e04: backlog
   e04s01: backlog
   e04s02: backlog
@@ -27,7 +27,7 @@ epics:
     wsjf: 0.71
     total_bcps: 18
   e03:
-    status: backlog
+    status: planned
     title: What the script costs
     wsjf: 1.08
     total_bcps: 13
@@ -100,21 +100,21 @@ stories:
     tasks_passing: 0
     tasks_failing: 0
   e03s01:
-    status: backlog
+    status: planned
     title: Live CPU and RAM of the running script
     bcps: 5
     epic: e03
-    tasks_total: 3
+    tasks_total: 5
     tasks_passing: 0
-    tasks_failing: 0
+    tasks_failing: 5
   e03s02:
-    status: backlog
+    status: planned
     title: One summed figure over the whole process tree
     bcps: 8
     epic: e03
     tasks_total: 5
     tasks_passing: 0
-    tasks_failing: 0
+    tasks_failing: 5
   e04s01:
     status: backlog
     title: Report GPU and VRAM when the machine can measure them

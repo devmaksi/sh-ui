@@ -4,14 +4,14 @@ stack: TypeScript / React + Vite / Tauri (Rust host) / Node 22 / Tailwind CSS / 
 session:
   started: 2026-08-14
   phase: build
-  active_epic: e01
-  active_story: e01s01
-active_epic_id: e01
+  active_epic: e03
+  active_story: e03s01
+active_epic_id: e03
 git:
   branch: feat/e01s02-script-registry
   head: d10b2e5
 active_flow:
-  current_skill: release-branch
+  current_skill: plan-work
   next_skill: kickoff-branch
 scope:
   file: specs/product/SCOPE_LATEST.yaml
@@ -55,14 +55,14 @@ decisions:
   why: The official template carries Linux build wiring a hand-built config would
     get wrong.
 - id: DEC-07
-  what: Every run is spawned as a process-group leader with setsid, and stopping a run
-    is killpg SIGTERM then SIGKILL after a two second grace.
-  why: One call must reach every descendant of a script that forks. Walking /proc races
-    with re-parenting.
+  what: Every run is spawned as a process-group leader with setsid, and stopping a
+    run is killpg SIGTERM then SIGKILL after a two second grace.
+  why: One call must reach every descendant of a script that forks. Walking /proc
+    races with re-parenting.
   ref: specs/adr/0002-run-supervision-and-output-caps.md
 - id: DEC-08
-  what: The host executes the registered file directly. A file without the execute bit
-    is refused with NotExecutable.
+  what: The host executes the registered file directly. A file without the execute
+    bit is refused with NotExecutable.
   why: Running sh <path> would execute something other than the file the user registered
     and would remove NotExecutable from the contract.
   ref: specs/adr/0002-run-supervision-and-output-caps.md
@@ -71,10 +71,26 @@ decisions:
     buffer, with dropped lines counted on screen.
   why: A fast-printing script must not grow the webview until the app stops responding.
   ref: specs/adr/0002-run-supervision-and-output-caps.md
+- id: DEC-11
+  what: Metric source is the procfs crate (0.18.0, tokio-rs). The host reads /proc
+    through it; CPU% and tree-sum math stay in our metrics module.
+  why: Linux-only product, mature maintained crate, Task::children() gives the descendant
+    walk e03s02 needs. Hand-parsing /proc/<pid>/stat by field index is fragile across
+    kernel versions; sysinfo is cross-platform weight we do not need. User confirmed
+    the dependency on 2026-08-14.
+- id: DEC-12
+  what: CPU percent is percent of one core — Δ(utime+stime) ticks over Δwall seconds.
+    A multi-threaded script may exceed 100%.
+  why: Matches top/htop semantics. User chose option A on 2026-08-14.
+- id: DEC-13
+  what: Tree RAM is the sum of RSS over the process tree. Shared pages count in each
+    process.
+  why: Matches ps semantics and the stated need. Pss via smaps_rollup deferred as
+    heavier with no stated need. User chose option A on 2026-08-14.
 - id: DEC-10
   what: A run starts in the directory that holds the script.
-  why: Scripts read their sibling files by relative path. Inheriting the host CWD made
-    the same script behave differently under cargo test and under npm run dev.
+  why: Scripts read their sibling files by relative path. Inheriting the host CWD
+    made the same script behave differently under cargo test and under npm run dev.
   ref: specs/adr/0002-run-supervision-and-output-caps.md
 deviations:
 - id: DEV-01
@@ -83,30 +99,42 @@ deviations:
     "unknown". See specs/bugs/BUG-20260814-01-guard-git-unborn-main.md
   resolution: Kept as the root commit. All later commits use kickoff-branch and land-branch.sh.
 - id: DEV-02
-  what: Worktrees are not used in this project. Feature branches are checked out in the primary checkout.
-  why: guard-git reads the HEAD of its own directory, so commits made from a linked worktree are refused. See specs/bugs/BUG-20260814-02-guard-git-blocks-worktree-commits.md
+  what: Worktrees are not used in this project. Feature branches are checked out in
+    the primary checkout.
+  why: guard-git reads the HEAD of its own directory, so commits made from a linked
+    worktree are refused. See specs/bugs/BUG-20260814-02-guard-git-blocks-worktree-commits.md
   resolution: Re-enable worktrees when the hook resolves the target repository.
 - id: DEV-03
-  what: run-verification-gates.sh is not run in this project. The project gate is npm run preflight.
-  why: The bundled golden suite tests the bigpowers repository itself and reports 25 false failures here. See specs/bugs/BUG-20260814-03-golden-gates-not-portable.md
+  what: run-verification-gates.sh is not run in this project. The project gate is
+    npm run preflight.
+  why: The bundled golden suite tests the bigpowers repository itself and reports
+    25 false failures here. See specs/bugs/BUG-20260814-03-golden-gates-not-portable.md
 open_decisions:
 - 'Metric source: /proc polling by hand, or a crate that reads it'
 - 'GPU probe order: which vendor tools, in what order'
 planning_coverage:
   planned:
   - e01
+  - e03
   awaiting_plan_work:
   - e02
-  - e03
   - e04
 test_plans:
   e01: specs/tech-architecture/e01-TEST_PLAN_LATEST.md
 known_findings:
-  - 'check-blind-spots: 3 MEDIUM sc-gap for e01s01-e01s03 — expected, no test files exist yet. They clear when SC tags land in test code.'
-  - 'ETXTBSY flake in cargo test: a script held open for writing cannot be exec'd. Source of the transient write handle is not traced. The host now retries 8 times at 25 ms and reports spawnFailed with the OS reason.'
+- 'check-blind-spots: 3 MEDIUM sc-gap for e01s01-e01s03 — expected, no test files
+  exist yet. They clear when SC tags land in test code.'
+- 'ETXTBSY flake in cargo test: a script held open for writing cannot be exec''d.
+  Source of the transient write handle is not traced. The host now retries 8 times
+  at 25 ms and reports spawnFailed with the OS reason.'
+- 'bp-timing.sh silently overwrote specs/state.yaml on 2026-08-14: its yaml.safe_load
+  swallowed a parse error (unescaped apostrophe in known_findings) and dumped an empty
+  skeleton. Restored from git. See specs/bugs/BUG-20260814-06-bp-timing-overwrites-unparseable-state.md'
 handoff:
-  last_step_completed: 'e01 complete — e01s01, e01s02, e01s03 all done and landed to main; user confirmed manual UAT for live output and clean shutdown'
-  open_decisions_from: open_decisions
+  last_step_completed: plan-work for e03 done — e03s01/e03s02 story specs and tasks.yaml
+    written, plan-consistency-check PASS
+  open_decisions_from:
+  - 'GPU probe order: which vendor tools, in what order (blocks e04 only)'
   required_reading:
   - AGENTS.md
   - CONVENTIONS.md
@@ -114,10 +142,12 @@ handoff:
   - specs/release-plan.yaml
   - specs/adr/0001-tauri-shell-with-rust-host.md
   - specs/adr/0002-run-supervision-and-output-caps.md
-  - specs/epics/archive/e01-run-and-watch/epic.yaml
   - specs/epics/e03-process-cost/epic.yaml
-  next_skill: plan-work
-  next_target: 'e03s01 live CPU and RAM. Close the two open decisions first: metric source (/proc by hand or a crate) and GPU probe order.'
+  - specs/epics/e03-process-cost/e03s01-live-cost.md
+  - specs/epics/e03-process-cost/e03s01-tasks.yaml
+  next_skill: kickoff-branch
+  next_target: 'e03s01 live CPU and RAM: kickoff-branch, then develop-tdd on task
+    1 (procfs + metrics module)'
 metrics:
   skill_timings:
     plan-work:

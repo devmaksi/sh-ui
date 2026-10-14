@@ -1,17 +1,53 @@
 story_id: e03s01
 title: Live CPU and RAM of the running script
-status: todo
+spec: e03s01-live-cost.md
+status: failing
 bcps: 5
+risk: P1
+verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
 tasks:
-  - id: t1
-    description: Read CPU time and resident memory for one pid from /proc, behind a metrics module with a testable interface.
+  - id: 1
+    description: Add procfs and the metrics module — ProcessSample, ProcReader trait, a procfs-backed reader; read a real spawned pid.
     verify: cargo test --manifest-path src-tauri/Cargo.toml proc_reader
-    status: todo
-  - id: t2
-    description: Emit a metrics event on a fixed interval while a run is alive, and stop emitting when it ends.
+    scenarios: [SC-e03s01-P1-01]
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories: ["host", "metrics"]
+  - id: 2
+    description: CPU percent math from tick deltas and wall deltas with the named interval constant.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml cpu_percent_math
+    scenarios: [SC-e03s01-P2-04]
+    risk: P2
+    status: failing
+    allure:
+      severity: normal
+      categories: ["host", "metrics"]
+  - id: 3
+    description: Poller emits RunEvent::Metrics every interval while the run is alive and stops after it ends.
     verify: cargo test --manifest-path src-tauri/Cargo.toml metrics_emits_and_stops
-    status: todo
-  - id: t3
-    description: Render the live CPU and RAM readout for a selected run.
+    scenarios: [SC-e03s01-P1-02, SC-e03s01-P1-03]
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories: ["host", "metrics"]
+  - id: 4
+    description: Map RunEvent::Metrics to run://metrics with a camelCase payload.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml metrics_event_payload
+    scenarios: [SC-e03s01-P1-02]
+    risk: P2
+    status: failing
+    allure:
+      severity: normal
+      categories: ["host", "IPC contract"]
+  - id: 5
+    description: Render the live CPU and RAM readout for the selected run.
     verify: npm run test -- cost-readout
-    status: todo
+    scenarios: [SC-e03s01-P2-05]
+    risk: P2
+    status: failing
+    allure:
+      severity: normal
+      categories: ["ui"]

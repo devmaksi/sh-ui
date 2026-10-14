@@ -1,28 +1,57 @@
 story_id: e03s02
 title: One summed figure over the whole process tree
-status: todo
+spec: e03s02-tree-cost.md
+status: failing
 bcps: 8
+risk: P1
+verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
 tasks:
-  - id: t1
-    description: Walk the descendant process tree of a run pid and collect every live descendant.
+  - id: 1
+    description: Walk descendants depth-first through ProcReader::children (procfs Task::children).
     verify: cargo test --manifest-path src-tauri/Cargo.toml process_tree_walk
-    status: todo
-  - id: t2
-    description: Sum CPU and RAM across the tree into one snapshot, with a named constant for the refresh interval.
+    scenarios: [SC-e03s02-P1-01]
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories: ["host", "metrics"]
+  - id: 2
+    description: Sum CPU and RAM across the tree into one snapshot, reusing the named interval constant.
     verify: cargo test --manifest-path src-tauri/Cargo.toml tree_sum
-    status: todo
-  - id: t3
-    description: Handle a child that exits mid-refresh without dropping or double counting the total.
+    scenarios: [SC-e03s02-P1-02]
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories: ["host", "metrics"]
+  - id: 3
+    description: Drop a child that exits between walk and read without double counting or panicking.
     verify: cargo test --manifest-path src-tauri/Cargo.toml tree_sum_handles_exit
-    status: todo
-  - id: t4
-    description: Show the summed figure as the headline number, with the per-process breakdown behind it.
+    scenarios: [SC-e03s02-P1-03]
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories: ["host", "race handling"]
+  - id: 4
+    description: Show the summed figure as the headline with the per-process breakdown behind a toggle.
     verify: npm run test -- cost-readout-tree
-    status: todo
-  - id: t5
-    description: Manual verification with a script that forks known children.
+    scenarios: [SC-e03s02-P2-04]
+    risk: P2
+    status: failing
+    allure:
+      severity: normal
+      categories: ["ui"]
+  - id: 5
+    description: Manual verification with a script that forks three children of known memory size.
     verify-script: |
       1. Register a script that forks three children, each allocating a known memory size.
       2. Start it.
       3. Confirm the headline RAM figure is at least the sum of the three allocations.
       4. Kill one child externally and confirm the figure drops without overshooting.
+    scenarios: [SC-e03s02-P1-M1]
+    risk: P2
+    status: failing
+    allure:
+      severity: normal
+      categories: ["manual verification"]
