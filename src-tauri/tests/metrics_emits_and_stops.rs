@@ -81,7 +81,7 @@ fn metrics_emits_and_stops_poller_stops_when_sample_gone() {
         "run-1".to_string(),
         4242,
         Arc::new(recorder.clone()),
-        std::sync::Arc::new(UnavailableGpuProbe),
+        std::sync::Arc::new(UnavailableGpuProbe::default()),
         finished,
         Duration::from_millis(50),
     );
@@ -123,7 +123,7 @@ fn metrics_emits_and_stops_poller_stops_on_finished() {
         "run-1".to_string(),
         4242,
         Arc::new(recorder.clone()),
-        std::sync::Arc::new(UnavailableGpuProbe),
+        std::sync::Arc::new(UnavailableGpuProbe::default()),
         finished.clone(),
         Duration::from_millis(50),
     );

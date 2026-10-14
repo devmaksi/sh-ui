@@ -11,7 +11,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml metric_unavailable
     scenarios: [SC-e04s02-P0-01]
     risk: P0
-    status: failing
+    status: passing
     allure:
       severity: critical
       categories: ["host", "IPC contract", "honest metrics"]
@@ -20,7 +20,7 @@ tasks:
     verify: npm run test -- CostReadoutUnavailable
     scenarios: [SC-e04s02-P1-02]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["ui"]

@@ -20,6 +20,7 @@ export interface MetricsEvent {
   vramBytes: number | null;
   gpuUtilPercent: number | null;
   gpuSource: string;
+  gpuReason: string | null;
 }
 
 export type OutputListener = (event: OutputEvent) => void;

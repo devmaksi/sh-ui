@@ -23,30 +23,30 @@ fn runner_answering(answering: &[&str]) -> impl Fn(&[&str]) -> Result<String, st
 #[test]
 fn gpu_probe_first_answerer_is_nvidia() {
     let runner = runner_answering(&["nvidia-smi", "amd-smi"]);
-    let source = probe_gpu_source(&runner);
-    assert!(matches!(source, GpuSource::NvidiaSmi));
-    assert_eq!(source.tag(), "nvidia-smi");
+    let outcome = probe_gpu_source(&runner);
+    assert!(matches!(outcome.source, GpuSource::NvidiaSmi));
+    assert_eq!(outcome.source.tag(), "nvidia-smi");
 }
 
 #[test]
 fn gpu_probe_order_reaches_amd_when_nvidia_absent() {
     let runner = runner_answering(&["amd-smi", "rocm-smi"]);
-    let source = probe_gpu_source(&runner);
-    assert!(matches!(source, GpuSource::AmdSmi), "amd-smi outranks rocm-smi");
-    assert_eq!(source.tag(), "amd-smi");
+    let outcome = probe_gpu_source(&runner);
+    assert!(matches!(outcome.source, GpuSource::AmdSmi), "amd-smi outranks rocm-smi");
+    assert_eq!(outcome.source.tag(), "amd-smi");
 }
 
 #[test]
 fn gpu_probe_legacy_rocm_when_modern_amd_absent() {
     let runner = runner_answering(&["rocm-smi"]);
-    let source = probe_gpu_source(&runner);
-    assert!(matches!(source, GpuSource::RocmSmi));
+    let outcome = probe_gpu_source(&runner);
+    assert!(matches!(outcome.source, GpuSource::RocmSmi));
 }
 
 #[test]
 fn gpu_probe_none_answering_is_unavailable() {
     let runner = runner_answering(&[]);
-    let source = probe_gpu_source(&runner);
-    assert!(matches!(source, GpuSource::Unavailable));
-    assert_eq!(source.tag(), "unavailable");
+    let outcome = probe_gpu_source(&runner);
+    assert!(matches!(outcome.source, GpuSource::Unavailable));
+    assert_eq!(outcome.source.tag(), "unavailable");
 }

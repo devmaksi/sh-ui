@@ -11,6 +11,7 @@ const gpuMetrics = {
   vramBytes: 367001600,
   gpuUtilPercent: 42,
   gpuSource: "nvidia-smi",
+  gpuReason: null,
 };
 
 describe("CostReadout gpu", () => {

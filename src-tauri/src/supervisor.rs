@@ -63,6 +63,7 @@ pub enum RunEvent {
         vram_bytes: Option<u64>,
         gpu_util_percent: Option<f64>,
         gpu_source: String,
+        gpu_reason: Option<String>,
     },
 }
 
@@ -166,7 +167,7 @@ impl Supervisor {
         Self {
             runs: HashMap::new(),
             sink: Arc::new(sink),
-            gpu: Arc::new(UnavailableGpuProbe),
+            gpu: Arc::new(UnavailableGpuProbe::default()),
             sequence: 0,
         }
     }
@@ -174,8 +175,7 @@ impl Supervisor {
     /// The host probes vendor GPU tooling once at startup and hands the answer to every
     /// poller. Tests keep the default Unavailable probe.
     pub fn attach_gpu(&mut self) {
-        let source = probe_gpu_source(&run_tool);
-        self.gpu = build_gpu_probe(&source);
+        self.gpu = build_gpu_probe(&probe_gpu_source(&run_tool));
     }
 
     pub fn live_run_ids(&self) -> Vec<String> {

@@ -7,15 +7,26 @@ use sh_ui_lib::metrics::{ProcReader, ProcfsReader};
 use std::process::{Command, Stdio};
 use std::time::Duration;
 
+/// ETXTBSY is the known transient flake (see specs/state.yaml known_findings).
+fn spawn_retry(path: &std::path::Path) -> std::process::Child {
+    for attempt in 0..8 {
+        match Command::new(path).stdin(Stdio::null()).spawn() {
+            Ok(child) => return child,
+            Err(error) if error.raw_os_error() == Some(26) && attempt < 7 => {
+                std::thread::sleep(Duration::from_millis(25));
+            }
+            Err(error) => panic!("the script must spawn: {error}"),
+        }
+    }
+    unreachable!()
+}
+
 #[test]
 fn proc_reader_reads_live_pid() {
     let temp = TempRegistry::new("proc-reader");
     let script = temp.write_script("busy.sh", "#!/bin/sh\nwhile :; do :; done\n");
 
-    let mut child = Command::new(&script)
-        .stdin(Stdio::null())
-        .spawn()
-        .expect("the busy script must spawn");
+    let mut child = spawn_retry(&script);
 
     let reader = ProcfsReader::new();
 
@@ -46,10 +57,7 @@ fn proc_reader_returns_none_for_dead_pid() {
     let temp = TempRegistry::new("proc-reader-dead");
     let script = temp.write_script("quick.sh", "#!/bin/sh\nexit 0\n");
 
-    let mut child = Command::new(&script)
-        .stdin(Stdio::null())
-        .spawn()
-        .expect("the quick script must spawn");
+    let mut child = spawn_retry(&script);
     let pid = child.id();
     let _ = child.wait();
 

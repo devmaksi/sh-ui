@@ -7,5 +7,6 @@
   ],
   "vramBytes": null,
   "gpuUtilPercent": null,
-  "gpuSource": "unavailable"
+  "gpuSource": "unavailable",
+  "gpuReason": "no gpu tool found"
 }

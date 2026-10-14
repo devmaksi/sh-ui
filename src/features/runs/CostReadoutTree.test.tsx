@@ -14,6 +14,7 @@ const treeMetrics = {
   vramBytes: null,
   gpuUtilPercent: null,
   gpuSource: "unavailable",
+  gpuReason: "no gpu tool found",
 };
 
 describe("CostReadout tree", () => {

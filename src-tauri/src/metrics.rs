@@ -173,6 +173,7 @@ pub fn spawn_metrics_poller(
                 vram_bytes,
                 gpu_util_percent,
                 gpu_source: gpu.source_tag().to_string(),
+                gpu_reason: gpu.source_reason().map(str::to_string),
             });
             baseline = next_baseline;
             previous_at = now;

@@ -7,5 +7,6 @@
   ],
   "vramBytes": 367001600,
   "gpuUtilPercent": 42.0,
-  "gpuSource": "nvidia-smi"
+  "gpuSource": "nvidia-smi",
+  "gpuReason": null
 }

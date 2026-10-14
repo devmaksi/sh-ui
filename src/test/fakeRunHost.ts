@@ -84,9 +84,19 @@ export class FakeRunHost implements RunHost {
     vramBytes: number | null = null,
     gpuUtilPercent: number | null = null,
     gpuSource = "unavailable",
+    gpuReason = "no gpu tool found",
   ): void {
     for (const listener of this.metricsListeners) {
-      listener({ runId, cpuPercent, ramBytes, processes, vramBytes, gpuUtilPercent, gpuSource });
+      listener({
+        runId,
+        cpuPercent,
+        ramBytes,
+        processes,
+        vramBytes,
+        gpuUtilPercent,
+        gpuSource,
+        gpuReason,
+      });
     }
   }
 }

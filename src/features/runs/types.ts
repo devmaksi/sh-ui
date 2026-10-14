@@ -32,6 +32,7 @@ export interface RunMetrics {
   vramBytes: number | null;
   gpuUtilPercent: number | null;
   gpuSource: string;
+  gpuReason: string | null;
 }
 
 export interface Run {

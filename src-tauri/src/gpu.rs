@@ -26,23 +26,65 @@ impl GpuSource {
 
 pub type ToolRunner = dyn Fn(&[&str]) -> Result<String, std::io::Error> + Send + Sync;
 
+/// What the probe learned: the source, and for Unavailable a plain-words reason from a
+/// closed set. Raw tool stderr never reaches the UI.
+pub struct GpuProbeOutcome {
+    pub source: GpuSource,
+    pub reason: Option<&'static str>,
+}
+
+const TOOL_PROBES: &[&[&str]] = &[
+    &["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
+    &["amd-smi", "static"],
+    &["rocm-smi", "--version"],
+    &["intel_gpu_top", "--list"],
+];
+
+fn source_for(tool: &str) -> GpuSource {
+    match tool {
+        "nvidia-smi" => GpuSource::NvidiaSmi,
+        "amd-smi" => GpuSource::AmdSmi,
+        "rocm-smi" => GpuSource::RocmSmi,
+        _ => GpuSource::IntelGpuTop,
+    }
+}
+
 /// DEC-14 order: nvidia-smi, amd-smi, rocm-smi (legacy), intel_gpu_top last and only
-/// when it answers without elevated privileges — a root-only tool answers an error here.
-/// The runner is injected so tests never execute real vendor tools.
-pub fn probe_gpu_source(runner: &ToolRunner) -> GpuSource {
-    if runner(&["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"]).is_ok() {
-        return GpuSource::NvidiaSmi;
+/// when it answers without elevated privileges — a root-only tool answers PermissionDenied
+/// and becomes an honest gap, never a sudo prompt. The runner is injected so tests never
+/// execute real vendor tools.
+pub fn probe_gpu_source(runner: &ToolRunner) -> GpuProbeOutcome {
+    let mut permission_blocked = false;
+    let mut tool_failed = false;
+
+    for argv in TOOL_PROBES {
+        match runner(argv) {
+            Ok(_) => {
+                return GpuProbeOutcome {
+                    source: source_for(argv[0]),
+                    reason: None,
+                }
+            }
+            Err(error) => match error.kind() {
+                std::io::ErrorKind::PermissionDenied => permission_blocked = true,
+                std::io::ErrorKind::NotFound => {}
+                _ => tool_failed = true,
+            },
+        }
     }
-    if runner(&["amd-smi", "static"]).is_ok() {
-        return GpuSource::AmdSmi;
+
+    let reason = if permission_blocked {
+        "gpu tool needs permissions this app does not have"
+    } else if tool_failed {
+        "gpu tool failed to run"
+    } else {
+        "no gpu tool found"
+    };
+
+    GpuProbeOutcome {
+        source: GpuSource::Unavailable,
+        reason: Some(reason),
     }
-    if runner(&["rocm-smi", "--version"]).is_ok() {
-        return GpuSource::RocmSmi;
-    }
-    if runner(&["intel_gpu_top", "--list"]).is_ok() {
-        return GpuSource::IntelGpuTop;
-    }
-    GpuSource::Unavailable
 }
 
 /// Sums vendor per-process GPU memory (MiB) over the pids in the run's process tree.
@@ -61,6 +103,11 @@ pub trait GpuProbe: Send + Sync {
     /// Which tool this probe stands for; becomes the payload's gpuSource tag.
     fn source_tag(&self) -> &'static str;
 
+    /// For an unavailable source, the plain-words reason. Measured sources have none.
+    fn source_reason(&self) -> Option<&'static str> {
+        None
+    }
+
     /// Vendor per-process GPU memory: pid → MiB, as the tool lists it.
     fn compute_apps(&self) -> Option<Vec<(u32, u64)>>;
 
@@ -68,12 +115,26 @@ pub trait GpuProbe: Send + Sync {
     fn device_util_max(&self) -> Option<f64>;
 }
 
-/// The source that answers nothing. Metrics stay null.
-pub struct UnavailableGpuProbe;
+/// The source that answers nothing. Metrics stay null and the reason explains why.
+pub struct UnavailableGpuProbe {
+    pub reason: &'static str,
+}
+
+impl Default for UnavailableGpuProbe {
+    fn default() -> Self {
+        Self {
+            reason: "no gpu tool found",
+        }
+    }
+}
 
 impl GpuProbe for UnavailableGpuProbe {
     fn source_tag(&self) -> &'static str {
         "unavailable"
+    }
+
+    fn source_reason(&self) -> Option<&'static str> {
+        Some(self.reason)
     }
 
     fn compute_apps(&self) -> Option<Vec<(u32, u64)>> {
@@ -129,10 +190,12 @@ impl GpuProbe for NvidiaGpuProbe {
 
 /// Only nvidia per-process data is implemented for now; the other sources answer null,
 /// which the UI renders as an honest gap (e04s02).
-pub fn build_gpu_probe(source: &GpuSource) -> std::sync::Arc<dyn GpuProbe> {
-    match source {
+pub fn build_gpu_probe(outcome: &GpuProbeOutcome) -> std::sync::Arc<dyn GpuProbe> {
+    match outcome.source {
         GpuSource::NvidiaSmi => std::sync::Arc::new(NvidiaGpuProbe),
-        _ => std::sync::Arc::new(UnavailableGpuProbe),
+        _ => std::sync::Arc::new(UnavailableGpuProbe {
+            reason: outcome.reason.unwrap_or("no gpu tool found"),
+        }),
     }
 }
 

@@ -113,6 +113,7 @@ export function useRuns(host: RunHost) {
                   vramBytes: event.vramBytes,
                   gpuUtilPercent: event.gpuUtilPercent,
                   gpuSource: event.gpuSource,
+                  gpuReason: event.gpuReason,
                 },
               }
             : run,

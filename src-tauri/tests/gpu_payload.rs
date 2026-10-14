@@ -26,6 +26,7 @@ fn gpu_payload_matches_the_shared_fixture() {
         vram_bytes: Some(350 * 1024 * 1024),
         gpu_util_percent: Some(42.0),
         gpu_source: "nvidia-smi".to_string(),
+        gpu_reason: None,
     };
 
     let produced: serde_json::Value =

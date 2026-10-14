@@ -84,6 +84,7 @@ describe("useRuns", () => {
       vramBytes: null,
       gpuUtilPercent: null,
       gpuSource: "unavailable",
+      gpuReason: "no gpu tool found",
     });
   });
 

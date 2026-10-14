@@ -26,6 +26,7 @@ fn metrics_event_payload_matches_the_shared_fixture() {
         vram_bytes: None,
         gpu_util_percent: None,
         gpu_source: "unavailable".to_string(),
+        gpu_reason: Some("no gpu tool found".to_string()),
     };
 
     let produced: serde_json::Value =

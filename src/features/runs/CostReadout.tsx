@@ -57,7 +57,12 @@ export function CostReadout({ metrics }: CostReadoutProps) {
               (device, {metrics.gpuSource})
             </span>
           </span>
-        ) : null}
+        ) : (
+          <span data-testid="cost-gpu-gap" className="text-neutral-500">
+            GPU: not measurable
+            {metrics.gpuReason ? ` — ${metrics.gpuReason}` : ""}
+          </span>
+        )}
         <button
           type="button"
           onClick={() => setOpen((current) => !current)}
