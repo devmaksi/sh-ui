@@ -1,5 +1,5 @@
 // story: e01s03
-// scenarios: SC-e01s03-P1-06, SC-e01s03-P1-08
+// scenarios: SC-e01s03-P1-06, SC-e01s03-P1-08, SC-e03s01-P2-05
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { FakeRunHost } from "../../test/fakeRunHost";
@@ -60,6 +60,25 @@ describe("useRuns", () => {
     expect(result.current.runs).toHaveLength(0);
     expect(result.current.error).toContain("execute");
     expect(result.current.error).toContain("/home/user/build.sh");
+  });
+
+  it("attaches the newest metrics event to its run", async () => {
+    const host = new FakeRunHost();
+    const { result } = renderHook(() => useRuns(host));
+
+    await act(async () => {
+      await result.current.start("entry-1");
+    });
+
+    act(() => {
+      host.emitMetrics("run-1", 12.5, 2097152);
+      host.emitMetrics("run-1", 42.5, 1048576);
+    });
+
+    expect(result.current.runs[0].metrics).toEqual({
+      cpuPercent: 42.5,
+      ramBytes: 1048576,
+    });
   });
 
   it("marks a run ended with its exit code", async () => {

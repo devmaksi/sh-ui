@@ -1,5 +1,6 @@
 // story: e01s01 e01s02 e01s03
 pub mod commands;
+pub mod metrics;
 pub mod registry;
 pub mod runs;
 pub mod supervisor;

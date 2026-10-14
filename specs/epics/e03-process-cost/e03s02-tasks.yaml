@@ -35,7 +35,7 @@ tasks:
       categories: ["host", "race handling"]
   - id: 4
     description: Show the summed figure as the headline with the per-process breakdown behind a toggle.
-    verify: npm run test -- cost-readout-tree
+    verify: npm run test -- CostReadoutTree
     scenarios: [SC-e03s02-P2-04]
     risk: P2
     status: failing

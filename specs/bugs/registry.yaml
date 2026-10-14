@@ -48,3 +48,11 @@ bugs:
     summary: bp-timing.sh overwrites specs/state.yaml with an empty skeleton when yaml.safe_load fails, silently destroying state
     status: logged
     file: specs/bugs/BUG-20260814-06-bp-timing-overwrites-unparseable-state.md
+  - bug_id: BUG-20260814-07
+    date: 2026-08-14
+    severity: low
+    priority: P2
+    scope: bigpowers planning data (upstream templates)
+    summary: kebab-case vitest verify tokens never match PascalCase test file names under vitest 5 case-sensitive filters
+    status: resolved locally
+    file: specs/bugs/BUG-20260814-07-vitest-verify-token-case.md

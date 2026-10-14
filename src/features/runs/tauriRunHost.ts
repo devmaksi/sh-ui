@@ -1,8 +1,13 @@
-// story: e01s03
+// story: e01s03 e03s01
 import { invoke } from "@tauri-apps/api/core";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 
-import type { EndedListener, OutputListener, RunHost } from "./host";
+import type {
+  EndedListener,
+  MetricsListener,
+  OutputListener,
+  RunHost,
+} from "./host";
 import type { OutputStream, RunHandle, StartFailure } from "./types";
 
 interface RunOutputPayload {
@@ -14,6 +19,12 @@ interface RunOutputPayload {
 interface RunEndedPayload {
   runId: string;
   code: number | null;
+}
+
+interface RunMetricsPayload {
+  runId: string;
+  cpuPercent: number;
+  ramBytes: number;
 }
 
 function toStartFailure(cause: unknown): StartFailure {
@@ -72,5 +83,14 @@ export const tauriRunHost: RunHost = {
   onEnded: (listener: EndedListener) =>
     subscribe<RunEndedPayload>("run://ended", (payload) =>
       listener({ runId: payload.runId, code: payload.code }),
+    ),
+
+  onMetrics: (listener: MetricsListener) =>
+    subscribe<RunMetricsPayload>("run://metrics", (payload) =>
+      listener({
+        runId: payload.runId,
+        cpuPercent: payload.cpuPercent,
+        ramBytes: payload.ramBytes,
+      }),
     ),
 };

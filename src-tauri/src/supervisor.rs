@@ -10,6 +10,8 @@ use std::sync::{Arc, Condvar, Mutex};
 use std::thread;
 use std::time::{Duration, Instant};
 
+use crate::metrics::{spawn_metrics_poller, ProcfsReader, METRICS_REFRESH};
+
 /// One event payload cannot exceed this. A script that writes fast must not flood the UI.
 pub const OUTPUT_CHUNK_MAX_BYTES: usize = 8 * 1024;
 
@@ -36,7 +38,7 @@ impl OutputStream {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum RunEvent {
     Started {
         run_id: String,
@@ -51,6 +53,11 @@ pub enum RunEvent {
     Ended {
         run_id: String,
         code: Option<i32>,
+    },
+    Metrics {
+        run_id: String,
+        cpu_percent: f64,
+        ram_bytes: u64,
     },
 }
 
@@ -236,6 +243,18 @@ impl Supervisor {
         }
 
         watch_exit(child, run_id.clone(), self.sink.clone(), finished.clone(), completion);
+
+        // story: e03s01
+        // The poller ends with the run: it watches the same finished flag and stops when
+        // the pid stops answering.
+        spawn_metrics_poller(
+            ProcfsReader::new(),
+            run_id.clone(),
+            pid,
+            self.sink.clone(),
+            finished.clone(),
+            METRICS_REFRESH,
+        );
 
         Ok(RunHandle {
             run_id,

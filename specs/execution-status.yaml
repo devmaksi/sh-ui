@@ -100,13 +100,13 @@ stories:
     tasks_passing: 0
     tasks_failing: 0
   e03s01:
-    status: planned
+    status: built
     title: Live CPU and RAM of the running script
     bcps: 5
     epic: e03
     tasks_total: 5
-    tasks_passing: 0
-    tasks_failing: 5
+    tasks_passing: 5
+    tasks_failing: 0
   e03s02:
     status: planned
     title: One summed figure over the whole process tree

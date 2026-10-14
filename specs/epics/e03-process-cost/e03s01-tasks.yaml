@@ -1,7 +1,7 @@
 story_id: e03s01
 title: Live CPU and RAM of the running script
 spec: e03s01-live-cost.md
-status: failing
+status: passing
 bcps: 5
 risk: P1
 verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
@@ -11,7 +11,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml proc_reader
     scenarios: [SC-e03s01-P1-01]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["host", "metrics"]
@@ -20,7 +20,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml cpu_percent_math
     scenarios: [SC-e03s01-P2-04]
     risk: P2
-    status: failing
+    status: passing
     allure:
       severity: normal
       categories: ["host", "metrics"]
@@ -29,7 +29,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml metrics_emits_and_stops
     scenarios: [SC-e03s01-P1-02, SC-e03s01-P1-03]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["host", "metrics"]
@@ -38,16 +38,16 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml metrics_event_payload
     scenarios: [SC-e03s01-P1-02]
     risk: P2
-    status: failing
+    status: passing
     allure:
       severity: normal
       categories: ["host", "IPC contract"]
   - id: 5
     description: Render the live CPU and RAM readout for the selected run.
-    verify: npm run test -- cost-readout
+    verify: npm run test -- CostReadout
     scenarios: [SC-e03s01-P2-05]
     risk: P2
-    status: failing
+    status: passing
     allure:
       severity: normal
       categories: ["ui"]

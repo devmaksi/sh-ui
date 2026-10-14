@@ -1,4 +1,4 @@
-// story: e01s03
+// story: e01s03 e03s01
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { describeStartFailure } from "./startErrors";
 import type { RunHost } from "./host";
@@ -68,7 +68,10 @@ export function useRuns(host: RunHost) {
     async (entryId: string) => {
       try {
         const handle = await host.startScript(entryId);
-        setRuns((current) => [...current, { handle, state: "running", exitCode: null }]);
+        setRuns((current) => [
+          ...current,
+          { handle, state: "running", exitCode: null, metrics: null },
+        ]);
         setError(null);
       } catch (cause) {
         setError(describeStartFailure(toStartFailure(cause)));
@@ -97,9 +100,23 @@ export function useRuns(host: RunHost) {
       );
     });
 
+    const offMetrics = host.onMetrics((event) => {
+      setRuns((current) =>
+        current.map((run) =>
+          run.handle.runId === event.runId
+            ? {
+                ...run,
+                metrics: { cpuPercent: event.cpuPercent, ramBytes: event.ramBytes },
+              }
+            : run,
+        ),
+      );
+    });
+
     return () => {
       offOutput();
       offEnded();
+      offMetrics();
     };
   }, [host]);
 

@@ -11,8 +11,8 @@ git:
   branch: feat/e01s02-script-registry
   head: d10b2e5
 active_flow:
-  current_skill: plan-work
-  next_skill: kickoff-branch
+  current_skill: develop-tdd
+  next_skill: verify-work
 scope:
   file: specs/product/SCOPE_LATEST.yaml
   epics:
@@ -131,8 +131,9 @@ known_findings:
   swallowed a parse error (unescaped apostrophe in known_findings) and dumped an empty
   skeleton. Restored from git. See specs/bugs/BUG-20260814-06-bp-timing-overwrites-unparseable-state.md'
 handoff:
-  last_step_completed: plan-work for e03 done — e03s01/e03s02 story specs and tasks.yaml
-    written, plan-consistency-check PASS
+  last_step_completed: e03s01 tasks 1-5 passing on feat/e03s01-live-cost (RED/GREEN
+    pairs, red-isolation PASS, full preflight green). Manual verification SC-e03s01-P1-M1
+    awaits the user.
   open_decisions_from:
   - 'GPU probe order: which vendor tools, in what order (blocks e04 only)'
   required_reading:
@@ -145,12 +146,16 @@ handoff:
   - specs/epics/e03-process-cost/epic.yaml
   - specs/epics/e03-process-cost/e03s01-live-cost.md
   - specs/epics/e03-process-cost/e03s01-tasks.yaml
-  next_skill: kickoff-branch
-  next_target: 'e03s01 live CPU and RAM: kickoff-branch, then develop-tdd on task
-    1 (procfs + metrics module)'
+  next_skill: verify-work
+  next_target: manual verification of e03s01 (Verification Script in e03s01-live-cost.md),
+    then verify-work, then land e03s01 and start e03s02
 metrics:
   skill_timings:
     plan-work:
       calls: 1
       total_seconds: 176.0
       avg_seconds: 176.0
+    develop-tdd:
+      calls: 1
+      total_seconds: 387.0
+      avg_seconds: 387.0

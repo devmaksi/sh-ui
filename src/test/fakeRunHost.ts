@@ -2,6 +2,7 @@
 // Named fake of the run host, per the e01 test plan.
 import type {
   EndedListener,
+  MetricsListener,
   OutputListener,
   RunHost,
 } from "../features/runs/host";
@@ -13,6 +14,7 @@ export class FakeRunHost implements RunHost {
   private handles = new Map<string, RunHandle>();
   private outputListeners = new Set<OutputListener>();
   private endedListeners = new Set<EndedListener>();
+  private metricsListeners = new Set<MetricsListener>();
   private nextFailure: StartFailure | null = null;
   private sequence = 0;
 
@@ -49,8 +51,17 @@ export class FakeRunHost implements RunHost {
     return () => this.endedListeners.delete(listener);
   }
 
+  onMetrics(listener: MetricsListener): () => void {
+    this.metricsListeners.add(listener);
+    return () => this.metricsListeners.delete(listener);
+  }
+
   listenerCount(): number {
-    return this.outputListeners.size + this.endedListeners.size;
+    return (
+      this.outputListeners.size +
+      this.endedListeners.size +
+      this.metricsListeners.size
+    );
   }
 
   emitOutput(runId: string, stream: "stdout" | "stderr", chunk: string): void {
@@ -62,6 +73,12 @@ export class FakeRunHost implements RunHost {
   emitEnded(runId: string, code: number | null): void {
     for (const listener of this.endedListeners) {
       listener({ runId, code });
+    }
+  }
+
+  emitMetrics(runId: string, cpuPercent: number, ramBytes: number): void {
+    for (const listener of this.metricsListeners) {
+      listener({ runId, cpuPercent, ramBytes });
     }
   }
 }

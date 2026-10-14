@@ -1,9 +1,10 @@
-// story: e01s01 e01s02 e01s03
+// story: e01s01 e01s02 e01s03 e03s01
 import { open } from "@tauri-apps/plugin-dialog";
 import { AddScriptForm } from "./features/registry/AddScriptForm";
 import { ScriptsList } from "./features/registry/ScriptsList";
 import { tauriRegistryHost } from "./features/registry/tauriRegistryHost";
 import { useRegistry } from "./features/registry/useRegistry";
+import { CostReadout } from "./features/runs/CostReadout";
 import { OutputPanel } from "./features/runs/OutputPanel";
 import { tauriRunHost } from "./features/runs/tauriRunHost";
 import { useRuns } from "./features/runs/useRuns";
@@ -56,6 +57,9 @@ export function App() {
               ? `ended with code ${activeRun.exitCode ?? "unknown"}`
               : "running"}
           </h2>
+          <div className="mt-2">
+            <CostReadout metrics={activeRun.metrics} />
+          </div>
           <div className="mt-2">
             <OutputPanel
               lines={linesFor(activeRun.handle.runId)}

@@ -7,6 +7,7 @@ use crate::supervisor::{EventSink, RunEvent};
 pub const EVENT_STARTED: &str = "run://started";
 pub const EVENT_OUTPUT: &str = "run://output";
 pub const EVENT_ENDED: &str = "run://ended";
+pub const EVENT_METRICS: &str = "run://metrics";
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -29,6 +30,14 @@ pub struct OutputPayload {
 pub struct EndedPayload {
     pub run_id: String,
     pub code: Option<i32>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MetricsPayload {
+    pub run_id: String,
+    pub cpu_percent: f64,
+    pub ram_bytes: u64,
 }
 
 /// Turns supervisor events into app events. The supervisor itself never sees Tauri.
@@ -75,6 +84,20 @@ impl EventSink for TauriRunSink {
             }
             RunEvent::Ended { run_id, code } => {
                 let _ = self.app.emit(EVENT_ENDED, EndedPayload { run_id, code });
+            }
+            RunEvent::Metrics {
+                run_id,
+                cpu_percent,
+                ram_bytes,
+            } => {
+                let _ = self.app.emit(
+                    EVENT_METRICS,
+                    MetricsPayload {
+                        run_id,
+                        cpu_percent,
+                        ram_bytes,
+                    },
+                );
             }
         }
     }
