@@ -1,12 +1,132 @@
-# Flat story status. Skills update this, not release-plan.yaml.
-e01s01: todo
-e01s02: todo
-e01s03: todo
-e02s01: todo
-e02s02: todo
-e02s03: todo
-e02s04: todo
-e03s01: todo
-e03s02: todo
-e04s01: todo
-e04s02: todo
+development_status:
+  e01: backlog
+  e01s01: backlog
+  e01s02: backlog
+  e01s03: backlog
+  e02: backlog
+  e02s01: backlog
+  e02s02: backlog
+  e02s03: backlog
+  e02s04: backlog
+  e03: backlog
+  e03s01: backlog
+  e03s02: backlog
+  e04: backlog
+  e04s01: backlog
+  e04s02: backlog
+
+epics:
+  e01:
+    status: backlog
+    title: Run a script and watch it
+    wsjf: 1.23
+    total_bcps: 18
+  e02:
+    status: backlog
+    title: Configure and control the run
+    wsjf: 0.71
+    total_bcps: 18
+  e03:
+    status: backlog
+    title: What the script costs
+    wsjf: 1.08
+    total_bcps: 13
+  e04:
+    status: backlog
+    title: 'GPU and VRAM, honestly'
+    wsjf: 1.0
+    total_bcps: 8
+
+stories:
+  e01s01:
+    status: backlog
+    title: App shell shows the script list
+    bcps: 5
+    epic: e01
+    tasks_total: 5
+    tasks_passing: 0
+    tasks_failing: 5
+    risk_max: P0
+  e01s02:
+    status: backlog
+    title: Add a script by path and keep it across restarts
+    bcps: 5
+    epic: e01
+    tasks_total: 6
+    tasks_passing: 0
+    tasks_failing: 6
+    risk_max: P0
+  e01s03:
+    status: backlog
+    title: Start a script and read its live output
+    bcps: 8
+    epic: e01
+    tasks_total: 7
+    tasks_passing: 0
+    tasks_failing: 7
+    risk_max: P0
+    security_max: high
+  e02s01:
+    status: backlog
+    title: 'Arguments, environment, and working directory per script'
+    bcps: 6
+    epic: e02
+    tasks_total: 4
+    tasks_passing: 0
+    tasks_failing: 0
+  e02s02:
+    status: backlog
+    title: Stop a running script
+    bcps: 4
+    epic: e02
+    tasks_total: 3
+    tasks_passing: 0
+    tasks_failing: 0
+  e02s03:
+    status: backlog
+    title: Show how the run ended
+    bcps: 4
+    epic: e02
+    tasks_total: 3
+    tasks_passing: 0
+    tasks_failing: 0
+  e02s04:
+    status: backlog
+    title: Leave nothing running when the app closes
+    bcps: 4
+    epic: e02
+    tasks_total: 3
+    tasks_passing: 0
+    tasks_failing: 0
+  e03s01:
+    status: backlog
+    title: Live CPU and RAM of the running script
+    bcps: 5
+    epic: e03
+    tasks_total: 3
+    tasks_passing: 0
+    tasks_failing: 0
+  e03s02:
+    status: backlog
+    title: One summed figure over the whole process tree
+    bcps: 8
+    epic: e03
+    tasks_total: 5
+    tasks_passing: 0
+    tasks_failing: 0
+  e04s01:
+    status: backlog
+    title: Report GPU and VRAM when the machine can measure them
+    bcps: 5
+    epic: e04
+    tasks_total: 3
+    tasks_passing: 0
+    tasks_failing: 0
+  e04s02:
+    status: backlog
+    title: Say what cannot be measured
+    bcps: 3
+    epic: e04
+    tasks_total: 3
+    tasks_passing: 0
+    tasks_failing: 0

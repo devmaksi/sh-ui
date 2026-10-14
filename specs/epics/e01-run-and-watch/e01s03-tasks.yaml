@@ -1,34 +1,75 @@
 story_id: e01s03
 title: Start a script and read its live output
-status: todo
+spec: e01s03-live-output.md
+status: failing
 bcps: 8
+risk: P0
 verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
 tasks:
-  - id: t1
-    description: Implement host command start_script — spawn the registered file with argv arrays, never a shell string.
-    verify: cargo test --manifest-path src-tauri/Cargo.toml start_script
-    status: todo
-  - id: t2
-    description: Track the spawned process in a supervisor map keyed by run id.
+  - id: 1
+    description: Add the supervisor map keyed by run id, with spawn using an argv array.
     verify: cargo test --manifest-path src-tauri/Cargo.toml supervisor_tracks_run
-    status: todo
-  - id: t3
-    description: Capture stdout and stderr and emit them as Tauri events, chunked, with the stream tagged.
+    risk: P0
+    status: failing
+    allure:
+      severity: critical
+      categories:
+        - "host"
+        - "process control"
+  - id: 2
+    description: Capture stdout and stderr and emit them as tagged events.
     verify: cargo test --manifest-path src-tauri/Cargo.toml output_events
-    status: todo
-  - id: t4
-    description: Build the read-only output panel — append-only, stdout and stderr visually distinguished, no input control.
+    risk: P0
+    status: failing
+    allure:
+      severity: critical
+      categories:
+        - "host"
+        - "IPC contract"
+  - id: 3
+    description: Enforce the output chunk cap as a named constant.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml output_chunk_cap
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories:
+        - "host"
+  - id: 4
+    description: Prove a registered path containing shell metacharacters is passed as one literal argument.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml spawn_no_shell_interpretation
+    risk: P0
+    security: high
+    status: failing
+    allure:
+      severity: critical
+      categories:
+        - "Security Review"
+        - "process control"
+  - id: 5
+    description: Build the read-only output panel that appends and distinguishes the two streams.
     verify: npm run test -- output-panel
-    status: todo
-  - id: t5
-    description: Kill every child on app shutdown so no orphaned process survives.
+    risk: P1
+    status: failing
+    allure:
+      severity: high
+      categories:
+        - "ui"
+  - id: 6
+    description: Confirm the output panel exposes no input control.
+    verify: npm run test -- output-panel-no-input
+    risk: P2
+    status: failing
+    allure:
+      severity: normal
+      categories:
+        - "ui"
+  - id: 7
+    description: Terminate every live child when the host exits.
     verify: cargo test --manifest-path src-tauri/Cargo.toml shutdown_kills_children
-    status: todo
-  - id: t6
-    description: Manual verification of a real script on this machine.
-    verify-script: |
-      1. Register /tmp/echo-loop.sh that prints one line per second.
-      2. Start it from the app.
-      3. Confirm lines appear within one second and keep appearing.
-      4. Close the app.
-      5. Run pgrep -f echo-loop.sh and confirm no process remains.
+    risk: P0
+    status: failing
+    allure:
+      severity: critical
+      categories:
+        - "process control"

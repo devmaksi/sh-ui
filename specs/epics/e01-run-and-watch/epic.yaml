@@ -9,16 +9,32 @@ stories:
   - id: e01s01
     title: App shell shows the script list
     bcps: 5
+    risk: P0
+    spec: e01s01-app-shell.md
     tasks_file: e01s01-tasks.yaml
   - id: e01s02
     title: Add a script by path and keep it across restarts
     bcps: 5
+    risk: P0
+    spec: e01s02-add-script.md
     tasks_file: e01s02-tasks.yaml
   - id: e01s03
     title: Start a script and read its live output
     bcps: 8
+    risk: P0
+    spec: e01s03-live-output.md
     tasks_file: e01s03-tasks.yaml
 tracer_bullet: e01s01 → e01s02 → e01s03
 value_test: >
   After e01s03 a user can register a real script, run it, and read what it prints.
   That is new value on its own. It needs no later epic to be demonstrable.
+decisions:
+  - id: DEC-04
+    what: Registry persistence is a JSON file in application data, written by a Rust module.
+    why: One readable file, no extra dependency, easy to test. plugin-store was rejected as surplus.
+  - id: DEC-05
+    what: Script selection uses the native Tauri file dialog plus an editable path field.
+    why: A picker alone hides what the app will execute. The path must be visible and correctable.
+  - id: DEC-06
+    what: Scaffolding uses create-tauri-app with the React + TypeScript template.
+    why: Official template carries the Linux build wiring a hand-built config would get wrong.
