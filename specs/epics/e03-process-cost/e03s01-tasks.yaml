@@ -1,0 +1,17 @@
+story_id: e03s01
+title: Live CPU and RAM of the running script
+status: todo
+bcps: 5
+tasks:
+  - id: t1
+    description: Read CPU time and resident memory for one pid from /proc, behind a metrics module with a testable interface.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml proc_reader
+    status: todo
+  - id: t2
+    description: Emit a metrics event on a fixed interval while a run is alive, and stop emitting when it ends.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml metrics_emits_and_stops
+    status: todo
+  - id: t3
+    description: Render the live CPU and RAM readout for a selected run.
+    verify: npm run test -- cost-readout
+    status: todo

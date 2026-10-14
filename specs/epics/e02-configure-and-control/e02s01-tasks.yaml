@@ -1,0 +1,21 @@
+story_id: e02s01
+title: Arguments, environment, and working directory per script
+status: todo
+bcps: 6
+tasks:
+  - id: t1
+    description: Store per-script run configuration — argv list, environment map, working directory — in the registry entry.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml run_config_store
+    status: todo
+  - id: t2
+    description: Reject a working directory that does not exist before starting, with a typed error.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml run_config_validates_cwd
+    status: todo
+  - id: t3
+    description: Start the script with its stored argv, environment, and directory. Never build a shell string.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml start_uses_config
+    status: todo
+  - id: t4
+    description: Build the edit form for argv, environment variables, and working directory, with validation errors shown inline.
+    verify: npm run test -- run-config-form
+    status: todo

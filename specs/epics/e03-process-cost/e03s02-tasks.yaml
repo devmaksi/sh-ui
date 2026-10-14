@@ -1,0 +1,28 @@
+story_id: e03s02
+title: One summed figure over the whole process tree
+status: todo
+bcps: 8
+tasks:
+  - id: t1
+    description: Walk the descendant process tree of a run pid and collect every live descendant.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml process_tree_walk
+    status: todo
+  - id: t2
+    description: Sum CPU and RAM across the tree into one snapshot, with a named constant for the refresh interval.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml tree_sum
+    status: todo
+  - id: t3
+    description: Handle a child that exits mid-refresh without dropping or double counting the total.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml tree_sum_handles_exit
+    status: todo
+  - id: t4
+    description: Show the summed figure as the headline number, with the per-process breakdown behind it.
+    verify: npm run test -- cost-readout-tree
+    status: todo
+  - id: t5
+    description: Manual verification with a script that forks known children.
+    verify-script: |
+      1. Register a script that forks three children, each allocating a known memory size.
+      2. Start it.
+      3. Confirm the headline RAM figure is at least the sum of the three allocations.
+      4. Kill one child externally and confirm the figure drops without overshooting.

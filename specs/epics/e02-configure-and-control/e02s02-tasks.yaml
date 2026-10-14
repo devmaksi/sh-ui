@@ -1,0 +1,17 @@
+story_id: e02s02
+title: Stop a running script
+status: todo
+bcps: 4
+tasks:
+  - id: t1
+    description: Implement stop_run — send the graceful termination signal to the whole process group.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml stop_sends_signal
+    status: todo
+  - id: t2
+    description: Escalate to a forced kill after the bounded wait, using a named constant for the timeout.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml stop_escalates
+    status: todo
+  - id: t3
+    description: Add the stop control to the run view and disable it when the run is not live.
+    verify: npm run test -- run-controls
+    status: todo

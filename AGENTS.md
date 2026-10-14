@@ -32,18 +32,18 @@ Load subdirectory context by file glob — see project-specific routing table (s
 <!-- BEGIN bigpowers:project -->
 ## Project
 
-sh-ui is a browser application with a user interface. It is not a published package.
-Stack: TypeScript / React + Vite / Node 22 / Tailwind CSS / Vitest
+sh-ui is a Linux desktop application that manages a registry of shell scripts.
+Stack: TypeScript / React + Vite / Tauri (Rust host) / Node 22 / Tailwind CSS / Vitest
 
 ## Commands
 
 | Action | Command |
 |--------|---------|
-| Run | `npm run dev` |
-| Test | `npm run test` |
-| Build | `npm run build` |
-| Lint | `npm run lint` |
-| Preflight | `npm run lint && npm run test && npm run build` |
+| Run | `npm run tauri dev` |
+| Test | `npm run test && cargo test --manifest-path src-tauri/Cargo.toml` |
+| Build | `npm run tauri build` |
+| Lint | `npm run lint && cargo clippy --manifest-path src-tauri/Cargo.toml -- -D warnings` |
+| Preflight | `npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build` |
 | Land | `bash scripts/land-branch.sh <branch> "<conventional message>"` |
 
 ## Test
@@ -60,16 +60,18 @@ Stack: TypeScript / React + Vite / Node 22 / Tailwind CSS / Vitest
 
 ## Architecture
 
-`src/features/` holds domain slices. Each slice owns its components, hooks, and data access.
-`src/components/` holds shared presentational primitives only. `src/lib/` holds framework-free helpers.
+`src-tauri/` is the process host. It spawns scripts, supervises them, captures output, and reads metrics.
+`src/features/` holds UI slices. Each slice owns its components, hooks, and IPC calls.
+`src/components/` holds shared presentational primitives only. UI talks to the host over Tauri IPC, never a socket.
 
 ## Conventions
 
-- Use named exports. Do not use default exports.
+- Named exports. Default exports are forbidden.
 - Name component files `PascalCase.tsx`. Name hooks `useThing.ts`.
 - Style with Tailwind utility classes. Do not add global CSS files.
-- Keep data access inside the feature slice that owns the data.
-- Tag every story implementation with `// story: eNNsNN`.
+- Keep IPC calls inside the feature slice that owns the data.
+- Keep process and metric logic in Rust. Keep presentation logic in TypeScript.
+- Tag every story implementation with `// story: eNNsNN` or `// story: eNNsNN` in Rust comments.
 
 ## Never
 
@@ -79,6 +81,8 @@ Stack: TypeScript / React + Vite / Node 22 / Tailwind CSS / Vitest
 - Never edit `.env*` files or commit secrets.
 - Never write feature code without a plan in `specs/`.
 - Never push directly to `main` except via `land-branch.sh`.
+- Never listen on a network port. Tauri IPC is the only seam between UI and host.
+- Never run a script through a shell string built from user input. Pass argv arrays.
 
 ## Agent Rules
 

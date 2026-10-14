@@ -1,0 +1,24 @@
+id: e01
+title: Run a script and watch it
+capsule_dir: epics/e01-run-and-watch
+wsjf: 1.23
+total_bcps: 18
+status: planned
+delta: ADDED
+stories:
+  - id: e01s01
+    title: App shell shows the script list
+    bcps: 5
+    tasks_file: e01s01-tasks.yaml
+  - id: e01s02
+    title: Add a script by path and keep it across restarts
+    bcps: 5
+    tasks_file: e01s02-tasks.yaml
+  - id: e01s03
+    title: Start a script and read its live output
+    bcps: 8
+    tasks_file: e01s03-tasks.yaml
+tracer_bullet: e01s01 → e01s02 → e01s03
+value_test: >
+  After e01s03 a user can register a real script, run it, and read what it prints.
+  That is new value on its own. It needs no later epic to be demonstrable.

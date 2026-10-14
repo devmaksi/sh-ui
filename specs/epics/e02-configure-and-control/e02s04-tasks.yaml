@@ -1,0 +1,20 @@
+story_id: e02s04
+title: Leave nothing running when the app closes
+status: todo
+bcps: 4
+tasks:
+  - id: t1
+    description: On host shutdown, stop every live run through the same stop path a user trigger uses.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml shutdown_stops_all
+    status: todo
+  - id: t2
+    description: On host start, detect processes left over from a previous crash and reap or report them.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml crash_recovery_reaps
+    status: todo
+  - id: t3
+    description: Manual verification that closing the app leaves no orphan.
+    verify-script: |
+      1. Start two registered scripts that run indefinitely.
+      2. Close the app window.
+      3. Run pgrep for both script names.
+      4. Confirm neither is running.

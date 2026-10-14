@@ -1,0 +1,26 @@
+story_id: e01s02
+title: Add a script by path and keep it across restarts
+status: todo
+bcps: 5
+verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
+tasks:
+  - id: t1
+    description: Implement registry add — validate the path points to an existing readable .sh file, reject anything else with a typed error.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml registry_add
+    status: todo
+  - id: t2
+    description: Persist the registry to disk and load it at host start.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml registry_persistence
+    status: todo
+  - id: t3
+    description: Implement registry remove by entry id.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml registry_remove
+    status: todo
+  - id: t4
+    description: Add the UI form for path entry, the add button, the remove action, and the validation error display.
+    verify: npm run test -- registry-form
+    status: todo
+  - id: t5
+    description: Prove persistence end to end with a scripted check that writes, reloads, and compares.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml registry_survives_reload
+    status: todo

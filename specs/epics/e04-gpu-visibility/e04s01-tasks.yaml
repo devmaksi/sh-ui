@@ -1,0 +1,17 @@
+story_id: e04s01
+title: Report GPU and VRAM when the machine can measure them
+status: todo
+bcps: 5
+tasks:
+  - id: t1
+    description: Probe vendor GPU tools in a fixed order and record which one answered.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml gpu_probe
+    status: todo
+  - id: t2
+    description: Attribute VRAM and GPU utilisation to the run process tree where the vendor tool exposes per-process data.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml gpu_attribution
+    status: todo
+  - id: t3
+    description: Add GPU and VRAM to the metrics snapshot and to the readout.
+    verify: npm run test -- cost-readout-gpu
+    status: todo

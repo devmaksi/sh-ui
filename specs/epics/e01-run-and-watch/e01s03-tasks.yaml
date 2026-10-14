@@ -1,0 +1,34 @@
+story_id: e01s03
+title: Start a script and read its live output
+status: todo
+bcps: 8
+verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
+tasks:
+  - id: t1
+    description: Implement host command start_script — spawn the registered file with argv arrays, never a shell string.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml start_script
+    status: todo
+  - id: t2
+    description: Track the spawned process in a supervisor map keyed by run id.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml supervisor_tracks_run
+    status: todo
+  - id: t3
+    description: Capture stdout and stderr and emit them as Tauri events, chunked, with the stream tagged.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml output_events
+    status: todo
+  - id: t4
+    description: Build the read-only output panel — append-only, stdout and stderr visually distinguished, no input control.
+    verify: npm run test -- output-panel
+    status: todo
+  - id: t5
+    description: Kill every child on app shutdown so no orphaned process survives.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml shutdown_kills_children
+    status: todo
+  - id: t6
+    description: Manual verification of a real script on this machine.
+    verify-script: |
+      1. Register /tmp/echo-loop.sh that prints one line per second.
+      2. Start it from the app.
+      3. Confirm lines appear within one second and keep appearing.
+      4. Close the app.
+      5. Run pgrep -f echo-loop.sh and confirm no process remains.

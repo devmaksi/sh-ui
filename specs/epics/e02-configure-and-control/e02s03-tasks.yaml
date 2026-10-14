@@ -1,0 +1,17 @@
+story_id: e02s03
+title: Show how the run ended
+status: todo
+bcps: 4
+tasks:
+  - id: t1
+    description: Record the exit state — exited, failed, or stopped — with the exit code, on the run record.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml run_exit_state
+    status: todo
+  - id: t2
+    description: Emit the final state event once and stop the metrics timer for that run.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml final_state_event
+    status: todo
+  - id: t3
+    description: Render the four states distinctly — not running, running, exited, failed.
+    verify: npm run test -- run-status
+    status: todo

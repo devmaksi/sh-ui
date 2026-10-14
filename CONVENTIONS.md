@@ -40,7 +40,7 @@ Solo developers own the whole codebase. **Always Green** means Preflight is gree
 
 **Shift Left (1-10-100):** a defect costs 1× in development, 10× in integration, 100× in production. Fix a red gate now.
 
-**Preflight** — `npm run lint && npm run test && npm run build`. It MUST pass before kickoff, develop, or verify phases advance.
+**Preflight** — `npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build`. It MUST pass before kickoff, develop, or verify phases advance.
 
 ## Discovered Defects
 
@@ -78,6 +78,18 @@ Ship discovered fixes in separate commits. NEVER narrate a failure and continue.
 | `specs/verifications/` | UAT evidence |
 
 Every task needs `verify: <runnable command>`. Evidence over claims.
+
+## Stack Conventions (Tauri)
+
+Two languages, one seam.
+
+- `src-tauri/` (Rust) owns spawning, supervision, output capture, and metric reading.
+- `src/` (TypeScript) owns presentation. It renders state it is given. It does not decide process behaviour.
+- The seam is Tauri IPC: commands for calls, events for streamed output and metrics.
+- IPC payloads get explicit Rust structs and matching TypeScript types. Do not pass untyped JSON.
+- Every IPC command has a typed error shape the UI can render without string parsing.
+- Rust functions stay under 40 lines. Split a command handler when it grows.
+- `cargo clippy -- -D warnings` is part of Lint. Clippy warnings are not style noise.
 
 ## UI Conventions
 

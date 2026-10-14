@@ -1,0 +1,27 @@
+id: e02
+title: Configure and control the run
+capsule_dir: epics/e02-configure-and-control
+wsjf: 0.71
+total_bcps: 18
+status: planned
+delta: ADDED
+stories:
+  - id: e02s01
+    title: Arguments, environment, and working directory per script
+    bcps: 6
+    tasks_file: e02s01-tasks.yaml
+  - id: e02s02
+    title: Stop a running script
+    bcps: 4
+    tasks_file: e02s02-tasks.yaml
+  - id: e02s03
+    title: Show how the run ended
+    bcps: 4
+    tasks_file: e02s03-tasks.yaml
+  - id: e02s04
+    title: Leave nothing running when the app closes
+    bcps: 4
+    tasks_file: e02s04-tasks.yaml
+value_test: >
+  After e02s01 the user runs a script the way they would from a terminal, with their own
+  arguments, environment, and directory. That is the registration the product promises.

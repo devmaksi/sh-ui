@@ -1,0 +1,20 @@
+story_id: e04s02
+title: Say what cannot be measured
+status: todo
+bcps: 3
+tasks:
+  - id: t1
+    description: Represent an unmeasurable metric as an explicit unavailable state in the snapshot type. Zero is never used for unknown.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml metric_unavailable
+    status: todo
+  - id: t2
+    description: Render the unavailable state as a labelled gap with the reason the probe failed.
+    verify: npm run test -- cost-readout-unavailable
+    status: todo
+  - id: t3
+    description: Manual verification on a machine with no GPU tooling.
+    verify-script: |
+      1. Run the app with vendor GPU tools removed from PATH.
+      2. Start a script.
+      3. Confirm CPU and RAM still show.
+      4. Confirm GPU and VRAM show as not measurable, not as 0.

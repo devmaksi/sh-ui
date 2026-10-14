@@ -1,0 +1,26 @@
+story_id: e01s01
+title: App shell shows the script list
+status: todo
+bcps: 5
+verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
+tasks:
+  - id: t1
+    description: Scaffold the Tauri app — React + Vite + TypeScript strict + Tailwind + Vitest + ESLint, and src-tauri with a Rust host crate.
+    verify: npm run build && cargo build --manifest-path src-tauri/Cargo.toml
+    status: todo
+  - id: t2
+    description: Add npm scripts for dev, build, test, lint, and tauri so the commands in AGENTS.md exist.
+    verify: npm run lint && npm run test
+    status: todo
+  - id: t3
+    description: Implement host command list_scripts returning the empty registry as a typed struct.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml list_scripts
+    status: todo
+  - id: t4
+    description: Render the registry list in the UI from the IPC call, with an explicit empty state.
+    verify: npm run test -- scripts-list
+    status: todo
+  - id: t5
+    description: Wire the Preflight chain so one command runs lint, both test suites, and build.
+    verify: npm run preflight
+    status: todo

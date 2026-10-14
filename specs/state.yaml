@@ -1,20 +1,37 @@
 workflow_mode: solo-git
 project: sh-ui
-stack: TypeScript / React + Vite / Node 22 / Tailwind CSS / Vitest
+stack: TypeScript / React + Vite / Tauri (Rust host) / Node 22 / Tailwind CSS / Vitest
 
 session:
   started: 2026-08-14
   phase: plan
-  active_epic: null
+  active_epic: e01
   active_story: null
 
 active_flow:
-  current_skill: scope-work
-  next_skill: slice-tasks
+  current_skill: slice-tasks
+  next_skill: plan-work
 
 scope:
   file: specs/product/SCOPE_LATEST.yaml
-  epics_provisional: [e01, e02, e03, e04, e05]
+  epics: [e01, e02, e03, e04]
+
+release:
+  file: specs/release-plan.yaml
+  order: [e01, e03, e04, e02]
+  total_bcps: 57
+
+decisions:
+  - id: DEC-01
+    what: Tauri shell with a Rust process host. UI talks over IPC, never a socket.
+    why: Local process control and /proc access without a listening port or a second daemon.
+    ref: specs/adr/0001-tauri-shell-with-rust-host.md
+  - id: DEC-02
+    what: Provisional scope epic e05 (local process host) was folded into e01 and e02.
+    why: An epic that only builds plumbing delivers no value on its own. Launch lives in e01, stop and shutdown cleanup in e02.
+  - id: DEC-03
+    what: Release order is e01 → e03 → e04 → e02 by WSJF.
+    why: e01 is the tracer bullet. e03 and e04 are the product differentiator. e02 is table stakes but the largest job.
 
 deviations:
   - id: DEV-01
@@ -22,16 +39,20 @@ deviations:
     why: guard-git read HEAD before git init ran, so the protected-branch check saw "unknown". See specs/bugs/BUG-20260814-01-guard-git-unborn-main.md
     resolution: Kept as the root commit. All later commits use kickoff-branch and land-branch.sh.
 
+open_decisions:
+  - "Metric source: /proc polling by hand, or a crate that reads it"
+  - "GPU probe order: which vendor tools, in what order"
+  - "Registry persistence format: JSON file, SQLite, or YAML"
+  - "Styling default is Tailwind CSS — confirm or switch to CSS Modules"
+
 handoff:
-  last_step_completed: "scope-work: SCOPE_LATEST.yaml and VISION_LATEST.yaml written; CONVENTIONS defensive code updated for process supervision"
-  open_decisions:
-    - "UI shell shape: Tauri desktop wrapper or local web app served by a Node host"
-    - "Metric source: /proc polling or a supervisor library"
-    - "Registry persistence format: JSON, SQLite, or YAML"
-    - "Styling default is Tailwind CSS — confirm or switch to CSS Modules"
+  last_step_completed: "slice-tasks: 4 epic capsules, 11 stories, 40 tasks with verify commands; release-plan.yaml ordered by WSJF"
+  open_decisions_from: open_decisions
   required_reading:
     - AGENTS.md
     - CONVENTIONS.md
     - specs/product/SCOPE_LATEST.yaml
-    - specs/WORKFLOW-solo-git.md
-  next_skill: slice-tasks
+    - specs/release-plan.yaml
+    - specs/adr/0001-tauri-shell-with-rust-host.md
+    - specs/epics/e01-run-and-watch/epic.yaml
+  next_skill: plan-work
