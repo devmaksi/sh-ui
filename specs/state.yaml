@@ -3,17 +3,17 @@ project: sh-ui
 stack: TypeScript / React + Vite / Tauri (Rust host) / Node 22 / Tailwind CSS / Vitest
 session:
   started: 2026-08-14
-  phase: build
+  phase: release
   active_epic: e02
-  active_story: e02s03
+  active_story: e02s04
 active_epic_id: e02
 active_story: e02s04
 git:
   branch: chore/e03-close
   head: pending
 active_flow:
-  current_skill: verify-work
-  next_skill: audit-code
+  current_skill: release-branch
+  next_skill: deploy
 scope:
   file: specs/product/SCOPE_LATEST.yaml
   epics:
@@ -153,11 +153,10 @@ known_findings:
   swallowed a parse error (unescaped apostrophe in known_findings) and dumped an empty
   skeleton. Restored from git. See specs/bugs/BUG-20260814-06-bp-timing-overwrites-unparseable-state.md'
 handoff:
-  last_step_completed: e02s04 tasks 1-2 landed on feat/e02s04-shutdown-cleanup — shutdown
-    via stop_run emits Ended stopped; recovery.rs live-group records with start-time
-    guard; reap at setup; Ended now follows a poller join. Two flakes found by red
-    preflight were root-caused and fixed honestly in-scope (c45ebc2, 4410a39). Preflight
-    green 3/3 runs. Task 3 (manual UAT SC-e02s04-P1-M1) awaits the human.
+  last_step_completed: e02s04 landed on main as 888a748 (squash land via land-branch.sh;
+    branch feat/e02s04-shutdown-cleanup kept because guard-git blocks branch -D). Main
+    preflight green after land. Epic e02 done — all four epics of the release plan (e01,
+    e03, e04, e02) are now done.
   open_decisions_from: []
   required_reading:
   - AGENTS.md
@@ -177,8 +176,10 @@ handoff:
   - specs/epics/e02-configure-and-control/e02s03-end-state.md
   - specs/epics/e02-configure-and-control/e02s04-tasks.yaml
   - specs/epics/e02-configure-and-control/e02s04-shutdown-cleanup.md
-  next_skill: audit-code
-  next_target: audit-code then land-branch for e02s04 on feat/e02s04-shutdown-cleanup
+  next_skill: deploy
+  next_target: all release-plan epics done — human decision next: cut the release (npm
+    run tauri build + tag) or change-request the follow-ups (single-instance enforcement,
+    reaped-orphans UI, supervisor.rs split refactor)
 metrics:
   skill_timings:
     plan-work:
