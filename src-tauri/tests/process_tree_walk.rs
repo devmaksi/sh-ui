@@ -63,7 +63,10 @@ fn process_tree_walk_finds_live_children() {
 #[test]
 fn process_tree_walk_returns_root_only_for_childless_pid() {
     let temp = TempRegistry::new("tree-walk-leaf");
-    let script = temp.write_script("sleepy.sh", "#!/bin/sh\nsleep 30\n");
+    // `exec` replaces the shell with sleep: the pid is genuinely childless. Without it
+    // dash forks sleep as a child (verified on this host), and the walk legitimately
+    // finds two pids — the old fixture only passed when the walk beat the fork.
+    let script = temp.write_script("sleepy.sh", "#!/bin/sh\nexec sleep 30\n");
 
     let mut child = spawn_retry(&script);
 

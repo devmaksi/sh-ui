@@ -2,6 +2,7 @@
 pub mod commands;
 pub mod gpu;
 pub mod metrics;
+pub mod recovery;
 pub mod registry;
 pub mod runs;
 pub mod supervisor;
@@ -21,10 +22,22 @@ pub fn run() {
             let data_dir = app.path().app_data_dir()?;
             std::fs::create_dir_all(&data_dir)?;
 
+            // story: e02s04 — reap groups a crashed host left before anything can start.
+            let reaped = recovery::reap_stale(&data_dir.join("live-runs.json"), &|pgid, _pid| {
+                let finished = std::sync::atomic::AtomicBool::new(false);
+                supervisor::terminate_group(pgid, &finished);
+            });
+            // pgid == pid for a group leader; the closure only needs the group.
+            if !reaped.is_empty() {
+                eprintln!("recovery: reaped {} orphaned run group(s)", reaped.len());
+            }
+
             let store = RegistryStore::open(&data_dir.join("registry.json"))?;
             app.manage(Mutex::new(store));
 
-            let supervisor = Supervisor::new(TauriRunSink::new(app.handle().clone()));
+            let supervisor = Supervisor::new(TauriRunSink::new(app.handle().clone()))
+                // story: e02s04 — same file the reap above reads.
+                .with_state_file(data_dir.join("live-runs.json"));
             let mut supervisor = supervisor;
             // story: e04s01 — probe vendor GPU tooling once at startup.
             supervisor.attach_gpu();

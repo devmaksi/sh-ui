@@ -1,0 +1,61 @@
+story_id: e02s04
+verified_at: "2026-10-15T11:40:00Z"
+verifier: verify-work
+phases:
+  smoke:
+    passed: true
+    note: "App booted from scratch during manual UAT (npm run tauri dev, fresh app data dir); runs registered and started."
+  build:
+    passed: true
+    command: "npm run build"
+  typecheck:
+    passed: true
+    note: "tsc --noEmit inside npm run lint"
+  lint:
+    passed: true
+    note: "eslint + clippy -D warnings clean"
+  tests:
+    passed: true
+    vitest: "53 passed (17 files)"
+    cargo: "79 passed, 0 failed"
+  terminal_verdict:
+    command: "npm run preflight"
+    exit_code: 0
+    captured_at: "2026-10-15T11:38:00Z"
+    note: "Single contiguous run captured in /tmp/verify-preflight.log. Earlier 3/3 stability runs recorded separately in specs/state.yaml handoff."
+  task_verifies:
+    - command: "cargo test --manifest-path src-tauri/Cargo.toml shutdown_stops_all"
+      result: "test shutdown_stops_all ... ok"
+    - command: "cargo test --manifest-path src-tauri/Cargo.toml crash_recovery_reaps"
+      result: "test crash_recovery_reaps ... ok"
+  blind_spots:
+    findings: 2
+    high: 0
+    note: "Both MEDIUM double-tag findings are in src-tauri/target build artifacts, not source."
+  completeness_critic:
+    blocker: 0
+    warning: 2
+    note: "Warnings were missing active_story (state.yaml) and missing verify evidence (this file)."
+  security:
+    verdict: PASS
+    report: specs/security/REVIEW.md
+    high_findings: 0
+  manual:
+    steps:
+      - step: "Start two registered infinite scripts (infinite-a.sh, infinite-b.sh)"
+        expected: "Both runs live in the UI"
+        actual: "Confirmed by the user"
+        passed: true
+      - step: "Close the app window; pgrep -f for both script names"
+        expected: "Neither process running"
+        actual: "Confirmed by the user"
+        passed: true
+      - step: "Start one infinite script, kill -9 the app, start the app again"
+        expected: "pgrep no longer finds the orphan; app starts normally"
+        actual: "Confirmed by the user"
+        passed: true
+  gaps:
+    closed: true
+    notes:
+      - "Metrics-after-Ended race found by red preflight, root-caused and fixed in c45ebc2 (Ended follows poller join)."
+      - "process_tree_walk leaf-test race found by red preflight, root-caused and fixed in 4410a39 (dash forks; fixture uses exec)."

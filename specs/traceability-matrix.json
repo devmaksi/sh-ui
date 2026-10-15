@@ -1,55 +1,289 @@
 {
-  "generated_at": "2026-10-14T08:41:40.942439+00:00",
+  "generated_at": "2026-10-15T07:38:45.380163+00:00",
   "matrix_version": "1.0",
   "stories": [
     {
-      "id": "e01s01",
-      "title": "App shell shows the script list",
-      "epic_id": "e01",
-      "epic_title": "Run a script and watch it",
+      "id": "e02s01",
+      "title": "Arguments, environment, and working directory per script",
+      "epic_id": "e02",
+      "epic_title": "Configure and control the run",
       "bcp": 0,
-      "wsjf": 1.23,
-      "status": "backlog",
+      "wsjf": 0.71,
+      "status": "done",
       "links": [
         {
-          "file": "src/tooling/tauriDevWiring.test.ts",
-          "line": 1,
+          "file": "src/test/fakeHostBridge.ts",
+          "line": 53,
           "confidence": "high",
           "method": "explicit_tag"
         },
         {
-          "file": "src/features/registry/contract.test.ts",
-          "line": 1,
+          "file": "src/features/runs/types.ts",
+          "line": 49,
+          "confidence": "high",
+          "method": "explicit_tag"
+        },
+        {
+          "file": "src/features/runs/startErrors.ts",
+          "line": 8,
+          "confidence": "high",
+          "method": "explicit_tag"
+        },
+        {
+          "file": "src/features/registry/registryErrors.ts",
+          "line": 11,
           "confidence": "high",
           "method": "explicit_tag"
         },
         {
           "file": "src/features/registry/types.ts",
-          "line": 1,
+          "line": 18,
+          "confidence": "high",
+          "method": "explicit_tag"
+        },
+        {
+          "file": "src/features/registry/types.ts",
+          "line": 33,
           "confidence": "high",
           "method": "explicit_tag"
         },
         {
           "file": "src/features/registry/useRegistry.ts",
-          "line": 1,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "src/features/registry/host.ts",
-          "line": 1,
+          "line": 51,
           "confidence": "high",
           "method": "explicit_tag"
         },
         {
           "file": "src/features/registry/tauriRegistryHost.ts",
-          "line": 1,
+          "line": 35,
           "confidence": "high",
           "method": "explicit_tag"
         },
         {
-          "file": "specs/epics/e01-run-and-watch/e01s01-app-shell.md",
-          "line": 84,
+          "file": "specs/adr/0002-run-supervision-and-output-caps.md",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/tests/supervisor_script_directory.rs",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/.fingerprint/sh-ui-55b977ae764ed31b/test-integration-test-supervisor_script_directory.json",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/.fingerprint/sh-ui-55b977ae764ed31b/test-integration-test-supervisor_script_directory",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/.fingerprint/sh-ui-55b977ae764ed31b/dep-test-integration-test-supervisor_script_directory",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/.fingerprint/sh-ui-35e01a07f102144a/test-integration-test-supervisor_script_directory.json",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/.fingerprint/sh-ui-35e01a07f102144a/test-integration-test-supervisor_script_directory",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/.fingerprint/sh-ui-35e01a07f102144a/dep-test-integration-test-supervisor_script_directory",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/.fingerprint/sh-ui-dab1afd827ff97f9/test-integration-test-supervisor_script_directory.json",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/.fingerprint/sh-ui-dab1afd827ff97f9/test-integration-test-supervisor_script_directory",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/.fingerprint/sh-ui-dab1afd827ff97f9/dep-test-integration-test-supervisor_script_directory",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/.fingerprint/sh-ui-09b2b910eb2fc10c/test-integration-test-supervisor_script_directory.json",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/.fingerprint/sh-ui-09b2b910eb2fc10c/test-integration-test-supervisor_script_directory",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/.fingerprint/sh-ui-09b2b910eb2fc10c/dep-test-integration-test-supervisor_script_directory",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/deps/libsupervisor_script_directory-dab1afd827ff97f9.rmeta",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/deps/supervisor_script_directory-55b977ae764ed31b.d",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/deps/supervisor_script_directory-09b2b910eb2fc10c",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/deps/libsupervisor_script_directory-55b977ae764ed31b.rmeta",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/deps/supervisor_script_directory-dab1afd827ff97f9.d",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/deps/supervisor_script_directory-09b2b910eb2fc10c.d",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/deps/supervisor_script_directory-35e01a07f102144a",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/deps/supervisor_script_directory-35e01a07f102144a.d",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "specs/epics/e02-configure-and-control/e02s01-tasks.yaml",
+          "line": 0,
+          "confidence": "low",
+          "method": "task_reference"
+        }
+      ],
+      "link_count": 31
+    },
+    {
+      "id": "e02s02",
+      "title": "Stop a running script",
+      "epic_id": "e02",
+      "epic_title": "Configure and control the run",
+      "bcp": 0,
+      "wsjf": 0.71,
+      "status": "done",
+      "links": [
+        {
+          "file": "src/test/fakeRunHost.ts",
+          "line": 13,
+          "confidence": "high",
+          "method": "explicit_tag"
+        },
+        {
+          "file": "src/test/fakeRunHost.ts",
+          "line": 46,
+          "confidence": "high",
+          "method": "explicit_tag"
+        },
+        {
+          "file": "src/features/runs/useRuns.ts",
+          "line": 83,
+          "confidence": "high",
+          "method": "explicit_tag"
+        },
+        {
+          "file": "src/features/runs/tauriRunHost.ts",
+          "line": 81,
+          "confidence": "high",
+          "method": "explicit_tag"
+        },
+        {
+          "file": "src/features/runs/useRuns.test.ts",
+          "line": 10,
+          "confidence": "high",
+          "method": "explicit_tag"
+        },
+        {
+          "file": "src/features/runs/host.ts",
+          "line": 35,
+          "confidence": "high",
+          "method": "explicit_tag"
+        },
+        {
+          "file": "specs/epics/e02-configure-and-control/e02s02-tasks.yaml",
+          "line": 0,
+          "confidence": "low",
+          "method": "task_reference"
+        }
+      ],
+      "link_count": 7
+    },
+    {
+      "id": "e02s03",
+      "title": "Show how the run ended",
+      "epic_id": "e02",
+      "epic_title": "Configure and control the run",
+      "bcp": 0,
+      "wsjf": 0.71,
+      "status": "done",
+      "links": [
+        {
+          "file": "src/test/fakeRunHost.ts",
+          "line": 80,
+          "confidence": "high",
+          "method": "explicit_tag"
+        },
+        {
+          "file": "src/features/runs/tauriRunHost.ts",
+          "line": 22,
+          "confidence": "high",
+          "method": "explicit_tag"
+        },
+        {
+          "file": "src/features/runs/types.ts",
+          "line": 16,
+          "confidence": "high",
+          "method": "explicit_tag"
+        },
+        {
+          "file": "src/features/runs/host.ts",
+          "line": 13,
           "confidence": "high",
           "method": "explicit_tag"
         },
@@ -59,132 +293,6 @@
           "confidence": "high",
           "method": "explicit_tag"
         },
-        {
-          "file": "src/features/registry/ScriptsList.tsx",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src/features/registry/ScriptsList.test.tsx",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/build/tauri-d661bf118031c9d6/out/permissions/app/autogenerated/commands/set_app_theme.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/release/build/tauri-5f8f95de71b26d9d/out/permissions/app/autogenerated/commands/set_app_theme.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "specs/epics/e01-run-and-watch/e01s01-tasks.yaml",
-          "line": 0,
-          "confidence": "low",
-          "method": "task_reference"
-        }
-      ],
-      "link_count": 13
-    },
-    {
-      "id": "e01s02",
-      "title": "Add a script by path and keep it across restarts",
-      "epic_id": "e01",
-      "epic_title": "Run a script and watch it",
-      "bcp": 0,
-      "wsjf": 1.23,
-      "status": "backlog",
-      "links": [
-        {
-          "file": "specs/epics/e01-run-and-watch/e01s02-add-script.md",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "specs/epics/e01-run-and-watch/e01s02-tasks.yaml",
-          "line": 0,
-          "confidence": "low",
-          "method": "task_reference"
-        }
-      ],
-      "link_count": 2
-    },
-    {
-      "id": "e01s03",
-      "title": "Start a script and read its live output",
-      "epic_id": "e01",
-      "epic_title": "Run a script and watch it",
-      "bcp": 0,
-      "wsjf": 1.23,
-      "status": "backlog",
-      "links": [
-        {
-          "file": "specs/epics/e01-run-and-watch/e01s03-live-output.md",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "specs/epics/e01-run-and-watch/e01s03-tasks.yaml",
-          "line": 0,
-          "confidence": "low",
-          "method": "task_reference"
-        }
-      ],
-      "link_count": 2
-    },
-    {
-      "id": "e02s01",
-      "title": "Arguments, environment, and working directory per script",
-      "epic_id": "e02",
-      "epic_title": "Configure and control the run",
-      "bcp": 0,
-      "wsjf": 0.71,
-      "status": "backlog",
-      "links": [
-        {
-          "file": "specs/epics/e02-configure-and-control/e02s01-tasks.yaml",
-          "line": 0,
-          "confidence": "low",
-          "method": "task_reference"
-        }
-      ],
-      "link_count": 1
-    },
-    {
-      "id": "e02s02",
-      "title": "Stop a running script",
-      "epic_id": "e02",
-      "epic_title": "Configure and control the run",
-      "bcp": 0,
-      "wsjf": 0.71,
-      "status": "backlog",
-      "links": [
-        {
-          "file": "specs/epics/e02-configure-and-control/e02s02-tasks.yaml",
-          "line": 0,
-          "confidence": "low",
-          "method": "task_reference"
-        }
-      ],
-      "link_count": 1
-    },
-    {
-      "id": "e02s03",
-      "title": "Show how the run ended",
-      "epic_id": "e02",
-      "epic_title": "Configure and control the run",
-      "bcp": 0,
-      "wsjf": 0.71,
-      "status": "backlog",
-      "links": [
         {
           "file": "src-tauri/target/debug/build/tauri-d661bf118031c9d6/out/permissions/tray/autogenerated/commands/set_show_menu_on_left_click.toml",
           "line": 0,
@@ -205,6 +313,30 @@
         },
         {
           "file": "src-tauri/target/debug/build/tauri-d661bf118031c9d6/out/permissions/app/autogenerated/commands/app_show.toml",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/build/tauri-4b28fc76adadf714/out/permissions/tray/autogenerated/commands/set_show_menu_on_left_click.toml",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/build/tauri-4b28fc76adadf714/out/permissions/webview/autogenerated/commands/webview_show.toml",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/build/tauri-4b28fc76adadf714/out/permissions/window/autogenerated/commands/show.toml",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/build/tauri-4b28fc76adadf714/out/permissions/app/autogenerated/commands/app_show.toml",
           "line": 0,
           "confidence": "medium",
           "method": "file_heuristic"
@@ -240,7 +372,7 @@
           "method": "task_reference"
         }
       ],
-      "link_count": 9
+      "link_count": 18
     },
     {
       "id": "e02s04",
@@ -249,10 +381,22 @@
       "epic_title": "Configure and control the run",
       "bcp": 0,
       "wsjf": 0.71,
-      "status": "backlog",
+      "status": "done",
       "links": [
         {
+          "file": "specs/state.yaml",
+          "line": 10,
+          "confidence": "high",
+          "method": "explicit_tag"
+        },
+        {
           "file": "src-tauri/target/debug/build/tauri-d661bf118031c9d6/out/permissions/app/autogenerated/commands/set_app_theme.toml",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "src-tauri/target/debug/build/tauri-4b28fc76adadf714/out/permissions/app/autogenerated/commands/set_app_theme.toml",
           "line": 0,
           "confidence": "medium",
           "method": "file_heuristic"
@@ -270,130 +414,31 @@
           "method": "task_reference"
         }
       ],
-      "link_count": 3
-    },
-    {
-      "id": "e03s01",
-      "title": "Live CPU and RAM of the running script",
-      "epic_id": "e03",
-      "epic_title": "What the script costs",
-      "bcp": 0,
-      "wsjf": 1.08,
-      "status": "backlog",
-      "links": [
-        {
-          "file": "specs/epics/e03-process-cost/e03s01-tasks.yaml",
-          "line": 0,
-          "confidence": "low",
-          "method": "task_reference"
-        }
-      ],
-      "link_count": 1
-    },
-    {
-      "id": "e03s02",
-      "title": "One summed figure over the whole process tree",
-      "epic_id": "e03",
-      "epic_title": "What the script costs",
-      "bcp": 0,
-      "wsjf": 1.08,
-      "status": "backlog",
-      "links": [
-        {
-          "file": "specs/epics/e03-process-cost/e03s02-tasks.yaml",
-          "line": 0,
-          "confidence": "low",
-          "method": "task_reference"
-        }
-      ],
-      "link_count": 1
-    },
-    {
-      "id": "e04s01",
-      "title": "Report GPU and VRAM when the machine can measure them",
-      "epic_id": "e04",
-      "epic_title": "GPU and VRAM, honestly",
-      "bcp": 0,
-      "wsjf": 1.0,
-      "status": "backlog",
-      "links": [
-        {
-          "file": "src-tauri/target/debug/build/tauri-d661bf118031c9d6/out/permissions/window/autogenerated/commands/theme.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/build/tauri-d661bf118031c9d6/out/permissions/window/autogenerated/commands/set_theme.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/build/tauri-d661bf118031c9d6/out/permissions/app/autogenerated/commands/set_app_theme.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/release/build/tauri-5f8f95de71b26d9d/out/permissions/window/autogenerated/commands/theme.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/release/build/tauri-5f8f95de71b26d9d/out/permissions/window/autogenerated/commands/set_theme.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/release/build/tauri-5f8f95de71b26d9d/out/permissions/app/autogenerated/commands/set_app_theme.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "specs/epics/e04-gpu-visibility/e04s01-tasks.yaml",
-          "line": 0,
-          "confidence": "low",
-          "method": "task_reference"
-        }
-      ],
-      "link_count": 7
-    },
-    {
-      "id": "e04s02",
-      "title": "Say what cannot be measured",
-      "epic_id": "e04",
-      "epic_title": "GPU and VRAM, honestly",
-      "bcp": 0,
-      "wsjf": 1.0,
-      "status": "backlog",
-      "links": [
-        {
-          "file": "specs/epics/e04-gpu-visibility/e04s02-tasks.yaml",
-          "line": 0,
-          "confidence": "low",
-          "method": "task_reference"
-        }
-      ],
-      "link_count": 1
+      "link_count": 5
     }
   ],
   "summary": {
-    "total_stories": 11,
-    "tagged_stories": 1,
+    "total_stories": 4,
+    "tagged_stories": 4,
     "dark_stories": [],
     "dark_count": 0,
-    "orphan_tags": [],
-    "orphan_count": 0,
-    "stale_tags": [],
-    "stale_count": 0,
+    "orphan_tags": [
+      "e01s01",
+      "e01s02",
+      "e01s03"
+    ],
+    "orphan_count": 3,
+    "stale_tags": [
+      "e02s01",
+      "e02s02",
+      "e02s03",
+      "e02s04"
+    ],
+    "stale_count": 4,
     "oracle_stats": {
-      "high": 8,
-      "medium": 22,
-      "low": 11
+      "high": 20,
+      "medium": 37,
+      "low": 4
     }
   }
 }

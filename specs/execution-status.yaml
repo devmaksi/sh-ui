@@ -3,11 +3,11 @@ development_status:
   e01s01: done
   e01s02: done
   e01s03: done
-  e02: backlog
-  e02s01: backlog
-  e02s02: backlog
-  e02s03: backlog
-  e02s04: backlog
+  e02: done
+  e02s01: done
+  e02s02: done
+  e02s03: done
+  e02s04: done
   e03: done
   e03s01: done
   e03s02: done
@@ -21,7 +21,7 @@ epics:
     title: Run a script and watch it
     total_bcps: 18
   e02:
-    status: backlog
+    status: done
     title: Configure and control the run
     total_bcps: 18
   e03:
@@ -64,7 +64,7 @@ stories:
     risk_max: P0
     security_max: high
   e02s01:
-    status: backlog
+    status: done
     title: 'Arguments, environment, and working directory per script'
     bcps: 6
     epic: e02
@@ -73,7 +73,7 @@ stories:
     tasks_failing: 0
     risk_max: P1
   e02s02:
-    status: backlog
+    status: done
     title: Stop a running script
     bcps: 4
     epic: e02
@@ -82,7 +82,7 @@ stories:
     tasks_failing: 0
     risk_max: P1
   e02s03:
-    status: backlog
+    status: done
     title: Show how the run ended
     bcps: 4
     epic: e02
@@ -91,13 +91,13 @@ stories:
     tasks_failing: 0
     risk_max: P1
   e02s04:
-    status: backlog
+    status: done
     title: Leave nothing running when the app closes
     bcps: 4
     epic: e02
     tasks_total: 3
-    tasks_passing: 0
-    tasks_failing: 3
+    tasks_passing: 3
+    tasks_failing: 0
     risk_max: P1
   e03s01:
     status: done

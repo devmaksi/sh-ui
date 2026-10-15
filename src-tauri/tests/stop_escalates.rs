@@ -30,26 +30,32 @@ fn stop_escalates_to_sigkill_after_the_grace() {
         .expect("stopping a live run must succeed");
 
     let deadline = started + TERM_GRACE + Duration::from_secs(3);
-    while Instant::now() < deadline {
-        if !Path::new(&format!("/proc/{}", handle.pid)).exists() {
-            let ended = recorder.events().into_iter().any(|event| {
-                matches!(
-                    event,
-                    RunEvent::Ended {
-                        status: sh_ui_lib::supervisor::RunStatus::Stopped,
-                        ..
-                    }
-                )
-            });
-            assert!(ended, "an escalated stop must still report its end");
+    // Ended follows the reap by design: watch_exit stops the metrics poller and joins
+    // it before announcing the verdict, so wait for both, then assert each.
+    let mut gone = false;
+    let mut ended = false;
+    while Instant::now() < deadline && !(gone && ended) {
+        gone = !Path::new(&format!("/proc/{}", handle.pid)).exists();
+        ended = recorder.events().into_iter().any(|event| {
+            matches!(
+                event,
+                RunEvent::Ended {
+                    status: sh_ui_lib::supervisor::RunStatus::Stopped,
+                    ..
+                }
+            )
+        });
+        if gone && ended {
             return;
         }
         std::thread::sleep(Duration::from_millis(50));
     }
 
-    panic!(
+    assert!(
+        gone,
         "a SIGTERM-ignoring script must be gone within TERM_GRACE + KILL_GRACE, pid {} lived past {:?}",
         handle.pid,
         started.elapsed()
     );
+    assert!(ended, "an escalated stop must still report its end");
 }

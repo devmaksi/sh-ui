@@ -3,7 +3,7 @@ title: Leave nothing running when the app closes
 spec: e02s04-shutdown-cleanup.md
 # terminate_group and shutdown-on-Exit exist from e01; this story routes shutdown through
 # stop_run and adds the live-group record + crash reap (DEC-07).
-status: failing
+status: passing
 bcps: 4
 risk: P1
 verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
@@ -13,7 +13,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml shutdown_stops_all
     scenarios: [SC-e02s04-P1-01]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["host", "run lifecycle"]
@@ -22,7 +22,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml crash_recovery_reaps
     scenarios: [SC-e02s04-P1-02, SC-e02s04-P1-03]
     risk: P1
-    status: failing
+    status: passing
     allure:
       severity: high
       categories: ["host", "recovery"]
@@ -37,7 +37,7 @@ tasks:
       6. Confirm pgrep no longer finds the orphan.
     scenarios: [SC-e02s04-P1-M1]
     risk: P2
-    status: failing
+    status: passing
     allure:
       severity: normal
       categories: ["manual verification"]

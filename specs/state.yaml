@@ -7,12 +7,13 @@ session:
   active_epic: e02
   active_story: e02s03
 active_epic_id: e02
+active_story: e02s04
 git:
   branch: chore/e03-close
   head: pending
 active_flow:
-  current_skill: develop-tdd
-  next_skill: develop-tdd
+  current_skill: verify-work
+  next_skill: audit-code
 scope:
   file: specs/product/SCOPE_LATEST.yaml
   epics:
@@ -134,16 +135,29 @@ known_findings:
 - 'ETXTBSY flake in cargo test: a script held open for writing cannot be exec''d.
   Source of the transient write handle is not traced. The host now retries 8 times
   at 25 ms and reports spawnFailed with the OS reason.'
+- 'Fixed during e02s04: Metrics-after-Ended race — the poller could finish an iteration
+  after Ended was emitted. watch_exit now sets finished, joins the poller, then emits
+  Ended, so Ended is structurally the last event (c45ebc2).'
+- 'Fixed during e02s04: process_tree_walk leaf-test race — /bin/sh (dash) forks external
+  commands, so the old fixture pid was never childless; the test only passed when
+  the walk beat the fork. Fixture now uses exec (4410a39).'
+- 'Fixed during e02s04: specs/release-plan.yaml had wsjf: keys at 2-space indent,
+  which broke YAML parsing and blocked trace-stories.sh. Re-indented (4 spaces).'
+- 'trace-stories.py greps only md/sh/py/js/ts/yaml for story tags — Rust // story:
+  comments are not collected as explicit links. scripts/ is the global bigpowers symlink;
+  upstream fix candidate, not edited here.'
+- 'supervisor.rs is 619 lines (>300 convention), pre-existing and slightly grown in
+  e02s04. Logged follow-up: plan-refactor to split events/errors/exit-watch out of
+  it (see specs/verifications/AUDIT-e02-e02s04.md).'
 - 'bp-timing.sh silently overwrote specs/state.yaml on 2026-08-14: its yaml.safe_load
   swallowed a parse error (unescaped apostrophe in known_findings) and dumped an empty
   skeleton. Restored from git. See specs/bugs/BUG-20260814-06-bp-timing-overwrites-unparseable-state.md'
 handoff:
-  last_step_completed: e02s01 landed 6affeeb, e02s02 landed e65da1b, e02s03 on feat/e02s03-end-state
-    — end status derived (exited/failed/stopped), final event once with no metrics
-    after it, RunStatusBadge with five labels; all task verifies passing, preflight
-    green, manual UAT confirmed with scripts in /tmp/sh-ui-uat. One flake fixed honestly
-    — the outside-signal test now kills the whole group (killpg), 3 full cargo runs
-    green.
+  last_step_completed: e02s04 tasks 1-2 landed on feat/e02s04-shutdown-cleanup — shutdown
+    via stop_run emits Ended stopped; recovery.rs live-group records with start-time
+    guard; reap at setup; Ended now follows a poller join. Two flakes found by red
+    preflight were root-caused and fixed honestly in-scope (c45ebc2, 4410a39). Preflight
+    green 3/3 runs. Task 3 (manual UAT SC-e02s04-P1-M1) awaits the human.
   open_decisions_from: []
   required_reading:
   - AGENTS.md
@@ -163,8 +177,8 @@ handoff:
   - specs/epics/e02-configure-and-control/e02s03-end-state.md
   - specs/epics/e02-configure-and-control/e02s04-tasks.yaml
   - specs/epics/e02-configure-and-control/e02s04-shutdown-cleanup.md
-  next_skill: develop-tdd
-  next_target: develop-tdd on e02s03 (show how the run ended) after landing e02s02
+  next_skill: audit-code
+  next_target: audit-code then land-branch for e02s04 on feat/e02s04-shutdown-cleanup
 metrics:
   skill_timings:
     plan-work:
@@ -172,6 +186,10 @@ metrics:
       total_seconds: 645.0
       avg_seconds: 215.0
     develop-tdd:
-      calls: 6
-      total_seconds: 4204.0
-      avg_seconds: 700.6666666666666
+      calls: 7
+      total_seconds: 5895.0
+      avg_seconds: 842.1428571428571
+    verify-work:
+      calls: 1
+      total_seconds: 73.0
+      avg_seconds: 73.0

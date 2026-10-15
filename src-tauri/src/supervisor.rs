@@ -12,6 +12,8 @@ use std::time::{Duration, Instant};
 
 use crate::gpu::{build_gpu_probe, probe_gpu_source, run_tool, GpuProbe, UnavailableGpuProbe};
 use crate::metrics::{spawn_metrics_poller, ProcfsReader, METRICS_REFRESH};
+// story: e02s04 — live group records for crash recovery.
+use crate::recovery::{self, LiveGroupRecord, LiveRunFile};
 // story: e02s01
 use crate::registry::RunConfig;
 
@@ -213,6 +215,8 @@ pub struct Supervisor {
     runs: HashMap<String, LiveRun>,
     sink: Arc<dyn EventSink>,
     gpu: Arc<dyn GpuProbe>,
+    // story: e02s04 — live group records kept while runs are live.
+    state_file: Option<LiveRunFile>,
     sequence: u64,
 }
 
@@ -222,8 +226,16 @@ impl Supervisor {
             runs: HashMap::new(),
             sink: Arc::new(sink),
             gpu: Arc::new(UnavailableGpuProbe::default()),
+            state_file: None,
             sequence: 0,
         }
+    }
+
+    /// story: e02s04 — the host keeps a live group record for every live run so a
+    /// crashed host's groups can be reaped on the next start.
+    pub fn with_state_file(mut self, path: impl AsRef<Path>) -> Self {
+        self.state_file = Some(LiveRunFile::new(path.as_ref().to_path_buf()));
+        self
     }
 
     /// The host probes vendor GPU tooling once at startup and hands the answer to every
@@ -273,6 +285,17 @@ impl Supervisor {
         let pid = child.id();
         let finished = Arc::new(AtomicBool::new(false));
 
+        // story: e02s04 — record the live group before anything can end it.
+        if let Some(file) = &self.state_file
+            && let Some(start_time) = recovery::start_time_ticks(pid)
+        {
+            file.insert(&LiveGroupRecord {
+                pgid: pid,
+                pid,
+                start_time,
+            });
+        }
+
         self.runs.insert(
             run_id.clone(),
             LiveRun {
@@ -320,23 +343,10 @@ impl Supervisor {
             mark_reader_done(&completion);
         }
 
-        watch_exit(
-            child,
-            run_id.clone(),
-            self.sink.clone(),
-            finished.clone(),
-            self.runs
-                .get(&run_id)
-                .expect("live run must exist")
-                .stopped
-                .clone(),
-            completion,
-        );
-
         // story: e03s01
         // The poller ends with the run: it watches the same finished flag and stops when
         // the pid stops answering.
-        spawn_metrics_poller(
+        let poller = spawn_metrics_poller(
             ProcfsReader::new(),
             run_id.clone(),
             pid,
@@ -345,6 +355,25 @@ impl Supervisor {
             finished.clone(),
             METRICS_REFRESH,
         );
+
+        watch_exit(ExitWatch {
+            child,
+            run_id: run_id.clone(),
+            sink: self.sink.clone(),
+            finished: finished.clone(),
+            stopped: self
+                .runs
+                .get(&run_id)
+                .expect("live run must exist")
+                .stopped
+                .clone(),
+            completion,
+            state_file: self.state_file.clone(),
+            // story: e02s04 — Ended must be the last event of a run: watch_exit stops the
+            // poller and joins it before announcing the verdict, so no in-flight metrics
+            // tick can land after Ended.
+            poller,
+        });
 
         Ok(RunHandle {
             run_id,
@@ -367,13 +396,18 @@ impl Supervisor {
         Ok(())
     }
 
-    /// SIGTERM the whole group, then SIGKILL whatever is still alive.
+    /// story: e02s04 — shutdown routes every live run through the same stop_run path a
+    /// user press uses, so each run emits its final Ended with status stopped, and a
+    /// clean exit leaves no live group record behind.
     pub fn shutdown(&mut self) {
-        let runs: Vec<LiveRun> = self.runs.values().cloned().collect();
-        self.runs.clear();
+        let ids = self.live_run_ids();
 
-        for run in runs {
-            terminate_group(run.pid, &run.finished);
+        for run_id in ids {
+            let _ = self.stop_run(&run_id);
+        }
+
+        if let Some(file) = &self.state_file {
+            file.clear();
         }
     }
 }
@@ -442,18 +476,21 @@ fn spawn_capturing(
     }
 }
 
-fn terminate_group(pid: u32, finished: &AtomicBool) {
-    let group = pid as libc::pid_t;
+/// SIGTERM the whole group, then SIGKILL whatever is still alive.
+/// story: e02s04 — public so lib.rs setup can reap a crashed host's groups through
+/// the same path a user stop uses.
+pub fn terminate_group(pgid: u32, finished: &AtomicBool) {
+    let group = pgid as libc::pid_t;
 
     let term_accepted = unsafe { libc::killpg(group, libc::SIGTERM) } == 0;
 
-    if term_accepted && wait_for_exit(pid, TERM_GRACE) {
+    if term_accepted && wait_for_exit(pgid, TERM_GRACE) {
         finished.store(true, Ordering::SeqCst);
         return;
     }
 
     unsafe { libc::killpg(group, libc::SIGKILL) };
-    wait_for_exit(pid, KILL_GRACE);
+    wait_for_exit(pgid, KILL_GRACE);
     finished.store(true, Ordering::SeqCst);
 }
 
@@ -517,15 +554,34 @@ fn split_chunk(line: &str) -> Vec<String> {
     chunks
 }
 
-fn watch_exit(
-    mut child: Child,
+/// Everything one exit-watch thread needs for one run. Bundled because the thread
+/// owns the whole end-of-run sequence: reap, drain, stop the poller, record removal,
+/// verdict.
+struct ExitWatch {
+    child: Child,
     run_id: String,
     sink: Arc<dyn EventSink>,
     finished: Arc<AtomicBool>,
     stopped: Arc<AtomicBool>,
     completion: Arc<(Mutex<Completion>, Condvar)>,
-) {
+    state_file: Option<LiveRunFile>,
+    poller: std::thread::JoinHandle<()>,
+}
+
+fn watch_exit(watch: ExitWatch) {
     thread::spawn(move || {
+        let ExitWatch {
+            mut child,
+            run_id,
+            sink,
+            finished,
+            stopped,
+            completion,
+            state_file,
+            poller,
+        } = watch;
+
+        let pid = child.id();
         let status = child.wait();
         mark_exit(&completion, status.ok().and_then(|status| status.code()));
 
@@ -547,7 +603,17 @@ fn watch_exit(
             RunStatus::Failed
         };
 
-        sink.emit(RunEvent::Ended { run_id, code, status });
+        // story: e02s04 — stop the poller first and wait for it to leave, so Ended is
+        // structurally the last event of the run.
         finished.store(true, Ordering::SeqCst);
+        let _ = poller.join();
+
+        // story: e02s04 — the record goes away with the live process, before the
+        // verdict is announced, so no observer can see Ended and a stale record together.
+        if let Some(file) = &state_file {
+            file.remove(pid);
+        }
+
+        sink.emit(RunEvent::Ended { run_id, code, status });
     });
 }
