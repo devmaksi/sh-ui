@@ -2,7 +2,7 @@ release:
   # Mirror label only. semantic-release owns the real number.
   version: "0.1.0"
   codename: "See what your scripts cost"
-  status: planning
+  status: released
   semantic_release: true
   bump_hint: minor
 

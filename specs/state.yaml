@@ -153,10 +153,11 @@ known_findings:
   swallowed a parse error (unescaped apostrophe in known_findings) and dumped an empty
   skeleton. Restored from git. See specs/bugs/BUG-20260814-06-bp-timing-overwrites-unparseable-state.md'
 handoff:
-  last_step_completed: e02s04 landed on main as 888a748 (squash land via land-branch.sh;
-    branch feat/e02s04-shutdown-cleanup kept because guard-git blocks branch -D). Main
-    preflight green after land. Epic e02 done — all four epics of the release plan (e01,
-    e03, e04, e02) are now done.
+  last_step_completed: 'Release 0.1.0 cut. npm run tauri build green; bundles at
+    src-tauri/target/release/bundle/ (deb 2.55 MiB, rpm 2.55 MiB, AppImage 80.37 MiB);
+    release binary smoke — alive 4 s, direct TERM exits cleanly, no leftovers. Tag
+    v0.1.0 on ae466d7. release-plan status released. No git remote — semantic-release/CI
+    not wired; tagging is manual until a remote exists.'
   open_decisions_from: []
   required_reading:
   - AGENTS.md
@@ -167,19 +168,13 @@ handoff:
   - specs/adr/0002-run-supervision-and-output-caps.md
   - specs/epics/archive/e03-process-cost/epic.yaml
   - specs/epics/archive/e04-gpu-visibility/epic.yaml
-  - specs/epics/e02-configure-and-control/epic.yaml
-  - specs/epics/e02-configure-and-control/e02s01-tasks.yaml
-  - specs/epics/e02-configure-and-control/e02s01-run-config.md
-  - specs/epics/e02-configure-and-control/e02s02-tasks.yaml
-  - specs/epics/e02-configure-and-control/e02s02-stop-run.md
-  - specs/epics/e02-configure-and-control/e02s03-tasks.yaml
-  - specs/epics/e02-configure-and-control/e02s03-end-state.md
-  - specs/epics/e02-configure-and-control/e02s04-tasks.yaml
-  - specs/epics/e02-configure-and-control/e02s04-shutdown-cleanup.md
-  next_skill: deploy
-  next_target: all release-plan epics done — human decision next: cut the release (npm
-    run tauri build + tag) or change-request the follow-ups (single-instance enforcement,
-    reaped-orphans UI, supervisor.rs split refactor)
+  - specs/epics/archive/e02-configure-and-control/epic.yaml
+  - specs/epics/archive/e02-configure-and-control/e02s04-tasks.yaml
+  - specs/epics/archive/e02-configure-and-control/e02s04-shutdown-cleanup.md
+  next_skill: change-request
+  next_target: 0.1.0 released — follow-up candidates recorded in known_findings (single-
+    instance enforcement, reaped-orphans UI, supervisor.rs split refactor); or wire a git
+    remote + CI so semantic-release owns the version
 metrics:
   skill_timings:
     plan-work:
