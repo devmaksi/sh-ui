@@ -1,36 +1,30 @@
 # Traceability Matrix
 
-**Generated:** 2026-10-15 07:38:45 UTC
-**Total stories:** 4
-**Tagged stories:** 4
+**Generated:** 2026-10-15 20:27:35 UTC
+**Total stories:** 2
+**Tagged stories:** 1
 **Dark stories:** 0
-**Orphan tags:** 3
-**Stale tags:** 4
+**Orphan tags:** 6
+**Stale tags:** 0
 
 ## Oracle Stats
 
-- **High** (explicit tag): 20
-- **Medium** (file heuristic): 37
-- **Low** (task reference): 4
+- **High** (explicit tag): 3
+- **Medium** (file heuristic): 1
+- **Low** (task reference): 2
 
 ## Story Coverage
 
 | Story | Title | Epic | BCP | WSJF | Status | Links |
 |-------|-------|------|-----|------|--------|-------|
-| e02s01 | Arguments, environment, and working directory per script | e02 | 0 | 0.71 | done | 31 |
-| e02s02 | Stop a running script | e02 | 0 | 0.71 | done | 7 |
-| e02s03 | Show how the run ended | e02 | 0 | 0.71 | done | 18 |
-| e02s04 | Leave nothing running when the app closes | e02 | 0 | 0.71 | done | 5 |
+| e05s01 | A second instance must not fight the first | e05 | 0 | 3.57 | backlog | 4 |
+| e05s02 | Reaped orphans are visible in the UI | e05 | 0 | 3.57 | backlog | 2 |
 
 ## Orphan Tags (tag in code, no matching story)
 
 - `e01s01`
 - `e01s02`
 - `e01s03`
-
-## Stale Tags (story done, tag still in code)
-
 - `e02s01`
 - `e02s02`
 - `e02s03`
-- `e02s04`

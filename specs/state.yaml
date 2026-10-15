@@ -5,15 +5,23 @@ session:
   started: 2026-08-14
   phase: build
   active_epic: e05
-  active_story: e05s01
+  active_story: e05s02
 active_epic_id: e05
-active_story: e05s01
+active_story: e05s02
 git:
   branch: chore/e03-close
   head: pending
 active_flow:
-  current_skill: change-request
+  current_skill: release-branch
   next_skill: build-epic
+epic_cycle:
+  epic: e05
+  story: e05s01
+  step: 8
+  current_step: 8
+  story_bcps: 3
+  fast_mode: true
+  audit_result: pass
 scope:
   file: specs/product/SCOPE_LATEST.yaml
   epics:
@@ -158,10 +166,9 @@ known_findings:
   swallowed a parse error (unescaped apostrophe in known_findings) and dumped an empty
   skeleton. Restored from git. See specs/bugs/BUG-20260814-06-bp-timing-overwrites-unparseable-state.md'
 handoff:
-  last_step_completed: 'supervisor.rs split refactor landed (refactor/supervisor-split,
-  7 commits, purely structural; 41 Rust test suites green after every commit; clippy
-  clean). All host modules <300 lines except registry.rs (344). Release 0.1.0 remains
-  the last cut; semantic-release/CI wired (test-build-release.yml, release.config.cjs).'
+  last_step_completed: 'e05s01 single-instance flock lock implemented and verified
+  (instance.rs + lib.rs setup lock-before-reap; 42 Rust suites + 53 Vitest green; audit
+  PASS specs/verifications/AUDIT-e05-e05s01.md; manual two-instance evidence recorded).'
   open_decisions_from: []
   required_reading:
   - AGENTS.md
@@ -176,7 +183,7 @@ handoff:
   - specs/epics/archive/e02-configure-and-control/e02s04-tasks.yaml
   - specs/epics/archive/e02-configure-and-control/e02s04-shutdown-cleanup.md
   next_skill: build-epic
-  next_target: e05s01 (single-instance flock lock) — top-ranked unstarted story, WSJF 4.25
+  next_target: e05s02 (reaped-orphans UI) — next story in epic e05, WSJF 2.67
 metrics:
   skill_timings:
     plan-work:

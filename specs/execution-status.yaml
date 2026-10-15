@@ -14,10 +14,9 @@ development_status:
   e04: done
   e04s01: done
   e04s02: done
-  e05: backlog
-  e05s01: backlog
+  e05: in_progress
+  e05s01: done
   e05s02: backlog
-
 epics:
   e01:
     status: done
@@ -36,7 +35,7 @@ epics:
     total_bcps: 13
   e04:
     status: done
-    title: 'GPU and VRAM, honestly'
+    title: GPU and VRAM, honestly
     wsjf: 1.0
     total_bcps: 8
   e05:
@@ -44,7 +43,6 @@ epics:
     title: Protect the single host
     wsjf: 3.57
     total_bcps: 6
-
 stories:
   e01s01:
     status: done
@@ -77,7 +75,7 @@ stories:
     security_max: high
   e02s01:
     status: done
-    title: 'Arguments, environment, and working directory per script'
+    title: Arguments, environment, and working directory per script
     bcps: 6
     epic: e02
     tasks_total: 4
@@ -148,13 +146,15 @@ stories:
     tasks_failing: 1
     risk_max: P0
   e05s01:
-    status: backlog
+    status: done
     title: A second instance must not fight the first
     bcps: 3
     epic: e05
     tasks_total: 0
     tasks_passing: 0
     tasks_failing: 0
+    started_at: '2026-08-14T21:05:00Z'
+    completed_at: '2026-10-15T20:27:44Z'
   e05s02:
     status: backlog
     title: Reaped orphans are visible in the UI

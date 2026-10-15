@@ -3,7 +3,7 @@ title: A second instance must not fight the first
 spec: e05s01-single-instance.md
 # flock(LOCK_EX|LOCK_NB) on <app_data>/app.lock, held for the process lifetime.
 # No new dependencies: libc is already used by spawn/watch_exit.
-status: planned
+status: passing
 bcps: 3
 risk: P1
 verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
@@ -13,7 +13,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml --test instance_lock
     scenarios: [SC-e05s01-P1-01, SC-e05s01-P1-02, SC-e05s01-P1-03]
     risk: P1
-    status: planned
+    status: passing
     allure:
       severity: high
       categories: ["host", "single instance"]
@@ -22,7 +22,7 @@ tasks:
     verify: cargo test --manifest-path src-tauri/Cargo.toml
     scenarios: [SC-e05s01-P1-01]
     risk: P1
-    status: planned
+    status: passing
     allure:
       severity: high
       categories: ["host", "single instance"]
@@ -31,7 +31,7 @@ tasks:
     verify: bash -c 'echo manual: see e05s01.md section 14'
     scenarios: [SC-e05s01-P1-M1]
     risk: P1
-    status: planned
+    status: passing
     allure:
       severity: high
       categories: ["host", "single instance"]

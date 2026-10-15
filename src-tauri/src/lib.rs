@@ -3,6 +3,7 @@ pub mod commands;
 pub mod errors;
 pub mod events;
 pub mod gpu;
+pub mod instance;
 pub mod metrics;
 pub mod output;
 pub mod recovery;
@@ -26,6 +27,22 @@ pub fn run() {
         .setup(|app| {
             let data_dir = app.path().app_data_dir()?;
             std::fs::create_dir_all(&data_dir)?;
+
+            // story: e05s01 — single host: the instance lock is taken before anything
+            // reads live-runs.json, so a second instance can never reap the first one's
+            // live groups. A host that cannot take the lock exits with one stderr line
+            // and no side effects (no window, no file writes, no spawns).
+            let instance_lock = match instance::acquire_instance_lock(&data_dir.join("app.lock")) {
+                Ok(lock) => lock,
+                Err(instance::InstanceError::AlreadyRunning(_)) => {
+                    eprintln!("sh-ui: another instance is already running");
+                    std::process::exit(0);
+                }
+                Err(error) => return Err(Box::new(error)),
+            };
+            // The lock lives as long as this File; managed state keeps it for the
+            // whole process. The OS releases flock on exit, including a crash.
+            app.manage(instance_lock);
 
             // story: e02s04 — reap groups a crashed host left before anything can start.
             let reaped = recovery::reap_stale(&data_dir.join("live-runs.json"), &|pgid, _pid| {

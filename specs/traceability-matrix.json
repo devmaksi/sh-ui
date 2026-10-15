@@ -1,292 +1,16 @@
 {
-  "generated_at": "2026-10-15T07:38:45.380163+00:00",
+  "generated_at": "2026-10-15T20:27:35.032784+00:00",
   "matrix_version": "1.0",
   "stories": [
     {
-      "id": "e02s01",
-      "title": "Arguments, environment, and working directory per script",
-      "epic_id": "e02",
-      "epic_title": "Configure and control the run",
+      "id": "e05s01",
+      "title": "A second instance must not fight the first",
+      "epic_id": "e05",
+      "epic_title": "Protect the single host",
       "bcp": 0,
-      "wsjf": 0.71,
-      "status": "done",
+      "wsjf": 3.57,
+      "status": "backlog",
       "links": [
-        {
-          "file": "src/test/fakeHostBridge.ts",
-          "line": 53,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "src/features/runs/types.ts",
-          "line": 49,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "src/features/runs/startErrors.ts",
-          "line": 8,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "src/features/registry/registryErrors.ts",
-          "line": 11,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "src/features/registry/types.ts",
-          "line": 18,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "src/features/registry/types.ts",
-          "line": 33,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "src/features/registry/useRegistry.ts",
-          "line": 51,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "src/features/registry/tauriRegistryHost.ts",
-          "line": 35,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "specs/adr/0002-run-supervision-and-output-caps.md",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/tests/supervisor_script_directory.rs",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/.fingerprint/sh-ui-55b977ae764ed31b/test-integration-test-supervisor_script_directory.json",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/.fingerprint/sh-ui-55b977ae764ed31b/test-integration-test-supervisor_script_directory",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/.fingerprint/sh-ui-55b977ae764ed31b/dep-test-integration-test-supervisor_script_directory",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/.fingerprint/sh-ui-35e01a07f102144a/test-integration-test-supervisor_script_directory.json",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/.fingerprint/sh-ui-35e01a07f102144a/test-integration-test-supervisor_script_directory",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/.fingerprint/sh-ui-35e01a07f102144a/dep-test-integration-test-supervisor_script_directory",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/.fingerprint/sh-ui-dab1afd827ff97f9/test-integration-test-supervisor_script_directory.json",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/.fingerprint/sh-ui-dab1afd827ff97f9/test-integration-test-supervisor_script_directory",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/.fingerprint/sh-ui-dab1afd827ff97f9/dep-test-integration-test-supervisor_script_directory",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/.fingerprint/sh-ui-09b2b910eb2fc10c/test-integration-test-supervisor_script_directory.json",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/.fingerprint/sh-ui-09b2b910eb2fc10c/test-integration-test-supervisor_script_directory",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/.fingerprint/sh-ui-09b2b910eb2fc10c/dep-test-integration-test-supervisor_script_directory",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/deps/libsupervisor_script_directory-dab1afd827ff97f9.rmeta",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/deps/supervisor_script_directory-55b977ae764ed31b.d",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/deps/supervisor_script_directory-09b2b910eb2fc10c",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/deps/libsupervisor_script_directory-55b977ae764ed31b.rmeta",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/deps/supervisor_script_directory-dab1afd827ff97f9.d",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/deps/supervisor_script_directory-09b2b910eb2fc10c.d",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/deps/supervisor_script_directory-35e01a07f102144a",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/deps/supervisor_script_directory-35e01a07f102144a.d",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "specs/epics/e02-configure-and-control/e02s01-tasks.yaml",
-          "line": 0,
-          "confidence": "low",
-          "method": "task_reference"
-        }
-      ],
-      "link_count": 31
-    },
-    {
-      "id": "e02s02",
-      "title": "Stop a running script",
-      "epic_id": "e02",
-      "epic_title": "Configure and control the run",
-      "bcp": 0,
-      "wsjf": 0.71,
-      "status": "done",
-      "links": [
-        {
-          "file": "src/test/fakeRunHost.ts",
-          "line": 13,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "src/test/fakeRunHost.ts",
-          "line": 46,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "src/features/runs/useRuns.ts",
-          "line": 83,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "src/features/runs/tauriRunHost.ts",
-          "line": 81,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "src/features/runs/useRuns.test.ts",
-          "line": 10,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "src/features/runs/host.ts",
-          "line": 35,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "specs/epics/e02-configure-and-control/e02s02-tasks.yaml",
-          "line": 0,
-          "confidence": "low",
-          "method": "task_reference"
-        }
-      ],
-      "link_count": 7
-    },
-    {
-      "id": "e02s03",
-      "title": "Show how the run ended",
-      "epic_id": "e02",
-      "epic_title": "Configure and control the run",
-      "bcp": 0,
-      "wsjf": 0.71,
-      "status": "done",
-      "links": [
-        {
-          "file": "src/test/fakeRunHost.ts",
-          "line": 80,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "src/features/runs/tauriRunHost.ts",
-          "line": 22,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "src/features/runs/types.ts",
-          "line": 16,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
-        {
-          "file": "src/features/runs/host.ts",
-          "line": 13,
-          "confidence": "high",
-          "method": "explicit_tag"
-        },
         {
           "file": "specs/state.yaml",
           "line": 8,
@@ -294,151 +18,71 @@
           "method": "explicit_tag"
         },
         {
-          "file": "src-tauri/target/debug/build/tauri-d661bf118031c9d6/out/permissions/tray/autogenerated/commands/set_show_menu_on_left_click.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/build/tauri-d661bf118031c9d6/out/permissions/webview/autogenerated/commands/webview_show.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/build/tauri-d661bf118031c9d6/out/permissions/window/autogenerated/commands/show.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/build/tauri-d661bf118031c9d6/out/permissions/app/autogenerated/commands/app_show.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/build/tauri-4b28fc76adadf714/out/permissions/tray/autogenerated/commands/set_show_menu_on_left_click.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/build/tauri-4b28fc76adadf714/out/permissions/webview/autogenerated/commands/webview_show.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/build/tauri-4b28fc76adadf714/out/permissions/window/autogenerated/commands/show.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/debug/build/tauri-4b28fc76adadf714/out/permissions/app/autogenerated/commands/app_show.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/release/build/tauri-5f8f95de71b26d9d/out/permissions/tray/autogenerated/commands/set_show_menu_on_left_click.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/release/build/tauri-5f8f95de71b26d9d/out/permissions/webview/autogenerated/commands/webview_show.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/release/build/tauri-5f8f95de71b26d9d/out/permissions/window/autogenerated/commands/show.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/release/build/tauri-5f8f95de71b26d9d/out/permissions/app/autogenerated/commands/app_show.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "specs/epics/e02-configure-and-control/e02s03-tasks.yaml",
-          "line": 0,
-          "confidence": "low",
-          "method": "task_reference"
-        }
-      ],
-      "link_count": 18
-    },
-    {
-      "id": "e02s04",
-      "title": "Leave nothing running when the app closes",
-      "epic_id": "e02",
-      "epic_title": "Configure and control the run",
-      "bcp": 0,
-      "wsjf": 0.71,
-      "status": "done",
-      "links": [
-        {
           "file": "specs/state.yaml",
           "line": 10,
           "confidence": "high",
           "method": "explicit_tag"
         },
         {
-          "file": "src-tauri/target/debug/build/tauri-d661bf118031c9d6/out/permissions/app/autogenerated/commands/set_app_theme.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
+          "file": "specs/state.yaml",
+          "line": 19,
+          "confidence": "high",
+          "method": "explicit_tag"
         },
         {
-          "file": "src-tauri/target/debug/build/tauri-4b28fc76adadf714/out/permissions/app/autogenerated/commands/set_app_theme.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "src-tauri/target/release/build/tauri-5f8f95de71b26d9d/out/permissions/app/autogenerated/commands/set_app_theme.toml",
-          "line": 0,
-          "confidence": "medium",
-          "method": "file_heuristic"
-        },
-        {
-          "file": "specs/epics/e02-configure-and-control/e02s04-tasks.yaml",
+          "file": "specs/epics/e05-protect-single-host/e05s01-tasks.yaml",
           "line": 0,
           "confidence": "low",
           "method": "task_reference"
         }
       ],
-      "link_count": 5
+      "link_count": 4
+    },
+    {
+      "id": "e05s02",
+      "title": "Reaped orphans are visible in the UI",
+      "epic_id": "e05",
+      "epic_title": "Protect the single host",
+      "bcp": 0,
+      "wsjf": 3.57,
+      "status": "backlog",
+      "links": [
+        {
+          "file": "specs/epics/e05-protect-single-host/e05s02-reaped-orphans-ui.md",
+          "line": 0,
+          "confidence": "medium",
+          "method": "file_heuristic"
+        },
+        {
+          "file": "specs/epics/e05-protect-single-host/e05s02-tasks.yaml",
+          "line": 0,
+          "confidence": "low",
+          "method": "task_reference"
+        }
+      ],
+      "link_count": 2
     }
   ],
   "summary": {
-    "total_stories": 4,
-    "tagged_stories": 4,
+    "total_stories": 2,
+    "tagged_stories": 1,
     "dark_stories": [],
     "dark_count": 0,
     "orphan_tags": [
       "e01s01",
       "e01s02",
-      "e01s03"
-    ],
-    "orphan_count": 3,
-    "stale_tags": [
+      "e01s03",
       "e02s01",
       "e02s02",
-      "e02s03",
-      "e02s04"
+      "e02s03"
     ],
-    "stale_count": 4,
+    "orphan_count": 6,
+    "stale_tags": [],
+    "stale_count": 0,
     "oracle_stats": {
-      "high": 20,
-      "medium": 37,
-      "low": 4
+      "high": 3,
+      "medium": 1,
+      "low": 2
     }
   }
 }
