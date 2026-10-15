@@ -156,8 +156,9 @@ handoff:
   last_step_completed: 'Release 0.1.0 cut. npm run tauri build green; bundles at
     src-tauri/target/release/bundle/ (deb 2.55 MiB, rpm 2.55 MiB, AppImage 80.37 MiB);
     release binary smoke — alive 4 s, direct TERM exits cleanly, no leftovers. Tag
-    v0.1.0 on ae466d7. release-plan status released. No git remote — semantic-release/CI
-    not wired; tagging is manual until a remote exists.'
+    v0.1.0. release-plan status released. Remote origin git@github.com:devmaksi/sh-ui.git
+    connected; local main rebased onto the remote initial commit (LICENSE, afbf30fd) and
+    v0.1.0 re-pointed to f27a520. semantic-release/CI still not wired.'
   open_decisions_from: []
   required_reading:
   - AGENTS.md
