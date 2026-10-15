@@ -5,7 +5,8 @@ mod common;
 use common::TempRegistry;
 use sh_ui_lib::recovery::load_records;
 use sh_ui_lib::registry::RunConfig;
-use sh_ui_lib::supervisor::{Recorder, RunEvent, Supervisor};
+use sh_ui_lib::events::{Recorder, RunEvent};
+use sh_ui_lib::supervisor::{Supervisor};
 use std::time::{Duration, Instant};
 
 /// A run ending naturally removes only its own record; a clean shutdown leaves the

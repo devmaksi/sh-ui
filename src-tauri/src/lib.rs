@@ -1,11 +1,16 @@
 // story: e01s01 e01s02 e01s03
 pub mod commands;
+pub mod errors;
+pub mod events;
 pub mod gpu;
 pub mod metrics;
+pub mod output;
 pub mod recovery;
 pub mod registry;
 pub mod runs;
+pub mod spawn;
 pub mod supervisor;
+pub mod watch_exit;
 
 use registry::RegistryStore;
 use runs::TauriRunSink;
@@ -25,7 +30,7 @@ pub fn run() {
             // story: e02s04 — reap groups a crashed host left before anything can start.
             let reaped = recovery::reap_stale(&data_dir.join("live-runs.json"), &|pgid, _pid| {
                 let finished = std::sync::atomic::AtomicBool::new(false);
-                supervisor::terminate_group(pgid, &finished);
+                spawn::terminate_group(pgid, &finished);
             });
             // pgid == pid for a group leader; the closure only needs the group.
             if !reaped.is_empty() {

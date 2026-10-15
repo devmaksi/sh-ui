@@ -4,7 +4,8 @@ mod common;
 
 use common::TempRegistry;
 use sh_ui_lib::registry::RunConfig;
-use sh_ui_lib::supervisor::{Recorder, Supervisor};
+use sh_ui_lib::events::{Recorder};
+use sh_ui_lib::supervisor::{Supervisor};
 
 #[test]
 fn supervisor_tracks_run() {

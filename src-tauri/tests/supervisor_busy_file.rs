@@ -4,7 +4,9 @@ mod common;
 
 use common::TempRegistry;
 use sh_ui_lib::registry::RunConfig;
-use sh_ui_lib::supervisor::{Recorder, StartError, Supervisor};
+use sh_ui_lib::events::{Recorder};
+use sh_ui_lib::errors::StartError;
+use sh_ui_lib::supervisor::Supervisor;
 
 #[test]
 fn supervisor_retries_while_the_script_file_is_busy() {

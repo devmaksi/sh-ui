@@ -4,7 +4,8 @@ mod common;
 
 use common::TempRegistry;
 use sh_ui_lib::registry::RunConfig;
-use sh_ui_lib::supervisor::{Recorder, RunEvent, Supervisor};
+use sh_ui_lib::events::{Recorder, RunEvent};
+use sh_ui_lib::supervisor::{Supervisor};
 use std::time::{Duration, Instant};
 
 fn wait_for_end(recorder: &Recorder, timeout: Duration) -> Option<RunEvent> {
@@ -66,7 +67,7 @@ fn stop_sends_signal_to_the_whole_group() {
     assert!(matches!(
         ended,
         Some(RunEvent::Ended {
-            status: sh_ui_lib::supervisor::RunStatus::Stopped,
+            status: sh_ui_lib::events::RunStatus::Stopped,
             ..
         })
     ));

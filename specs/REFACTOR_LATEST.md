@@ -137,6 +137,12 @@ Each commit leaves the crate compiling and the full suite green.
 
 ## Further Notes
 
+- Deviation on execution: `Completion` and `mark_reader_done`/`mark_exit` moved with
+  `output.rs` (they are the output-drain rendezvous that `read_stream` needs), not
+  with `watch_exit.rs` as sketched above. No behavior change.
+- All host modules landed under 300 lines except `registry.rs` (344), left as a
+  later candidate per Out of Scope.
+
 - After extraction, `supervisor.rs` should land near ~180 lines; the largest new
   module near ~130. All under the 300-line convention.
 - Run the refactor on a `kickoff-branch` branch (worktrees are disabled per DEV-02;

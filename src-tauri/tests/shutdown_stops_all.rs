@@ -4,7 +4,8 @@ mod common;
 
 use common::TempRegistry;
 use sh_ui_lib::registry::RunConfig;
-use sh_ui_lib::supervisor::{Recorder, RunEvent, RunStatus, Supervisor};
+use sh_ui_lib::events::{Recorder, RunEvent, RunStatus};
+use sh_ui_lib::supervisor::{Supervisor};
 use std::time::{Duration, Instant};
 
 fn alive(pid: u32) -> bool {

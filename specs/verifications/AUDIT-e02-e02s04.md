@@ -50,6 +50,10 @@ Diff: `main..HEAD`, 11 commits. Churn hotspot: `src-tauri/src/supervisor.rs` (12
   keep the story diff reviewable. Recorded as a follow-up: plan-refactor on supervisor.rs.
 - `start()` is long (~90 lines, pre-existing) — same follow-up.
 
+**Resolution (2026-08-14, refactor/supervisor-split):** supervisor.rs split into
+events.rs / errors.rs / output.rs / spawn.rs / watch_exit.rs; supervisor.rs is 279
+lines, `start()` is 24 (validate/spawn_and_record/wire_run). Plan: specs/REFACTOR_LATEST.md.
+
 ### Red Flags named
 - I initially reached for "pre-existing, out of scope" on the two red-preflight flakes and
   on the wsjf indent — caught myself; all three were fixed in-scope.

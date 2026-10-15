@@ -5,7 +5,7 @@ use std::sync::Arc;
 use std::thread::{self, JoinHandle};
 use std::time::{Duration, Instant};
 
-use crate::supervisor::{EventSink, RunEvent};
+use crate::events::{EventSink, RunEvent};
 use procfs::process::Process;
 
 /// Gap between two metrics events. One named constant so host and UI agree on the cadence.

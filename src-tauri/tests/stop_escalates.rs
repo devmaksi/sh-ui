@@ -4,7 +4,9 @@ mod common;
 
 use common::TempRegistry;
 use sh_ui_lib::registry::RunConfig;
-use sh_ui_lib::supervisor::{Recorder, RunEvent, Supervisor, TERM_GRACE};
+use sh_ui_lib::events::{Recorder, RunEvent};
+use sh_ui_lib::spawn::TERM_GRACE;
+use sh_ui_lib::supervisor::Supervisor;
 use std::path::Path;
 use std::time::{Duration, Instant};
 
@@ -40,7 +42,7 @@ fn stop_escalates_to_sigkill_after_the_grace() {
             matches!(
                 event,
                 RunEvent::Ended {
-                    status: sh_ui_lib::supervisor::RunStatus::Stopped,
+                    status: sh_ui_lib::events::RunStatus::Stopped,
                     ..
                 }
             )

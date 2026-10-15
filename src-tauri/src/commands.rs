@@ -5,7 +5,8 @@ use std::sync::Mutex;
 use serde::Serialize;
 
 use crate::registry::{RegistryError, RegistryList, RegistryStore, ScriptEntry};
-use crate::supervisor::{StartError, Supervisor};
+use crate::errors::StartError;
+use crate::supervisor::Supervisor;
 
 /// The error the UI receives. `kind` is the stable tag; `detail` names the path involved.
 #[derive(Debug, Serialize)]

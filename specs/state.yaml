@@ -146,19 +146,20 @@ known_findings:
 - 'trace-stories.py greps only md/sh/py/js/ts/yaml for story tags — Rust // story:
   comments are not collected as explicit links. scripts/ is the global bigpowers symlink;
   upstream fix candidate, not edited here.'
-- 'supervisor.rs is 619 lines (>300 convention), pre-existing and slightly grown in
-  e02s04. Logged follow-up: plan-refactor to split events/errors/exit-watch out of
-  it (see specs/verifications/AUDIT-e02-e02s04.md).'
+- 'supervisor.rs split completed on refactor/supervisor-split (2026-08-14): 619 lines
+  split into events.rs (88), errors.rs (58), output.rs (76), spawn.rs (108),
+  watch_exit.rs (72); supervisor.rs now 279. start() split into validate/spawn_and_record/
+  wire_run (24 lines). Deviation from specs/REFACTOR_LATEST.md: Completion/mark_* moved
+  with output.rs (drain protocol), not watch_exit.rs. registry.rs (344) remains the only
+  host module over 300 — logged as a later candidate.'
 - 'bp-timing.sh silently overwrote specs/state.yaml on 2026-08-14: its yaml.safe_load
   swallowed a parse error (unescaped apostrophe in known_findings) and dumped an empty
   skeleton. Restored from git. See specs/bugs/BUG-20260814-06-bp-timing-overwrites-unparseable-state.md'
 handoff:
-  last_step_completed: 'Release 0.1.0 cut. npm run tauri build green; bundles at
-    src-tauri/target/release/bundle/ (deb 2.55 MiB, rpm 2.55 MiB, AppImage 80.37 MiB);
-    release binary smoke — alive 4 s, direct TERM exits cleanly, no leftovers. Tag
-    v0.1.0. release-plan status released. Remote origin git@github.com:devmaksi/sh-ui.git
-    connected; local main rebased onto the remote initial commit (LICENSE, afbf30fd) and
-    v0.1.0 re-pointed to f27a520. semantic-release/CI still not wired.'
+  last_step_completed: 'supervisor.rs split refactor landed (refactor/supervisor-split,
+  7 commits, purely structural; 41 Rust test suites green after every commit; clippy
+  clean). All host modules <300 lines except registry.rs (344). Release 0.1.0 remains
+  the last cut; semantic-release/CI wired (test-build-release.yml, release.config.cjs).'
   open_decisions_from: []
   required_reading:
   - AGENTS.md

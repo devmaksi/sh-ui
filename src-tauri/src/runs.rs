@@ -2,7 +2,7 @@
 use serde::Serialize;
 use tauri::{AppHandle, Emitter};
 
-use crate::supervisor::{EventSink, RunEvent};
+use crate::events::{EventSink, RunEvent};
 
 pub const EVENT_STARTED: &str = "run://started";
 pub const EVENT_OUTPUT: &str = "run://output";

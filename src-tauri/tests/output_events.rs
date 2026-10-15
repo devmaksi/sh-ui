@@ -4,7 +4,8 @@ mod common;
 
 use common::TempRegistry;
 use sh_ui_lib::registry::RunConfig;
-use sh_ui_lib::supervisor::{OutputStream, Recorder, RunEvent, Supervisor};
+use sh_ui_lib::events::{OutputStream, Recorder, RunEvent};
+use sh_ui_lib::supervisor::{Supervisor};
 use std::time::{Duration, Instant};
 
 fn outputs_for(recorder: &Recorder, stream: OutputStream) -> Vec<String> {

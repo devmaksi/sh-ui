@@ -4,7 +4,9 @@ mod common;
 
 use common::TempRegistry;
 use sh_ui_lib::registry::RunConfig;
-use sh_ui_lib::supervisor::{OutputStream, Recorder, RunEvent, Supervisor, OUTPUT_CHUNK_MAX_BYTES};
+use sh_ui_lib::events::{OutputStream, Recorder, RunEvent};
+use sh_ui_lib::output::OUTPUT_CHUNK_MAX_BYTES;
+use sh_ui_lib::supervisor::Supervisor;
 use std::time::{Duration, Instant};
 
 fn chunks_for(recorder: &Recorder) -> Vec<String> {

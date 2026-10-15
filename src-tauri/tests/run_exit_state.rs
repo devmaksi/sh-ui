@@ -4,7 +4,8 @@ mod common;
 
 use common::TempRegistry;
 use sh_ui_lib::registry::RunConfig;
-use sh_ui_lib::supervisor::{Recorder, RunEvent, Supervisor};
+use sh_ui_lib::events::{Recorder, RunEvent};
+use sh_ui_lib::supervisor::{Supervisor};
 use std::time::{Duration, Instant};
 
 fn wait_for_ended(recorder: &Recorder, timeout: Duration) -> (Option<i32>, &'static str) {
