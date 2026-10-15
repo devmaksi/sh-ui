@@ -28,6 +28,13 @@ epics:
     # (BV 8 + TC 7 + RR 0) / job size 21 — table stakes, but the largest job
     wsjf: 0.71
     capsule_dir: epics/e02-configure-and-control
+  - id: e05
+    title: Protect the single host
+    # (BV 14 + TC 8 + RR 3) / job size 7 — defect protection for the e02s04
+    # crash-recovery contract; a second instance currently reaps the first one's live runs.
+    wsjf: 3.57
+    capsule_dir: epics/e05-protect-single-host
+    note: Added 2026-08-14 via change-request after 0.1.0. Highest WSJF in the plan.
 
 scope_mapping:
   note: >

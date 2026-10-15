@@ -1,0 +1,23 @@
+id: e05
+title: Protect the single host
+capsule_dir: epics/e05-protect-single-host
+wsjf: 3.57
+# (BV 14 + TC 8 + RR 3) / job size 7 — defect protection for the crash-recovery
+# contract shipped in e02s04; outranks every released epic.
+total_bcps: 6
+status: planned
+delta: ADDED
+stories:
+  - id: e05s01
+    title: A second instance must not fight the first
+    bcps: 3
+    tasks_file: e05s01-tasks.yaml
+  - id: e05s02
+    title: Reaped orphans are visible in the UI
+    bcps: 3
+    tasks_file: e05s02-tasks.yaml
+value_test: >
+  After e05s01 a second launch of the app cannot touch the first instance's live runs or
+  its state file. After e05s02 a user who restarts the app after a crash sees which
+  orphaned groups were reaped instead of learning about it from a terminal that does not
+  exist.

@@ -14,24 +14,36 @@ development_status:
   e04: done
   e04s01: done
   e04s02: done
+  e05: backlog
+  e05s01: backlog
+  e05s02: backlog
 
 epics:
   e01:
     status: done
     title: Run a script and watch it
+    wsjf: 1.23
     total_bcps: 18
   e02:
     status: done
     title: Configure and control the run
+    wsjf: 0.71
     total_bcps: 18
   e03:
     status: done
     title: What the script costs
+    wsjf: 1.08
     total_bcps: 13
   e04:
     status: done
     title: 'GPU and VRAM, honestly'
+    wsjf: 1.0
     total_bcps: 8
+  e05:
+    status: backlog
+    title: Protect the single host
+    wsjf: 3.57
+    total_bcps: 6
 
 stories:
   e01s01:
@@ -135,3 +147,20 @@ stories:
     tasks_passing: 2
     tasks_failing: 1
     risk_max: P0
+  e05s01:
+    status: backlog
+    title: A second instance must not fight the first
+    bcps: 3
+    epic: e05
+    tasks_total: 0
+    tasks_passing: 0
+    tasks_failing: 0
+  e05s02:
+    status: backlog
+    title: Reaped orphans are visible in the UI
+    bcps: 3
+    epic: e05
+    tasks_total: 3
+    tasks_passing: 0
+    tasks_failing: 0
+    risk_max: P2

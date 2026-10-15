@@ -1,0 +1,36 @@
+story_id: e05s02
+title: Reaped orphans are visible in the UI
+spec: e05s02-reaped-orphans-ui.md
+# Reap report from lib.rs setup -> managed state -> take_reap_report IPC -> ReapBanner.
+status: planned
+bcps: 3
+risk: P2
+verify_preflight: npm run lint && npm run test && cargo test --manifest-path src-tauri/Cargo.toml && npm run build
+tasks:
+  - id: 1
+    description: Store reap_stale result in managed state; take_reap_report command with take-once semantics; Rust test for take-once.
+    verify: cargo test --manifest-path src-tauri/Cargo.toml --test reap_report
+    scenarios: [SC-e05s02-P2-03]
+    risk: P2
+    status: planned
+    allure:
+      severity: normal
+      categories: ["host", "IPC contract"]
+  - id: 2
+    description: ReapBanner component in the runs slice — count and pid list, dismiss control, empty report renders nothing.
+    verify: npm run test -- ReapBanner
+    scenarios: [SC-e05s02-P2-01, SC-e05s02-P2-02]
+    risk: P2
+    status: planned
+    allure:
+      severity: normal
+      categories: ["ui"]
+  - id: 3
+    description: Wire takeReapReport into the slice mount; manual crash-restart check naming the orphaned pid.
+    verify: npm run test -- ReapBanner
+    scenarios: [SC-e05s02-P2-M1]
+    risk: P2
+    status: planned
+    allure:
+      severity: normal
+      categories: ["ui", "IPC contract"]
