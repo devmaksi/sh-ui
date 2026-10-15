@@ -1,5 +1,7 @@
 # sh-ui
 
+[Русская версия](README.ru.md)
+
 **A Linux desktop app that manages a registry of your shell scripts** — launch them with
 your own arguments, environment, and working directory; watch their output live; see what
 they cost; stop them with one press; and never leave a stray process behind.
